@@ -3,13 +3,29 @@ package main
 import (
 	"github.com/evstrART/taskFlow"
 	"github.com/evstrART/taskFlow/pkg/handler"
+	"github.com/evstrART/taskFlow/pkg/repository"
+	"github.com/evstrART/taskFlow/pkg/service"
+	"github.com/spf13/viper"
 	"log"
 )
 
 func main() {
-	srv := new(taskFlow.Server)
-	handlers := new(handler.Handler)
-	if err := srv.Run("8080", handlers.InitRoutes()); err != nil {
-		log.Fatal(err)
+	if err := InitConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s", err.Error())
 	}
+
+	repos := repository.NewRepository()
+	services := service.NewService(repos)
+	handlers := handler.NewHandler(services)
+
+	srv := new(taskFlow.Server)
+	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+		log.Fatalf("error occured while run http server: %s", err.Error())
+	}
+}
+
+func InitConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
+	return viper.ReadInConfig()
 }

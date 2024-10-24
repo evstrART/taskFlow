@@ -10,7 +10,7 @@ type Task struct {
 	AssignedTo  int       `json:"assigned_to"` // Идентификатор пользователя, которому назначена задача.
 	Status      string    `json:"status"`      // Статус задачи.
 	Priority    string    `json:"priority"`    // Приоритет задачи.
-	DueDate     time.Time `json:"due_date"`    // Дата завершения задачи.
+	EndDate     time.Time `json:"due_date"`    // Дата завершения задачи.
 	CreatedAt   time.Time `json:"created_at"`  // Дата создания задачи.
 	UpdatedAt   time.Time `json:"updated_at"`  // Дата последнего обновления задачи.
 }
