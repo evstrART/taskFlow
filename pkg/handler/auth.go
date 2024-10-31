@@ -18,7 +18,7 @@ func (h *Handler) singIn(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
+		"user_id": id,
 	})
 }
 
