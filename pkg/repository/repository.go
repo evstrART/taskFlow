@@ -1,10 +1,12 @@
 package repository
 
 import (
+	"github.com/evstrART/taskFlow"
 	"github.com/jmoiron/sqlx"
 )
 
 type AutorisationService interface {
+	CreateUser(user taskFlow.User) (int, error)
 }
 
 type TaskRepository interface {
@@ -24,5 +26,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		AutorisationService: NewAuthPostgres(db),
+	}
 }

@@ -1,8 +1,12 @@
 package service
 
-import "github.com/evstrART/taskFlow/pkg/repository"
+import (
+	"github.com/evstrART/taskFlow"
+	"github.com/evstrART/taskFlow/pkg/repository"
+)
 
 type AutorisationService interface {
+	CreateUser(user taskFlow.User) (int, error)
 }
 
 type TaskService interface {
@@ -22,5 +26,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		AutorisationService: NewAuthService(repos.AutorisationService),
+	}
 }

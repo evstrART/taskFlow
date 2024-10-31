@@ -6,13 +6,14 @@ import (
 	"github.com/evstrART/taskFlow/pkg/repository"
 	"github.com/evstrART/taskFlow/pkg/service"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 )
 
 func main() {
+	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := InitConfig(); err != nil {
-		log.Fatalf("Error reading config file, %s", err.Error())
+		logrus.Fatalf("Error reading config file, %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -25,7 +26,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("Error connecting to database, %s", err.Error())
+		logrus.Fatalf("Error connecting to database, %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
@@ -34,7 +35,7 @@ func main() {
 
 	srv := new(taskFlow.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		log.Fatalf("error occured while run http server: %s", err.Error())
+		logrus.Fatalf("error occured while run http server: %s", err.Error())
 	}
 }
 

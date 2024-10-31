@@ -5,6 +5,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	UserTable          = "users"
+	TaskTable          = "tasks"
+	TagTable           = "tags"
+	ProjectTable       = "projects"
+	CommentTable       = "comments"
+	ActivityLogsTable  = "activitylogs"
+	TaskTagTable       = "task_tags"
+	ProjectMemberTable = "project_members"
+)
+
 type Config struct {
 	Host     string
 	Port     string
