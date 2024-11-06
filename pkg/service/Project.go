@@ -28,3 +28,7 @@ func (s *ProjectService) GetProjectById(id int) (taskFlow.Project, error) {
 func (s *ProjectService) DeleteProject(id int) error {
 	return s.repo.DeleteProject(id)
 }
+
+func (s *ProjectService) UpdateProject(id int, input taskFlow.UpdateProjectInput) error {
+	return s.repo.UpdateProject(id, input)
+}

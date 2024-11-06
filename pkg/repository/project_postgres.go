@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/evstrART/taskFlow"
 	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 	"log"
+	"strings"
 )
 
 type ProjectPostgres struct {
@@ -123,4 +125,60 @@ func (r *ProjectPostgres) DeleteProject(id int) error {
 	}
 
 	return nil
+}
+
+func (r *ProjectPostgres) UpdateProject(id int, input taskFlow.UpdateProjectInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	// Проверяем поля и добавляем их в запрос
+	if input.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, *input.Name)
+		argId++
+	}
+
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	if input.StartDate != nil {
+		setValues = append(setValues, fmt.Sprintf("start_date=$%d", argId))
+		args = append(args, *input.StartDate)
+		argId++
+	}
+
+	if input.EndDate != nil {
+		setValues = append(setValues, fmt.Sprintf("end_date=$%d", argId))
+		args = append(args, *input.EndDate)
+		argId++
+	}
+
+	if input.Status != nil {
+		setValues = append(setValues, fmt.Sprintf("status=$%d", argId))
+		args = append(args, *input.Status)
+		argId++
+	}
+
+	// Формируем строку обновления
+	setQuery := strings.Join(setValues, ", ")
+	if setQuery == "" {
+		return nil // Если нет полей для обновления, ничего не делаем
+	}
+
+	// Формируем полный запрос
+	query := fmt.Sprintf("UPDATE Projects SET %s, updated_at = NOW() WHERE project_id = $%d",
+		setQuery, argId)
+	args = append(args, id)
+
+	// Логирование
+	logrus.Debugf("updateQuery: %s", query)
+	logrus.Debugf("args: %v", args)
+
+	// Выполняем запрос
+	_, err := r.db.Exec(query, args...)
+	return err
 }

@@ -52,7 +52,23 @@ func (h *Handler) getProjectById(c *gin.Context) {
 }
 
 func (h *Handler) updateProject(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	var input taskFlow.UpdateProjectInput
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
+	err = h.services.Project.UpdateProject(id, input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
 
 func (h *Handler) deleteProject(c *gin.Context) {

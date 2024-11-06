@@ -16,3 +16,11 @@ type Project struct {
 	CreatedAt   time.Time    `json:"created_at" db:"created_at"` // Дата создания проекта.
 	UpdatedAt   sql.NullTime `json:"updated_at" db:"updated_at"` // Дата последнего обновления проекта.
 }
+
+type UpdateProjectInput struct {
+	Name        *string `json:"name"`
+	Description *string `json:"description"`
+	StartDate   *string `json:"start_date"`
+	EndDate     *string `json:"end_date"`
+	Status      *string `json:"status"`
+}
