@@ -3,7 +3,7 @@ package taskFlow
 import "time"
 
 type User struct {
-	UserID    int       `json:"user_id"`                     // Уникальный идентификатор пользователя.
+	UserID    int       `json:"user_id" db:"user_id"`        // Уникальный идентификатор пользователя.
 	Username  string    `json:"username" binding:"required"` // Имя пользователя.
 	Password  string    `json:"password" binding:"required"` // Пароль (в хэшированном виде).
 	Email     string    `json:"email" binding:"required"`    // Электронная почта пользователя.

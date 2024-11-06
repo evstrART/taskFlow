@@ -24,11 +24,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sing-up", h.singUp)
 
 	}
-	api := router.Group("/api")
+	api := router.Group("/api", h.userIdentity)
 	{
-		project := api.Group("/project")
+		project := api.Group("/projects")
 		{
-			project.POST("/", h.CreateProject)
+			project.POST("/", h.createProject)
+			project.GET("/", h.getAllProjects)
+			project.GET("/:id", h.getProjectById)
+			project.PUT("/:id", h.updateProject)
+			project.DELETE("/:id", h.deleteProject)
 		}
 	}
 

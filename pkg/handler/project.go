@@ -1,7 +1,72 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/evstrART/taskFlow"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+)
 
-func (h *Handler) CreateProject(*gin.Context) {
+func (h *Handler) createProject(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+	var input taskFlow.Project
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	id, err := h.services.Project.Create(userId, input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
+}
 
+func (h *Handler) getAllProjects(c *gin.Context) {
+	projects, err := h.services.Project.GetAllProjects()
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, projects)
+}
+
+func (h *Handler) getProjectById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	project, err := h.services.Project.GetProjectById(id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, project)
+
+}
+
+func (h *Handler) updateProject(c *gin.Context) {
+
+}
+
+func (h *Handler) deleteProject(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	err = h.services.Project.DeleteProject(id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "ok",
+	})
 }

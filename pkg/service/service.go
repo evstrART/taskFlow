@@ -7,26 +7,33 @@ import (
 
 type AutorisationService interface {
 	CreateUser(user taskFlow.User) (int, error)
+	GenerateToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
-type TaskService interface {
+type Task interface {
 }
 
-type UserService interface {
+type User interface {
 }
 
-type ProjectService interface {
+type Project interface {
+	Create(ownerID int, project taskFlow.Project) (int, error)
+	GetAllProjects() ([]taskFlow.Project, error)
+	GetProjectById(id int) (taskFlow.Project, error)
+	DeleteProject(id int) error
 }
 
 type Service struct {
 	AutorisationService
-	TaskService
-	UserService
-	ProjectService
+	Project
+	Task
+	User
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		AutorisationService: NewAuthService(repos.AutorisationService),
+		Project:             NewProjectService(repos.Project),
 	}
 }

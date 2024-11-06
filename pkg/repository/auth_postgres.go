@@ -25,3 +25,11 @@ func (r *AuthPostgres) CreateUser(user taskFlow.User) (int, error) {
 	}
 	return id, nil
 }
+
+func (r *AuthPostgres) GetUser(username, password string) (taskFlow.User, error) {
+	var user taskFlow.User
+	query := fmt.Sprintf("SELECT user_id FROM %s WHERE username = $1 AND password = $2", UserTable)
+	err := r.db.Get(&user, query, username, password)
+
+	return user, err
+}

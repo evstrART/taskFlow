@@ -7,26 +7,32 @@ import (
 
 type AutorisationService interface {
 	CreateUser(user taskFlow.User) (int, error)
+	GetUser(username, password string) (taskFlow.User, error)
 }
 
-type TaskRepository interface {
+type Task interface {
 }
 
-type UserRepository interface {
+type User interface {
 }
 
-type ProjectRepository interface {
+type Project interface {
+	Create(ownerID int, project taskFlow.Project) (int, error)
+	GetAllProjects() ([]taskFlow.Project, error)
+	GetProjectById(id int) (taskFlow.Project, error)
+	DeleteProject(id int) error
 }
 
 type Repository struct {
 	AutorisationService
-	TaskRepository
-	UserRepository
-	ProjectRepository
+	Project
+	Task
+	User
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		AutorisationService: NewAuthPostgres(db),
+		Project:             NewProjectPostgres(db),
 	}
 }

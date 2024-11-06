@@ -13,7 +13,7 @@ const (
 	CommentTable       = "comments"
 	ActivityLogsTable  = "activitylogs"
 	TaskTagTable       = "task_tags"
-	ProjectMemberTable = "project_members"
+	ProjectMemberTable = "projectmembers"
 )
 
 type Config struct {
