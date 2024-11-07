@@ -11,6 +11,11 @@ type AutorisationService interface {
 }
 
 type Task interface {
+	CreateTask(projectId int, input taskFlow.Task) (int, error)
+	GetAllTasks(projectId int) ([]taskFlow.Task, error)
+	GetTask(projectId int, id int) (taskFlow.Task, error)
+	DeleteTask(projectId int, taskId int) error
+	UpdateTask(projectId int, taskId int, input taskFlow.UpdateTaskInput) error
 }
 
 type User interface {
@@ -35,5 +40,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		AutorisationService: NewAuthPostgres(db),
 		Project:             NewProjectPostgres(db),
+		Task:                NewTaskPostgres(db),
 	}
 }

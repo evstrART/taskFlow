@@ -12,6 +12,11 @@ type AutorisationService interface {
 }
 
 type Task interface {
+	CreateTask(projectId int, input taskFlow.Task) (int, error)
+	GetAllTasks(projectId int) ([]taskFlow.Task, error)
+	GetTask(projectId int, taskId int) (taskFlow.Task, error)
+	DeleteTask(projectId int, taskId int) error
+	UpdateTask(projectId int, taskId int, input taskFlow.UpdateTaskInput) error
 }
 
 type User interface {
@@ -36,5 +41,6 @@ func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		AutorisationService: NewAuthService(repos.AutorisationService),
 		Project:             NewProjectService(repos.Project),
+		Task:                NewTaskService(repos.Task, repos.Project),
 	}
 }

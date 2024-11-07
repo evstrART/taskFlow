@@ -33,6 +33,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			project.GET("/:id", h.getProjectById)
 			project.PUT("/:id", h.updateProject)
 			project.DELETE("/:id", h.deleteProject)
+
+			task := project.Group(":id/tasks")
+			task.POST("/", h.createTask)
+			task.GET("/", h.getAllTasks)
+			task.GET("/:task_id", h.getTaskById)
+			task.PUT("/:task_id", h.updateTask)
+			task.DELETE("/:task_id", h.deleteTask)
 		}
 	}
 
