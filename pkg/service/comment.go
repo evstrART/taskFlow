@@ -31,3 +31,7 @@ func (s *CommentService) GetAllCommentsForUser(userId int) ([]taskFlow.Comment, 
 func (s *CommentService) DeleteComment(commentId, userId int) error {
 	return s.repo.DeleteComment(commentId, userId)
 }
+
+func (s *CommentService) UpdateComment(commentId, userId int, input taskFlow.CommentInput) error {
+	return s.repo.UpdateComment(commentId, userId, input)
+}

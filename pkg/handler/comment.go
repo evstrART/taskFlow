@@ -98,5 +98,25 @@ func (h *Handler) deleteComment(c *gin.Context) {
 }
 
 func (h *Handler) updateComment(c *gin.Context) {
+	userID, err := getUserId(c)
+	if err != nil {
+		return
+	}
+	commentID, err := strconv.Atoi(c.Param("comment_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	var input taskFlow.CommentInput
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = h.services.UpdateComment(commentID, userID, input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
 
 }

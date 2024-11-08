@@ -65,3 +65,12 @@ func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
 	}
 	return nil
 }
+
+func (s *CommentPostgres) UpdateComment(commentId, userId int, input taskFlow.CommentInput) error {
+	query := fmt.Sprintf("UPDATE %s SET content = $1 WHERE comment_id = $2 AND user_id = $3", CommentTable)
+	_, err := s.db.Exec(query, input.Comment, commentId, userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

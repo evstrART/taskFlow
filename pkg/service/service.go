@@ -38,6 +38,7 @@ type Comment interface {
 	GetCommentById(taskId, id int) (taskFlow.Comment, error)
 	GetAllCommentsForUser(userId int) ([]taskFlow.Comment, error)
 	DeleteComment(commentId, userId int) error
+	UpdateComment(commentId, userId int, input taskFlow.CommentInput) error
 }
 type Tag interface {
 }
