@@ -34,8 +34,7 @@ func (r *TaskPostgres) CreateTask(projectId int, input taskFlow.Task) (int, erro
 
 func (r *TaskPostgres) GetAllTasks(projectId int) ([]taskFlow.Task, error) {
 	var tasks []taskFlow.Task
-	query := `SELECT * FROM Tasks WHERE project_id = $1`
-
+	query := fmt.Sprintf("SELECT * FROM %s WHERE project_id = $1", TaskTable)
 	err := r.db.Select(&tasks, query, projectId)
 	if err != nil {
 		return nil, err
@@ -46,8 +45,7 @@ func (r *TaskPostgres) GetAllTasks(projectId int) ([]taskFlow.Task, error) {
 
 func (r *TaskPostgres) GetTask(projectId int, taskId int) (taskFlow.Task, error) {
 	var task taskFlow.Task
-	query := `SELECT * FROM Tasks WHERE project_id = $1 AND task_id = $2`
-
+	query := fmt.Sprintf("SELECT * FROM %s WHERE project_id = $1 AND task_id = $2", TaskTable)
 	err := r.db.Get(&task, query, projectId, taskId)
 	if err != nil {
 		return taskFlow.Task{}, err
@@ -57,7 +55,7 @@ func (r *TaskPostgres) GetTask(projectId int, taskId int) (taskFlow.Task, error)
 }
 
 func (r *TaskPostgres) DeleteTask(projectId int, taskId int) error {
-	query := `DELETE FROM Tasks WHERE project_id = $1 AND task_id = $2`
+	query := fmt.Sprintf("DELETE FROM %s WHERE project_id = $1 AND task_id = $2", TaskTable)
 	_, err := r.db.Exec(query, projectId, taskId)
 	return err
 }
@@ -120,4 +118,15 @@ func (r *TaskPostgres) UpdateTask(projectId int, taskId int, input taskFlow.Upda
 	// Выполняем запрос
 	_, err := r.db.Exec(query, args...)
 	return err
+}
+
+func (r *TaskPostgres) GetAllTasksForUser(userID int) ([]taskFlow.Task, error) {
+	var tasks []taskFlow.Task
+	query := fmt.Sprintf("SELECT * FROM %s WHERE assigned_to = $1", TaskTable)
+	err := r.db.Select(&tasks, query, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
 }

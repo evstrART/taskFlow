@@ -170,7 +170,7 @@ func (r *ProjectPostgres) UpdateProject(id int, input taskFlow.UpdateProjectInpu
 	}
 
 	// Формируем полный запрос
-	query := fmt.Sprintf("UPDATE Projects SET %s, updated_at = NOW() WHERE project_id = $%d",
+	query := fmt.Sprintf("UPDATE %s SET %s, updated_at = NOW() WHERE project_id = $%d", ProjectTable,
 		setQuery, argId)
 	args = append(args, id)
 

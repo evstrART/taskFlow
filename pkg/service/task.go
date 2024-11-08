@@ -49,3 +49,6 @@ func (s *TaskService) UpdateTask(projectId int, taskId int, input taskFlow.Updat
 	}
 	return s.repo.UpdateTask(projectId, taskId, input)
 }
+func (s *TaskService) GetAllTasksForUser(userID int) ([]taskFlow.Task, error) {
+	return s.repo.GetAllTasksForUser(userID)
+}

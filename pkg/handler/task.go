@@ -101,3 +101,27 @@ func (h *Handler) getTaskById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, task)
 }
+
+func (h *Handler) getAllTasksForUser(c *gin.Context) {
+	userID, err := getUserId(c) // Используем вашу функцию для получения userID
+	if err != nil {
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"userId": userID,
+	})
+
+	tasks, err := h.services.Task.GetAllTasksForUser(userID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if len(tasks) == 0 {
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "No tasks found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, tasks)
+}

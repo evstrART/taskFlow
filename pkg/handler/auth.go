@@ -17,8 +17,14 @@ func (h *Handler) singIn(ctx *gin.Context) {
 		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
+	token, err := h.services.AutorisationService.GenerateToken(input.Username, input.Password)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"user_id": id,
+		"token":   token,
 	})
 }
 

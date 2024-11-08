@@ -16,6 +16,7 @@ type Task interface {
 	GetTask(projectId int, id int) (taskFlow.Task, error)
 	DeleteTask(projectId int, taskId int) error
 	UpdateTask(projectId int, taskId int, input taskFlow.UpdateTaskInput) error
+	GetAllTasksForUser(userID int) ([]taskFlow.Task, error)
 }
 
 type User interface {

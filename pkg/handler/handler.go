@@ -41,6 +41,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			task.PUT("/:task_id", h.updateTask)
 			task.DELETE("/:task_id", h.deleteTask)
 		}
+		tasks := api.Group("/tasks")
+		{
+			tasks.GET("/", h.getAllTasksForUser)
+		}
 	}
 
 	return router
