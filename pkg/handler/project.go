@@ -86,3 +86,26 @@ func (h *Handler) deleteProject(c *gin.Context) {
 		Status: "ok",
 	})
 }
+
+func (h *Handler) addMembers(c *gin.Context) {
+	projectId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+	var input taskFlow.AddMemberRequest
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = h.services.Project.AddMembers(projectId, userId, input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{"ok"})
+}

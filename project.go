@@ -24,3 +24,6 @@ type UpdateProjectInput struct {
 	EndDate     *string `json:"end_date"`
 	Status      *string `json:"status"`
 }
+type AddMemberRequest struct {
+	Role *string `json:"role"`
+}

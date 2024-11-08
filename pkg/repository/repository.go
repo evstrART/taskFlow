@@ -28,6 +28,7 @@ type Project interface {
 	GetProjectById(id int) (taskFlow.Project, error)
 	DeleteProject(id int) error
 	UpdateProject(id int, input taskFlow.UpdateProjectInput) error
+	AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error
 }
 
 type Repository struct {
