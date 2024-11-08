@@ -107,9 +107,6 @@ func (h *Handler) getAllTasksForUser(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"userId": userID,
-	})
 
 	tasks, err := h.services.Task.GetAllTasksForUser(userID)
 	if err != nil {

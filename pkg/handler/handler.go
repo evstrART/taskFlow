@@ -41,10 +41,22 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			task.GET("/:task_id", h.getTaskById)
 			task.PUT("/:task_id", h.updateTask)
 			task.DELETE("/:task_id", h.deleteTask)
+
+			comment := task.Group(":task_id/comments")
+			comment.POST("/", h.addCooment)
+			comment.GET("/", h.getAllComments)
+			comment.GET("/:comment_id", h.getCommentById)
+			comment.DELETE("/:comment_id", h.deleteComment)
+			comment.PUT("/:comment_id", h.updateComment)
 		}
 		tasks := api.Group("/tasks")
 		{
 			tasks.GET("/", h.getAllTasksForUser)
+		}
+		comments := api.Group("/comments")
+		{
+			comments.GET("/", h.getAllCommentsForUser)
+			comments.DELETE("/:comment_id", h.deleteComment)
 		}
 	}
 

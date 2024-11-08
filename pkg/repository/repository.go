@@ -21,6 +21,17 @@ type Task interface {
 
 type User interface {
 }
+type Comment interface {
+	AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error)
+	GetComments(taskId int) ([]taskFlow.Comment, error)
+	GetCommentById(taskId, id int) (taskFlow.Comment, error)
+	GetAllCommentsForUser(userId int) ([]taskFlow.Comment, error)
+	DeleteComment(commentId, userId int) error
+}
+type Tag interface {
+}
+type Log interface {
+}
 
 type Project interface {
 	Create(ownerID int, project taskFlow.Project) (int, error)
@@ -36,6 +47,9 @@ type Repository struct {
 	Project
 	Task
 	User
+	Comment
+	Tag
+	Log
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
@@ -43,5 +57,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		AutorisationService: NewAuthPostgres(db),
 		Project:             NewProjectPostgres(db),
 		Task:                NewTaskPostgres(db),
+		Comment:             NewCommentPostgres(db),
 	}
 }

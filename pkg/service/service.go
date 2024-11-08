@@ -32,11 +32,25 @@ type Project interface {
 	AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error
 }
 
+type Comment interface {
+	AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error)
+	GetComments(taskId int) ([]taskFlow.Comment, error)
+	GetCommentById(taskId, id int) (taskFlow.Comment, error)
+	GetAllCommentsForUser(userId int) ([]taskFlow.Comment, error)
+	DeleteComment(commentId, userId int) error
+}
+type Tag interface {
+}
+type Log interface {
+}
 type Service struct {
 	AutorisationService
 	Project
 	Task
 	User
+	Comment
+	Tag
+	Log
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -44,5 +58,6 @@ func NewService(repos *repository.Repository) *Service {
 		AutorisationService: NewAuthService(repos.AutorisationService),
 		Project:             NewProjectService(repos.Project),
 		Task:                NewTaskService(repos.Task, repos.Project),
+		Comment:             NewCommentService(repos.Comment),
 	}
 }
