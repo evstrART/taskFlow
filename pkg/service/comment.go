@@ -16,7 +16,6 @@ func NewCommentService(repo repository.Comment) *CommentService {
 func (s *CommentService) AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error) {
 	return s.repo.AddComment(taskId, userId, input)
 }
-
 func (s *CommentService) GetComments(taskId int) ([]taskFlow.Comment, error) {
 	return s.repo.GetComments(taskId)
 }
@@ -27,11 +26,9 @@ func (s *CommentService) GetCommentById(taskID, id int) (taskFlow.Comment, error
 func (s *CommentService) GetAllCommentsForUser(userId int) ([]taskFlow.Comment, error) {
 	return s.repo.GetAllCommentsForUser(userId)
 }
-
 func (s *CommentService) DeleteComment(commentId, userId int) error {
 	return s.repo.DeleteComment(commentId, userId)
 }
-
 func (s *CommentService) UpdateComment(commentId, userId int, input taskFlow.CommentInput) error {
 	return s.repo.UpdateComment(commentId, userId, input)
 }

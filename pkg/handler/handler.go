@@ -42,6 +42,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			task.PUT("/:task_id", h.updateTask)
 			task.DELETE("/:task_id", h.deleteTask)
 
+			tag := task.Group(":task_id/tags")
+			tag.GET("/", h.getTags)
+			tag.POST("/", h.createTag)
+			tag.DELETE("/:tag_id", h.deleteTag)
+			tag.PUT("/:tag_id", h.updateTag)
+
 			comment := task.Group(":task_id/comments")
 			comment.POST("/", h.addCooment)
 			comment.GET("/", h.getAllComments)
@@ -58,6 +64,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			comments.GET("/", h.getAllCommentsForUser)
 			comments.DELETE("/:comment_id", h.deleteComment)
 			comments.PUT("/:comment_id", h.updateComment)
+		}
+		tags := api.Group("/tags")
+		{
+			tags.GET("/", h.getAllTags)
 		}
 	}
 

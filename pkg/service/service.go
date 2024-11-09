@@ -41,6 +41,13 @@ type Comment interface {
 	UpdateComment(commentId, userId int, input taskFlow.CommentInput) error
 }
 type Tag interface {
+	CreateTag(taskId int, tag taskFlow.Tag) (int, error)
+	GetTags(taskId int) ([]taskFlow.Tag, error)
+	AddTag(taskId int, tag taskFlow.Tag) (int, error)
+	DeleteTag(tagId int) error
+	ChangeTag(taskId, newTag int) error
+	UpdateTag(tagId int, input taskFlow.TagInput) error
+	GetAllTags() ([]taskFlow.Tag, error)
 }
 type Log interface {
 }
@@ -60,5 +67,6 @@ func NewService(repos *repository.Repository) *Service {
 		Project:             NewProjectService(repos.Project),
 		Task:                NewTaskService(repos.Task, repos.Project),
 		Comment:             NewCommentService(repos.Comment),
+		Tag:                 NewTagService(repos.Tag),
 	}
 }
