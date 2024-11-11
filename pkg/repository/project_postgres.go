@@ -79,7 +79,6 @@ func (r *ProjectPostgres) GetAllProjects() ([]taskFlow.Project, error) {
 	var projects []taskFlow.Project
 	query := fmt.Sprintf("SELECT * FROM %s", ProjectTable)
 	err := r.db.Select(&projects, query)
-
 	return projects, err
 }
 

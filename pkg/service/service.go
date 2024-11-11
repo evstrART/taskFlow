@@ -21,6 +21,8 @@ type Task interface {
 }
 
 type User interface {
+	GetUser(userId int) (taskFlow.User, error)
+	GetUsers() ([]taskFlow.User, error)
 }
 
 type Project interface {
@@ -68,5 +70,6 @@ func NewService(repos *repository.Repository) *Service {
 		Task:                NewTaskService(repos.Task, repos.Project),
 		Comment:             NewCommentService(repos.Comment),
 		Tag:                 NewTagService(repos.Tag),
+		User:                NewUserService(repos.User),
 	}
 }

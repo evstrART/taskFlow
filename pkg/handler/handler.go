@@ -69,6 +69,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			tags.GET("/", h.getAllTags)
 		}
+		users := api.Group("/users")
+		{
+			users.GET("/", h.getUsers)
+			users.GET("/:user_id", h.getUser)
+		}
 	}
 
 	return router

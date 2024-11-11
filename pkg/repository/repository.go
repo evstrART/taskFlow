@@ -20,6 +20,8 @@ type Task interface {
 }
 
 type User interface {
+	GetUser(userId int) (taskFlow.User, error)
+	GetUsers() ([]taskFlow.User, error)
 }
 type Comment interface {
 	AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error)
@@ -67,5 +69,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Task:                NewTaskPostgres(db),
 		Comment:             NewCommentPostgres(db),
 		Tag:                 NewTagPostgres(db),
+		User:                NewUserPostgres(db),
 	}
 }
