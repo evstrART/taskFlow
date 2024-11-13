@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <link rel="stylesheet" href="/web/static/css/style.css">
+  <style>
+    /* Navbar стили */
+    .navbar {
+      background-color: #333;
+      padding: 10px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000; /* Сохраняем Navbar на переднем плане */
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      font-size: 1.1em;
+    }
+
+    .navbar a:hover {
+      background-color: #555;
+      border-radius: 4px;
+    }
+
+    .navbar .user-profile {
+      font-size: 1.2em;
+    }
+
+    /* Контейнер для всего содержимого, с отступом сверху для Navbar */
+    .container {
+      margin-top: 80px; /* Отступ сверху для контейнера, чтобы контент не перекрывался Navbar */
+      padding: 20px;
+    }
+
+    /* Контейнер для проектов */
+    .projects-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* Контейнер для каждого проекта */
+    .project-container {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .project-container:hover {
+      transform: scale(1.05);
+    }
+
+    /* Заголовок проекта */
+    .project-header {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* Стиль для информации о проекте */
+    .project-info {
+      margin-bottom: 10px;
+    }
+
+    .project-info strong {
+      color: #333;
+    }
+
+    .project-info span {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header id="navbar">
+  <div class="navbar">
+    <a href="/" id="home-link">Home</a>
+    <a href="/profile" id="profile-link" class="user-profile">Profile</a>
+  </div>
+</header>
+
+<!-- Контент страницы -->
+<div class="container">
+  <h2>Projects</h2>
+  <div id="projects-list" class="projects-container">
+    <!-- Список проектов будет отображаться здесь -->
+  </div>
+</div>
+
+<script>
+  // Скрипт для скрытия Navbar на главной странице
+  window.onload = function () {
+    const currentPage = window.location.pathname;
+
+    if (currentPage === "/") {
+      document.getElementById('navbar').style.display = 'none';
+    }
+
+    // Функция для получения проектов
+    fetchProjects();
+  };
+
+  // Функция для получения проектов
+  async function fetchProjects() {
+    const token = localStorage.getItem('token'); // Получаем токен из localStorage
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/projects', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Добавляем токен в заголовок
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error fetching projects');
+      }
+
+      const projects = await response.json();
+      displayProjects(projects);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  // Функция для отображения проектов
+  function displayProjects(projects) {
+    const projectsList = document.getElementById('projects-list');
+    projectsList.innerHTML = ''; // Очистить список перед добавлением новых данных
+
+    if (projects.length === 0) {
+      projectsList.innerHTML = '<p>No projects found</p>';
+      return;
+    }
+
+    projects.forEach(project => {
+      const projectDiv = document.createElement('div');
+      projectDiv.classList.add('project-container');
+
+      // Добавление обработчика клика для перехода на страницу проекта по ID
+      projectDiv.addEventListener('click', () => {
+        window.location.href = `/projects/${project.project_id}`;
+      });
+
+      projectDiv.innerHTML = `
+        <div class="project-header">${project.name}</div>
+        <div class="project-info">
+          <strong>Description:</strong> <span>${project.description || 'No description available'}</span>
+        </div>
+        <div class="project-info">
+          <strong>Start Date:</strong> <span>${new Date(project.start_date).toLocaleDateString()}</span>
+        </div>
+        <div class="project-info">
+          <strong>End Date:</strong> <span>${new Date(project.end_date).toLocaleDateString()}</span>
+        </div>
+        <div class="project-info">
+          <strong>Status:</strong> <span>${project.status}</span>
+        </div>
+        <div class="project-info">
+          <strong>Owner ID:</strong> <span>${project.owner_id}</span>
+        </div>
+      `;
+
+      projectsList.appendChild(projectDiv);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -25,6 +25,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	main := router.Group("/")
 	{
 		main.GET("/", h.mainGet) // Главная страница
+		main.GET("/projects", h.getProjectsPage)
 	}
 	auth := router.Group("/auth")
 	{

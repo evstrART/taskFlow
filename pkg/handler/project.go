@@ -109,3 +109,7 @@ func (h *Handler) addMembers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
+
+func (h *Handler) getProjectsPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "projects.html", gin.H{})
+}

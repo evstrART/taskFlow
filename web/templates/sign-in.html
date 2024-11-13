@@ -33,7 +33,7 @@
             const data = await response.json();
             localStorage.setItem('token', data.token); // Store JWT in local storage
 
-            window.location.href = '/'; // Redirect to main page
+            window.location.href = '/projects'; // Redirect to main page
         } catch (error) {
             errorMessage.textContent = error.message;
         }
