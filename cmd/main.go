@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/evstrART/taskFlow"
 	"github.com/evstrART/taskFlow/pkg/handler"
 	"github.com/evstrART/taskFlow/pkg/repository"
@@ -8,6 +9,9 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -34,9 +38,28 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(taskFlow.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalf("error occured while run http server: %s", err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			logrus.Fatalf("Error occurred while running HTTP server: %s", err.Error())
+		}
+	}()
+
+	logrus.Println("Server started")
+
+	// Graceful shutdown setup
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	logrus.Println("Shutting down server...")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Fatalf("Error occurred while shutting down server, %s", err.Error())
 	}
+	if err := db.Close(); err != nil {
+		logrus.Fatalf("Error occurred while closing database connection, %s", err.Error())
+	}
+
 }
 
 func InitConfig() error {

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/web/static/css/style.css">
+</head>
+<body>
+<div class="container">
+  <h2>Sign Up</h2>
+  <input type="text" id="username" placeholder="Username" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <button onclick="signUp()">Sign Up</button>
+  <div class="error-message" id="error-message"></div>
+  <p>Already have an account? <a href="/auth/sign-in">Sign In</a></p>
+</div>
+
+<script>
+  async function signUp() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const email = document.getElementById('email').value;
+    const errorMessage = document.getElementById('error-message');
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      errorMessage.textContent = "Passwords do not match.";
+      return;
+    }
+
+    try {
+      const response = await fetch('/auth/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, email })
+      });
+
+      if (!response.ok) throw new Error('Registration failed.');
+
+      window.location.href = '/auth/sign-in'; // Redirect to login page after signup
+    } catch (error) {
+      errorMessage.textContent = error.message;
+    }
+  }
+</script>
+</body>
+</html>

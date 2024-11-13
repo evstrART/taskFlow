@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (h *Handler) singIn(ctx *gin.Context) {
+func (h *Handler) signUp(ctx *gin.Context) {
 	var input taskFlow.User
 	if err := ctx.BindJSON(&input); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -33,7 +33,7 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"` // Пароль (в хэшированном виде).
 }
 
-func (h *Handler) singUp(ctx *gin.Context) {
+func (h *Handler) signIn(ctx *gin.Context) {
 	var input signInInput
 	if err := ctx.BindJSON(&input); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -47,4 +47,11 @@ func (h *Handler) singUp(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"token": token,
 	})
+}
+
+func (h *Handler) signInGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "sign-in.html", nil) // Отображаем страницу входа
+}
+func (h *Handler) signUpGet(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "sign-up.html", nil) // Отображаем страницу регистрации
 }

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    /* Основные стили */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+
+    /* Стили навигации */
+    .navbar {
+      width: 100%;
+      padding: 1em;
+      background-color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      color: #fff;
+    }
+
+    .navbar .buttons {
+      display: flex;
+      gap: 1em;
+    }
+
+    .navbar button {
+      padding: 0.5em 1em;
+      font-size: 1em;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .navbar button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Стили контейнера задач */
+    .task-container {
+      width: 90%;
+      max-width: 800px;
+      margin: 2em auto;
+    }
+
+    .task-container h2 {
+      margin-bottom: 1em;
+      color: #333;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-item h3 {
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    .task-item button {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .task-item button:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Навигация -->
+<div class="navbar">
+  <h1>Task Manager</h1>
+  <div class="buttons">
+    <button onclick="navigateTo('auth/sign-in')">Sign In</button>
+    <button onclick="navigateTo('auth/sign-up')">Sign Up</button>
+  </div>
+</div>
+
+<!-- Основной контейнер задач -->
+<div class="task-container">
+  <h2>Tasks for the Team</h2>
+  <div id="task-list" class="task-list">
+    <!-- Задачи будут добавляться здесь динамически через JavaScript -->
+  </div>
+</div>
+
+<script>
+  // Пример задач для отображения
+  const tasks = [
+    { id: 1, title: "Create user authentication", status: "In Progress" },
+    { id: 2, title: "Develop REST API for tasks", status: "Not Started" },
+    { id: 3, title: "Design task manager UI", status: "Completed" },
+  ];
+
+  // Функция для отображения задач
+  function loadTasks() {
+    const taskList = document.getElementById('task-list');
+    taskList.innerHTML = ''; // Очищаем список перед добавлением
+    tasks.forEach(task => {
+      const taskItem = document.createElement('div');
+      taskItem.className = 'task-item';
+      taskItem.innerHTML = `
+                    <h3>${task.title}</h3>
+                    <span>Status: ${task.status}</span>
+                    <button onclick="deleteTask(${task.id})">Delete</button>
+                `;
+      taskList.appendChild(taskItem);
+    });
+  }
+
+  // Функция для удаления задачи
+  function deleteTask(id) {
+    const index = tasks.findIndex(task => task.id === id);
+    if (index > -1) {
+      tasks.splice(index, 1);
+      loadTasks(); // Перезагружаем список задач после удаления
+    }
+  }
+
+  // Функция для навигации
+  function navigateTo(page) {
+    if (page === 'auth/sign-in') {
+      window.location.href = '/auth/sign-in';
+    } else if (page === 'auth/sign-up') {
+      window.location.href = '/auth/sign-up';
+    }
+  }
+
+  // Загрузка задач при загрузке страницы
+  window.onload = loadTasks;
+</script>
+
+</body>
+</html>

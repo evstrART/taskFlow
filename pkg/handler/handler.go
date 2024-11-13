@@ -18,10 +18,20 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	// Загрузка HTML-шаблонов
+	router.LoadHTMLGlob("web/templates/*html")
+	// Обслуживание статических файлов
+	router.Static("/web", "/Users/macbook/GolandProjects/taskFlow/web")
+	main := router.Group("/")
+	{
+		main.GET("/", h.mainGet) // Главная страница
+	}
 	auth := router.Group("/auth")
 	{
-		auth.POST("/sing-in", h.singIn)
-		auth.POST("/sing-up", h.singUp)
+		auth.GET("/sign-in", h.signInGet) // Маршрут для страницы входа
+		auth.POST("/sign-in", h.signIn)
+		auth.GET("/sign-up", h.signUpGet)
+		auth.POST("/sign-up", h.signUp)
 
 	}
 	api := router.Group("/api", h.userIdentity)
