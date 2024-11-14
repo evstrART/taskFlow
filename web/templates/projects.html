@@ -3,124 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects</title>
-  <link rel="stylesheet" href="/web/static/css/style.css">
-  <style>
-    /* Navbar стили */
-    .navbar {
-      background-color: #333;
-      padding: 10px 20px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000; /* Сохраняем Navbar на переднем плане */
-    }
-
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      padding: 8px 16px;
-      font-size: 1.1em;
-    }
-
-    .navbar a:hover {
-      background-color: #555;
-      border-radius: 4px;
-    }
-
-    .navbar .user-profile {
-      font-size: 1.2em;
-    }
-
-    /* Контейнер для всего содержимого, с отступом сверху для Navbar */
-    .container {
-      margin-top: 80px; /* Отступ сверху для контейнера, чтобы контент не перекрывался Navbar */
-      padding: 20px;
-    }
-
-    /* Контейнер для проектов */
-    .projects-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    /* Контейнер для каждого проекта */
-    .project-container {
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      padding: 20px;
-      width: 300px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-
-    .project-container:hover {
-      transform: scale(1.05);
-    }
-
-    /* Заголовок проекта */
-    .project-header {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    /* Стиль для информации о проекте */
-    .project-info {
-      margin-bottom: 10px;
-    }
-
-    .project-info strong {
-      color: #333;
-    }
-
-    .project-info span {
-      color: #555;
-    }
-  </style>
+  <title>Task Flow - Project Layout</title>
+  <!-- Подключение стилей -->
+  <link rel="stylesheet" href="/static/css/projects.css">
 </head>
 <body>
+<div class="layout">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow</div>
+    </div>
+    <div class="auth-buttons">
+      <!-- Кнопка профиля, которая меняет действие в зависимости от наличия токена -->
+      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<header id="navbar">
-  <div class="navbar">
-    <a href="/" id="home-link">Home</a>
-    <a href="/profile" id="profile-link" class="user-profile">Profile</a>
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/" class="home-link">Home</a></li>
+      <li class="current-page">Projects</li>
+    </ul>
   </div>
-</header>
 
-<!-- Контент страницы -->
-<div class="container">
-  <h2>Projects</h2>
-  <div id="projects-list" class="projects-container">
-    <!-- Список проектов будет отображаться здесь -->
-  </div>
+  <!-- Content -->
+  <main class="content-wrapper">
+    <!-- Sidebar for Projects -->
+    <div class="sider">
+      <h2>Projects:</h2>
+      <ul id="projects-list">
+        <li>Loading projects...</li>
+      </ul>
+    </div>
+
+    <div class="content">
+      Content Area
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
 </div>
 
+<!-- Подключение JavaScript -->
 <script>
-  // Скрипт для скрытия Navbar на главной странице
-  window.onload = function () {
-    const currentPage = window.location.pathname;
+  // Display current year in the footer
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-    if (currentPage === "/") {
-      document.getElementById('navbar').style.display = 'none';
-    }
-
-    // Функция для получения проектов
-    fetchProjects();
-  };
-
-  // Функция для получения проектов
   async function fetchProjects() {
-    const token = localStorage.getItem('token'); // Получаем токен из localStorage
+    const token = localStorage.getItem('token');
 
     if (!token) {
       alert("No token found. Please log in.");
@@ -128,11 +64,12 @@
     }
 
     try {
+      console.log('Fetching projects...');  // Для отладки
       const response = await fetch('/api/projects', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Добавляем токен в заголовок
+          'Authorization': `Bearer ${token}`
         }
       });
 
@@ -143,52 +80,46 @@
       const projects = await response.json();
       displayProjects(projects);
     } catch (error) {
+      console.error('Error:', error);  // Для отладки
       alert(error.message);
     }
   }
 
-  // Функция для отображения проектов
+  // Display project names in the sidebar
   function displayProjects(projects) {
     const projectsList = document.getElementById('projects-list');
-    projectsList.innerHTML = ''; // Очистить список перед добавлением новых данных
+    projectsList.innerHTML = '';
 
     if (projects.length === 0) {
-      projectsList.innerHTML = '<p>No projects found</p>';
+      projectsList.innerHTML = '<li>No projects found</li>';
       return;
     }
 
     projects.forEach(project => {
-      const projectDiv = document.createElement('div');
-      projectDiv.classList.add('project-container');
-
-      // Добавление обработчика клика для перехода на страницу проекта по ID
-      projectDiv.addEventListener('click', () => {
+      const projectItem = document.createElement('li');
+      projectItem.classList.add('project-item');
+      projectItem.textContent = project.name;
+      projectItem.addEventListener('click', () => {
         window.location.href = `/projects/${project.project_id}`;
       });
-
-      projectDiv.innerHTML = `
-        <div class="project-header">${project.name}</div>
-        <div class="project-info">
-          <strong>Description:</strong> <span>${project.description || 'No description available'}</span>
-        </div>
-        <div class="project-info">
-          <strong>Start Date:</strong> <span>${new Date(project.start_date).toLocaleDateString()}</span>
-        </div>
-        <div class="project-info">
-          <strong>End Date:</strong> <span>${new Date(project.end_date).toLocaleDateString()}</span>
-        </div>
-        <div class="project-info">
-          <strong>Status:</strong> <span>${project.status}</span>
-        </div>
-        <div class="project-info">
-          <strong>Owner ID:</strong> <span>${project.owner_id}</span>
-        </div>
-      `;
-
-      projectsList.appendChild(projectDiv);
+      projectsList.appendChild(projectItem);
     });
   }
-</script>
 
+  // Load projects on page load
+  window.onload = fetchProjects;
+
+  // Функция для редиректа на страницу профиля или на страницу входа
+  function redirectToProfile() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Если есть токен, перенаправить на страницу профиля
+      window.location.href = '/profile';  // Замените на актуальный путь к профилю
+    } else {
+      // Если нет токена, перенаправить на страницу входа
+      window.location.href = '/auth/sign-in';
+    }
+  }
+</script>
 </body>
 </html>

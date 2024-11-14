@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow - Project Details</title>
+  <!-- Подключение стилей -->
+  <link rel="stylesheet" href="/static/css/project.css">
+  <style>
+    /* Убираем выделение ссылки в слайдере */
+    #projects-list a {
+      text-decoration: none;
+      color: inherit; /* Оставляем цвет как у обычного текста */
+    }
+
+    /* Устанавливаем стиль для элемента списка */
+
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow</div>
+    </div>
+    <div class="auth-buttons">
+      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/" class="home-link">Home</a></li>
+      <li><a href="/projects" class="projects-link">Projects</a></li>
+      <li class="current-page" id="project-name">Loading Project...</li>
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <main class="content-wrapper">
+    <!-- Sidebar for Projects -->
+    <div class="sider">
+      <h2>Projects:</h2>
+      <ul id="projects-list">
+        <li>Loading projects...</li>
+      </ul>
+    </div>
+
+    <!-- Project Information Area -->
+    <div class="content">
+      <!-- Project Details Section -->
+      <div class="project-details">
+        <h2 id="project-title" class="project-title">Project Title</h2>
+        <p id="project-description" class="project-description">Project description will appear here...</p>
+
+        <div class="project-info">
+          <h3 class="section-title">Project Details</h3>
+          <div class="project-info-item">
+            <strong>Start Date:</strong> <span id="project-start-date">Loading...</span>
+          </div>
+          <div class="project-info-item">
+            <strong>End Date:</strong> <span id="project-end-date">Loading...</span>
+          </div>
+          <div class="project-info-item">
+            <strong>Status:</strong> <span id="project-status">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Section -->
+      <div class="tasks-section">
+        <h3 class="section-title">Tasks</h3>
+        <table id="tasks-list" class="tasks-table">
+          <thead>
+          <tr>
+            <th>Task Title</th>
+            <th>Status</th>
+            <th>Due Date</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr><td colspan="3">Loading tasks...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
+</div>
+
+<!-- Подключение JavaScript -->
+<script src="/web/js/project.js"></script>
+<script>
+  // Display current year in the footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Fetch project details
+  async function fetchProjectDetails(projectId) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      // Fetch project details
+      const projectResponse = await fetch(`/api/projects/${projectId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!projectResponse.ok) {
+        throw new Error('Error fetching project details');
+      }
+
+      const project = await projectResponse.json();
+      displayProjectDetails(project);
+
+      // Fetch tasks for the project
+      const tasksResponse = await fetch(`/api/projects/${projectId}/tasks`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!tasksResponse.ok) {
+        throw new Error('Error fetching tasks');
+      }
+
+      const tasks = await tasksResponse.json();
+      displayTasks(tasks);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message);
+    }
+  }
+
+  // Display project details
+  function displayProjectDetails(project) {
+    const projectTitle = document.getElementById('project-title');
+    const projectDescription = document.getElementById('project-description');
+    const projectNameInBreadcrumb = document.getElementById('project-name');
+    const projectStartDate = document.getElementById('project-start-date');
+    const projectEndDate = document.getElementById('project-end-date');
+    const projectStatus = document.getElementById('project-status');
+
+    projectTitle.textContent = project.name;
+    projectDescription.textContent = project.description || 'No description available';
+    projectNameInBreadcrumb.textContent = project.name;
+
+    projectStartDate.textContent = project.start_date || 'Not available';
+    projectEndDate.textContent = project.end_date || 'Not available';
+    projectStatus.textContent = project.status || 'Not available';
+  }
+
+  // Display tasks list in table
+  function displayTasks(tasks) {
+    const tasksList = document.getElementById('tasks-list').getElementsByTagName('tbody')[0];
+    tasksList.innerHTML = '';
+
+    if (tasks.length === 0) {
+      tasksList.innerHTML = '<tr><td colspan="3">No tasks found</td></tr>';
+      return;
+    }
+
+    tasks.forEach(task => {
+      const taskRow = document.createElement('tr');
+
+      const taskTitleCell = document.createElement('td');
+      const taskLink = document.createElement('a');
+      taskLink.textContent = task.title;
+      taskLink.href = `/projects/${task.project_id}/tasks/${task.task_id}`;
+      taskTitleCell.appendChild(taskLink);
+
+      const taskStatusCell = document.createElement('td');
+      taskStatusCell.textContent = task.status || 'Not available';
+
+      const taskDueDateCell = document.createElement('td');
+      taskDueDateCell.textContent = task.due_date || 'Not available';
+
+      taskRow.appendChild(taskTitleCell);
+      taskRow.appendChild(taskStatusCell);
+      taskRow.appendChild(taskDueDateCell);
+
+      tasksList.appendChild(taskRow);
+    });
+  }
+
+  // Display list of projects in the sidebar
+  async function fetchProjects() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/projects', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error fetching projects');
+      }
+
+      const projects = await response.json();
+      displayProjects(projects);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message);
+    }
+  }
+
+  // Display projects in sidebar
+  function displayProjects(projects) {
+    const projectsList = document.getElementById('projects-list');
+    projectsList.innerHTML = '';
+
+    if (projects.length === 0) {
+      projectsList.innerHTML = '<li>No projects found</li>';
+      return;
+    }
+
+    projects.forEach(project => {
+      const projectItem = document.createElement('li');
+      projectItem.classList.add('project-item');
+      projectItem.textContent = project.name;
+      projectItem.addEventListener('click', () => {
+        window.location.href = `/projects/${project.project_id}`;
+      });
+      projectsList.appendChild(projectItem);
+    });
+  }
+
+  // Extract project ID from URL and fetch data
+  window.onload = function() {
+    const projectId = window.location.pathname.split('/').pop();  // Get project ID from URL
+    if (projectId) {
+      fetchProjectDetails(projectId);  // Load project and tasks
+      fetchProjects(); // Load the list of projects in the sidebar
+    } else {
+      alert('Project ID is missing in the URL.');
+    }
+  };
+</script>
+</body>
+</html>

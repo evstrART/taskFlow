@@ -1,0 +1,232 @@
+/* Global styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Layout styling */
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #001529;
+    color: white;
+    padding: 0 20px;
+    height: 64px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.header .logo .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.header .auth-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.header .auth-buttons button {
+    background-color: #1890ff;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.header .auth-buttons button:hover {
+    background-color: #40a9ff;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    color: #555;
+    margin-left: 20px;
+}
+
+.breadcrumb li {
+    display: inline;
+}
+
+.breadcrumb li:after {
+    content: '/';
+    margin-left: 8px;
+    color: #aaa;
+}
+
+.breadcrumb li:last-child:after {
+    content: '';
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    padding: 24px;
+    background-color: #f0f2f5;
+}
+
+.sider {
+    width: 200px;
+    background-color: #001529;
+    color: white;
+    padding: 16px 0;
+}
+
+.sider h2 {
+    color: #fff;
+    font-size: 1.2em;
+    margin-bottom: 16px;
+    padding-left: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sider ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sider li {
+    padding: 12px 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.sider li:hover {
+    background-color: #1890ff;
+}
+
+.content {
+    flex: 1;
+    background-color: #fff;
+    padding: 24px;
+    margin-left: 24px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    text-align: center;
+    padding: 16px;
+    background-color: #001529;
+    color: white;
+}
+
+/* Project Details Section */
+.project-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.project-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #4CAF50;
+}
+
+.project-description {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.project-info {
+    margin-top: 20px;
+}
+
+.project-info-item {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.section-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Tasks Section */
+.tasks-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tasks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tasks-table th, .tasks-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tasks-table th {
+    background-color: #f4f4f4;
+    color: #555;
+    font-weight: bold;
+}
+
+.tasks-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.tasks-table td {
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        margin: 10px;
+    }
+
+    .tasks-table th, .tasks-table td {
+        padding: 8px;
+    }
+
+    .project-details {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.2em;
+    }
+}

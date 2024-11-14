@@ -21,11 +21,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	// Загрузка HTML-шаблонов
 	router.LoadHTMLGlob("web/templates/*html")
 	// Обслуживание статических файлов
-	router.Static("/web", "/Users/macbook/GolandProjects/taskFlow/web")
+	router.Static("/static", "./web/static")
 	main := router.Group("/")
 	{
 		main.GET("/", h.mainGet) // Главная страница
 		main.GET("/projects", h.getProjectsPage)
+		main.GET("/projects/:id", h.projectGet)
 	}
 	auth := router.Group("/auth")
 	{
