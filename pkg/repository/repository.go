@@ -50,6 +50,7 @@ type Project interface {
 	DeleteProject(id int) error
 	UpdateProject(id int, input taskFlow.UpdateProjectInput) error
 	AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error
+	GetMembers(projectId int) ([]taskFlow.User, error)
 }
 
 type Repository struct {

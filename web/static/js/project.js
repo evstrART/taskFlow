@@ -42,10 +42,61 @@ async function fetchProjectDetails(projectId) {
 
         const tasks = await tasksResponse.json();
         displayTasks(tasks);
+
+        // Fetch project members
+        await fetchProjectMembers(projectId); // Добавлено для загрузки участников
+
     } catch (error) {
         console.error('Error:', error);
         alert(error.message);
     }
+}
+
+// Fetch project members
+async function fetchProjectMembers(projectId) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/projects/${projectId}/members`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching project members');
+        }
+
+        const members = await response.json();
+        displayMembers(members);
+    } catch (error) {
+        console.error('Error fetching project members:', error);
+        alert(error.message);
+    }
+}
+
+// Display members in the team section
+function displayMembers(members) {
+    const teamList = document.getElementById('team-list');
+    teamList.innerHTML = ''; // Очищаем список перед добавлением новых участников
+
+    if (members.length === 0) {
+        teamList.innerHTML = '<li>No members found</li>';
+        return;
+    }
+
+    members.forEach(member => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${member.username} - ${member.role}`; // Выводим имя и роль
+        teamList.appendChild(listItem);
+    });
 }
 
 // Display project details
@@ -169,4 +220,15 @@ function editProject() {
 // Delete Project Function
 function deleteProject() {
     alert("Delete functionality is not yet implemented.");
+}
+
+function redirectToProfile() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        // Если есть токен, перенаправить на страницу профиля
+        window.location.href = '/profile';  // Замените на актуальный путь к профилю
+    } else {
+        // Если нет токена, перенаправить на страницу входа
+        window.location.href = '/auth/sign-in';
+    }
 }

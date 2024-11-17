@@ -109,3 +109,17 @@ func (h *Handler) addMembers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
+
+func (h *Handler) getMembers(c *gin.Context) {
+	projectId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	users, err := h.services.Project.GetMembers(projectId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}

@@ -1,0 +1,188 @@
+/* Global styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Layout styling */
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Гарантируем, что минимальная высота будет равна высоте экрана */
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #001529;
+    color: white;
+    padding: 0 20px;
+    height: 64px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.header .logo .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    color: #555;
+    margin-left: 20px;
+}
+
+.breadcrumb li {
+    display: inline;
+}
+
+.breadcrumb li:after {
+    content: '/';
+    margin-left: 8px;
+    color: #aaa;
+}
+
+.breadcrumb li:last-child:after {
+    content: '';
+}
+
+/* Profile card styling */
+.content-wrapper {
+    flex: 1; /* Занимает оставшееся пространство */
+    display: flex;
+    justify-content: center; /* Центрируем содержимое */
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+/* Delete button styling */
+.delete-buttons {
+    text-align: center; /* Центрируем кнопку */
+    margin-top: 20px; /* Отступ сверху для кнопки */
+}
+
+#delete-button {
+    background-color: #ff4d4f; /* Красный цвет фона */
+    border: none; /* Убираем рамку */
+    color: white; /* Цвет текста */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    font-size: 1em; /* Размер шрифта */
+    margin-bottom: 10px;
+    border-radius: 4px; /* Скругление углов */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+}
+
+#delete-button:hover {
+    background-color: #ff7875; /* Цвет фона при наведении (светлее красного) */
+}
+.profile-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Занимает всю ширину родительского контейнера */
+    max-width: 600px; /* Ограничиваем максимальную ширину */
+}
+
+/* User information styling */
+
+
+.user-info h2 {
+    font-size: 1.5em; /* Размер заголовка */
+    margin-bottom: 10px; /* Отступ снизу */
+    color: #333; /* Цвет текста */
+}
+
+.user-info p {
+    font-size: 1em; /* Размер текста */
+    margin: 5px 0; /* Отступы для абзацев */
+    color: #555; /* Цвет текста */
+}
+/* User information styling */
+.user-info {
+    margin-top: 20px; /* Отступ сверху */
+}
+
+.profile-info {
+    margin-bottom: 15px; /* Отступ снизу для каждого поля */
+}
+
+.profile-info label {
+    font-weight: bold; /* Жирный шрифт для меток */
+    color: #333; /* Цвет меток */
+}
+
+.profile-info p {
+    font-size: 1.1em; /* Увеличенный размер текста для информации */
+    margin: 5px 0; /* Отступы для абзацев */
+    color: #555; /* Цвет текста */
+    background: #e6f7ff; /* Светлый фон для выделения информации */
+    padding: 10px; /* Отступы внутри абзаца */
+    border-radius: 4px; /* Скругление углов */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень для выделения */
+}
+
+/* Остальная часть CSS остается без изменений */
+/* Button styling */
+.button-container {
+    text-align: center;
+    margin-top: 20px; /* Отступ сверху для кнопки */
+}
+
+.button-container button {
+    background-color: #1890ff; /* Цвет фона кнопки */
+    border: none; /* Убираем рамку */
+    color: white; /* Цвет текста */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    font-size: 1em; /* Размер шрифта */
+    border-radius: 4px; /* Скругление углов */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+}
+
+.button-container button:hover {
+    background-color: #40a9ff; /* Цвет фона при наведении */
+}
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    padding: 16px;
+    background-color: #001529;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-card {
+        margin: 10px;
+    }
+}

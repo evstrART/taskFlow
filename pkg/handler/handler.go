@@ -18,15 +18,14 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
-	// Загрузка HTML-шаблонов
 	router.LoadHTMLGlob("web/templates/*html")
-	// Обслуживание статических файлов
 	router.Static("/static", "./web/static")
 	main := router.Group("/")
 	{
 		main.GET("/", h.mainGet) // Главная страница
 		main.GET("/projects", h.getProjectsPage)
 		main.GET("/projects/:id", h.projectGet)
+		main.GET("/profile", h.profileGet)
 	}
 	auth := router.Group("/auth")
 	{
@@ -46,6 +45,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			project.PUT("/:id", h.updateProject)
 			project.DELETE("/:id", h.deleteProject)
 			project.POST("/:id", h.addMembers)
+
+			members := project.Group(":id/members")
+			members.GET("/", h.getMembers)
 
 			task := project.Group(":id/tasks")
 			task.POST("/", h.createTask)

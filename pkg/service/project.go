@@ -35,3 +35,6 @@ func (s *ProjectService) UpdateProject(id int, input taskFlow.UpdateProjectInput
 func (s *ProjectService) AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error {
 	return s.repo.AddMembers(projectId, userId, input)
 }
+func (s *ProjectService) GetMembers(projectId int) ([]taskFlow.User, error) {
+	return s.repo.GetMembers(projectId)
+}

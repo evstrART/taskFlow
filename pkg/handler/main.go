@@ -19,3 +19,6 @@ func (h *Handler) getProjectsPage(c *gin.Context) {
 		"breadcrumb": "Projects",
 	})
 }
+func (h *Handler) profileGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "profile.html", gin.H{})
+}

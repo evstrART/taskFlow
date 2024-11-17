@@ -191,3 +191,14 @@ func (r *ProjectPostgres) AddMembers(projectId, userId int, input taskFlow.AddMe
 	return nil
 
 }
+
+func (r *ProjectPostgres) GetMembers(projectId int) ([]taskFlow.User, error) {
+	var users []taskFlow.User
+	query := `
+		SELECT u.user_id, u.username, u.email, pm.role 
+		FROM ProjectMembers pm 
+	 JOIN Users u ON pm.user_id = u.user_id 
+		WHERE pm.project_id = $1`
+	err := r.db.Select(&users, query, projectId)
+	return users, err
+}

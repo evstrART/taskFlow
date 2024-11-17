@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow - User Profile</title>
+  <link rel="stylesheet" href="/static/css/profile.css">
+</head>
+<body>
+<div class="layout">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow</div>
+    </div>
+    <div class="delete-buttons">
+      <button id="delete-button" onclick="deleteProfile()">Delete Profile</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/" class="home-link">Home</a></li>
+      <li class="current-page" id="profile">Profile</li>
+    </ul>
+  </div>
+
+  <!-- Profile Content -->
+  <main class="content-wrapper">
+    <div class="profile-card">
+      <h2>User Profile</h2>
+      <div class="user-info">
+        <div class="profile-info">
+          <label for="username">Username:</label>
+          <p id="username">Loading...</p>
+        </div>
+        <div class="profile-info">
+          <label for="email">Email:</label>
+          <p id="email">Loading...</p>
+        </div>
+        <div class="profile-info">
+          <label for="role">Role:</label>
+          <p id="role">Loading...</p>
+        </div>
+      </div>
+      <div class="button-container">
+        <button onclick="editProfile()">Edit Profile</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
+</div>
+
+<!-- Подключение JavaScript -->
+<script src="/static/js/profile.js"></script>
+</body>
+</html>
