@@ -30,6 +30,7 @@ async function fetchProjects() {
         alert(error.message);
     }
 }
+
 // Display project names in the sidebar
 function displayProjects(projects) {
     const projectsList = document.getElementById('projects-list');
@@ -53,3 +54,15 @@ function displayProjects(projects) {
 
 // Load projects on page load
 window.onload = fetchProjects;
+
+// Функция для редиректа на страницу профиля или на страницу входа
+function redirectToProfile() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        // Если есть токен, перенаправить на страницу профиля
+        window.location.href = '/profile';  // Замените на актуальный путь к профилю
+    } else {
+        // Если нет токена, перенаправить на страницу входа
+        window.location.href = '/auth/sign-in';
+    }
+}
