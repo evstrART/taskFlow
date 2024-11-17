@@ -245,10 +245,11 @@ body, html {
 
 /* Tasks Section */
 .tasks-section {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Устанавливаем относительное позиционирование для контейнера */
+    padding: 20px; /* Отступы вокруг секции */
+    background-color: #fff; /* Цвет фона секции */
+    border-radius: 8px; /* Скругление углов */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Лёгкая тень для выделения */
 }
 
 .tasks-table {
@@ -294,4 +295,24 @@ body, html {
     .section-title {
         font-size: 1.2em;
     }
+}
+.add-buttons {
+    position: absolute; /* Позволяет позиционировать кнопку относительно родительского контейнера */
+    right: 20px; /* Отступ от правого края */
+    top: 20px; /* Отступ от верхнего края */
+}
+
+#add-button {
+    padding: 5px 10px; /* Уменьшаем отступы для меньшего размера */
+    background-color: #4CAF50; /* Зеленый цвет фона */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругление углов */
+    cursor: pointer; /* Курсор при наведении */
+    font-size: 0.9em; /* Уменьшаем размер шрифта */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+}
+
+#add-button:hover {
+    background-color: #45a049; /* Темнее зеленый цвет при наведении */
 }

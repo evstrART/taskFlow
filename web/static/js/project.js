@@ -232,3 +232,7 @@ function redirectToProfile() {
         window.location.href = '/auth/sign-in';
     }
 }
+
+function addTask(){
+    alert("add task")
+}
