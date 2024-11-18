@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Flow - Project Details</title>
-  <!-- Подключение стилей -->
   <link rel="stylesheet" href="/static/css/project.css">
-
 </head>
 <body>
 <div class="layout">
@@ -95,6 +93,17 @@
     <!-- Team Section -->
     <div class="team">
       <h2>Team</h2>
+      <button class="add-members-button" onclick="addMembers()">
+        <img src="/static/images/plus.png" alt="Add Members Icon">
+      </button>
+
+      <div id="add-member-modal" style="display:none;">
+        <h3>Add New Member</h3>
+        <input type="text" id="member-username" placeholder="Username" required>
+        <input type="text" id="member-role" placeholder="Role" required>
+        <button id="submit-member" onclick="submitMember()">Submit</button>
+        <button onclick="closeModal()">Cancel</button>
+      </div>
       <ul id="team-list">
         <li>Loading team members...</li>
       </ul>
@@ -107,7 +116,7 @@
   </footer>
 </div>
 
-<!-- Подключение JavaScript -->
 <script src="/static/js/project.js"></script>
+
 </body>
 </html>

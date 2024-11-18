@@ -232,7 +232,7 @@ function redirectToProfile() {
         window.location.href = '/auth/sign-in';
     }
 }
-
-function addTask(){
-    alert("add task")
+function addMembers(){
+    alert("add members")
 }
+

@@ -184,6 +184,7 @@ body, html {
     margin-left: 24px; /* Отступ от контента */
     display: flex;
     flex-direction: column; /* Вертикальная ориентация */
+    position: relative; /* Позволяет дочерним элементам быть позиционированными относительно этого контейнера */
 }
 
 .team h2 {
@@ -198,6 +199,25 @@ body, html {
 .team li {
     padding: 8px;
     border-bottom: 1px solid #ddd;
+}
+.add-members-button {
+    position: absolute; /* Позволяет разместить кнопку в правом верхнем углу */
+    top: 10px; /* Отступ сверху */
+    right: 10px; /* Отступ справа */
+    background: none; /* Убирает фон кнопки */
+    border: none; /* Убирает рамку */
+    cursor: pointer; /* Курсор при наведении */
+    padding: 5px; /* Уменьшенный отступ для кнопки */
+    transition: transform 0.2s; /* Плавный эффект при наведении */
+}
+
+.add-members-button img {
+    width: 30px; /* Уменьшение размера иконки */
+    height: 30px; /* Уменьшение размера иконки */
+}
+
+.add-members-button:hover {
+    transform: scale(1.1); /* Увеличение кнопки при наведении */
 }
 
 .footer {
