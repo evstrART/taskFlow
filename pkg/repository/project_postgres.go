@@ -35,6 +35,10 @@ func (r *ProjectPostgres) Create(ownerID int, project taskFlow.Project) (int, er
 		}
 	}()
 
+	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", ownerID))
+	if err != nil {
+		return 0, err
+	}
 	// Запрос для вставки проекта
 	query := fmt.Sprintf(`
         INSERT INTO %s (name, description, owner_id, start_date, end_date, status)
@@ -89,7 +93,7 @@ func (r *ProjectPostgres) GetProjectById(id int) (taskFlow.Project, error) {
 	return project, err
 }
 
-func (r *ProjectPostgres) DeleteProject(id int) error {
+func (r *ProjectPostgres) DeleteProject(userID, id int) error {
 	tx, err := r.db.Beginx()
 	if err != nil {
 		return err
@@ -103,7 +107,10 @@ func (r *ProjectPostgres) DeleteProject(id int) error {
 			}
 		}
 	}()
-
+	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID))
+	if err != nil {
+		return err
+	}
 	// Запрос для удаления проекта
 	query := fmt.Sprintf(`DELETE FROM %s WHERE project_id = $1`, ProjectTable)
 	_, err = tx.Exec(query, id)
@@ -126,7 +133,7 @@ func (r *ProjectPostgres) DeleteProject(id int) error {
 	return nil
 }
 
-func (r *ProjectPostgres) UpdateProject(id int, input taskFlow.UpdateProjectInput) error {
+func (r *ProjectPostgres) UpdateProject(userID, id int, input taskFlow.UpdateProjectInput) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1
@@ -173,13 +180,35 @@ func (r *ProjectPostgres) UpdateProject(id int, input taskFlow.UpdateProjectInpu
 		setQuery, argId)
 	args = append(args, id)
 
+	// Начинаем транзакцию
+	tx, err := r.db.Beginx()
+	if err != nil {
+		return err
+	}
+
+	// Устанавливаем user_id из JWT токена
+	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID))
+	if err != nil {
+		return err
+	}
+
 	// Логирование
 	logrus.Debugf("updateQuery: %s", query)
 	logrus.Debugf("args: %v", args)
 
 	// Выполняем запрос
-	_, err := r.db.Exec(query, args...)
-	return err
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		tx.Rollback() // Откат транзакции в случае ошибки
+		return err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *ProjectPostgres) AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error {

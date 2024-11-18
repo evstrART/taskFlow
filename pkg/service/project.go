@@ -25,12 +25,12 @@ func (s *ProjectService) GetProjectById(id int) (taskFlow.Project, error) {
 	return s.repo.GetProjectById(id)
 }
 
-func (s *ProjectService) DeleteProject(id int) error {
-	return s.repo.DeleteProject(id)
+func (s *ProjectService) DeleteProject(userID, id int) error {
+	return s.repo.DeleteProject(userID, id)
 }
 
-func (s *ProjectService) UpdateProject(id int, input taskFlow.UpdateProjectInput) error {
-	return s.repo.UpdateProject(id, input)
+func (s *ProjectService) UpdateProject(userId, id int, input taskFlow.UpdateProjectInput) error {
+	return s.repo.UpdateProject(userId, id, input)
 }
 func (s *ProjectService) AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error {
 	return s.repo.AddMembers(projectId, userId, input)

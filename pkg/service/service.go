@@ -29,8 +29,8 @@ type Project interface {
 	Create(ownerID int, project taskFlow.Project) (int, error)
 	GetAllProjects() ([]taskFlow.Project, error)
 	GetProjectById(id int) (taskFlow.Project, error)
-	DeleteProject(id int) error
-	UpdateProject(id int, input taskFlow.UpdateProjectInput) error
+	DeleteProject(userID, id int) error
+	UpdateProject(userId, id int, input taskFlow.UpdateProjectInput) error
 	AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error
 	GetMembers(projectId int) ([]taskFlow.User, error)
 }

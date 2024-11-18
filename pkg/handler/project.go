@@ -57,13 +57,17 @@ func (h *Handler) updateProject(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
 		return
 	}
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
 	var input taskFlow.UpdateProjectInput
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = h.services.Project.UpdateProject(id, input)
+	err = h.services.Project.UpdateProject(userId, id, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -77,7 +81,11 @@ func (h *Handler) deleteProject(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
 		return
 	}
-	err = h.services.Project.DeleteProject(id)
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+	err = h.services.Project.DeleteProject(userId, id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
