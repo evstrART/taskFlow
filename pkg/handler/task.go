@@ -8,6 +8,7 @@ import (
 )
 
 func (h *Handler) createTask(c *gin.Context) {
+	userID, err := getUserId(c)
 	projectId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
@@ -18,7 +19,7 @@ func (h *Handler) createTask(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.services.Task.CreateTask(projectId, input)
+	id, err := h.services.Task.CreateTask(userID, projectId, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -29,6 +30,10 @@ func (h *Handler) createTask(c *gin.Context) {
 }
 
 func (h *Handler) updateTask(c *gin.Context) {
+	userID, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid user id")
+	}
 	projectID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -44,7 +49,7 @@ func (h *Handler) updateTask(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = h.services.Task.UpdateTask(projectID, taskID, input)
+	err = h.services.Task.UpdateTask(userID, projectID, taskID, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
@@ -53,6 +58,10 @@ func (h *Handler) updateTask(c *gin.Context) {
 	})
 }
 func (h *Handler) deleteTask(c *gin.Context) {
+	userID, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
 	projectID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -63,7 +72,7 @@ func (h *Handler) deleteTask(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	err = h.services.Task.DeleteTask(projectID, taskID)
+	err = h.services.Task.DeleteTask(userID, projectID, taskID)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "task not found")
 		return

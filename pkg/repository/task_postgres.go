@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/evstrART/taskFlow"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"strings"
 )
 
@@ -15,7 +16,7 @@ func NewTaskPostgres(db *sqlx.DB) *TaskPostgres {
 	return &TaskPostgres{db: db}
 }
 
-func (r *TaskPostgres) CreateTask(projectId int, input taskFlow.Task) (int, error) {
+func (r *TaskPostgres) CreateTask(userID, projectId int, input taskFlow.Task) (int, error) {
 	var taskID int
 
 	query := `
@@ -23,9 +24,34 @@ func (r *TaskPostgres) CreateTask(projectId int, input taskFlow.Task) (int, erro
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
         RETURNING task_id`
 
-	// Выполняем запрос и возвращаем идентификатор созданной задачи
-	err := r.db.QueryRow(query, projectId, input.Title, input.Description, input.AssignedTo, input.Status, input.Priority, input.DueDate).Scan(&taskID)
+	// Начинаем транзакцию
+	tx, err := r.db.Begin()
 	if err != nil {
+		return 0, err
+	}
+
+	// Обеспечиваем откат в случае ошибки
+	defer func() {
+		if err != nil {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("failed to rollback transaction: %v", rbErr)
+			}
+		}
+	}()
+
+	// Устанавливаем локальный user_id (без параметров)
+	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID)); err != nil {
+		return 0, err
+	}
+
+	// Выполняем запрос и возвращаем идентификатор созданной задачи
+	err = tx.QueryRow(query, projectId, input.Title, input.Description, input.AssignedTo, input.Status, input.Priority, input.DueDate).Scan(&taskID)
+	if err != nil {
+		return 0, err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
 		return 0, err
 	}
 
@@ -54,13 +80,43 @@ func (r *TaskPostgres) GetTask(projectId int, taskId int) (taskFlow.Task, error)
 	return task, nil
 }
 
-func (r *TaskPostgres) DeleteTask(projectId int, taskId int) error {
+func (r *TaskPostgres) DeleteTask(userID, projectId, taskId int) error {
+	// Начинаем транзакцию
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Обеспечиваем откат в случае ошибки
+	defer func() {
+		if err != nil {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("failed to rollback transaction: %v", rbErr)
+			}
+		}
+	}()
+
+	// Устанавливаем локальный user_id
+	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID)); err != nil {
+		return err
+	}
+
+	// Запрос для удаления задачи
 	query := fmt.Sprintf("DELETE FROM %s WHERE project_id = $1 AND task_id = $2", TaskTable)
-	_, err := r.db.Exec(query, projectId, taskId)
-	return err
+	_, err = tx.Exec(query, projectId, taskId)
+	if err != nil {
+		return err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (r *TaskPostgres) UpdateTask(projectId int, taskId int, input taskFlow.UpdateTaskInput) error {
+func (r *TaskPostgres) UpdateTask(userID, projectId, taskId int, input taskFlow.UpdateTaskInput) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1
@@ -115,9 +171,31 @@ func (r *TaskPostgres) UpdateTask(projectId int, taskId int, input taskFlow.Upda
 
 	args = append(args, projectId, taskId)
 
+	// Начинаем транзакцию
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Устанавливаем локальный user_id
+	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID)); err != nil {
+		tx.Rollback() // Откат в случае ошибки
+		return err
+	}
+
 	// Выполняем запрос
-	_, err := r.db.Exec(query, args...)
-	return err
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		tx.Rollback() // Откат в случае ошибки
+		return err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *TaskPostgres) GetAllTasksForUser(userID int) ([]taskFlow.Task, error) {

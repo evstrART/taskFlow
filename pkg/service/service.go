@@ -12,11 +12,11 @@ type AutorisationService interface {
 }
 
 type Task interface {
-	CreateTask(projectId int, input taskFlow.Task) (int, error)
+	CreateTask(userID, projectId int, input taskFlow.Task) (int, error)
 	GetAllTasks(projectId int) ([]taskFlow.Task, error)
 	GetTask(projectId int, taskId int) (taskFlow.Task, error)
-	DeleteTask(projectId int, taskId int) error
-	UpdateTask(projectId int, taskId int, input taskFlow.UpdateTaskInput) error
+	DeleteTask(userID, projectId int, taskId int) error
+	UpdateTask(userID, projectId int, taskId int, input taskFlow.UpdateTaskInput) error
 	GetAllTasksForUser(userId int) ([]taskFlow.Task, error)
 }
 
