@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) addCooment(c *gin.Context) {
-	userID, err := getUserId(c) // Используем вашу функцию для получения userID
+	userID, err := getUserId(c)
 	if err != nil {
 		return
 	}
