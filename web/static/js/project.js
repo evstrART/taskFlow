@@ -218,8 +218,52 @@ function editProject() {
 }
 
 // Delete Project Function
-function deleteProject() {
-    alert("Delete functionality is not yet implemented.");
+async function deleteProject(projectId) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+    // Получаем ID проекта из URL
+    const urlParts = window.location.href.split('/');
+    const idString = urlParts[urlParts.length - 1]; // Последний элемент в URL
+    const id = parseInt(idString, 10); // Преобразование в целое число
+
+    // Проверка, является ли id действительным целым числом
+    if (isNaN(id)) {
+        alert('Invalid project ID');
+        return;
+    }
+
+    const url = `http://localhost:8080/api/projects/${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            // Обработка ошибок
+            const errorData = await response.json();
+            throw new Error(`Error: ${errorData.message} (Status: ${response.status})`);
+        }
+
+        // Успешное удаление
+        const successData = await response.json();
+        console.log(`Project ${id} deleted successfully:`, successData);
+        alert(`Project ${id} deleted successfully.`);
+        // Перенаправление или обновление страницы после удаления
+        window.location.href = '/projects'; // Замените на нужный вам адрес
+    } catch (error) {
+        // Обработка ошибки
+        console.error(`Failed to delete project: ${error.message}`);
+        alert(`Failed to delete project: ${error.message}`);
+    }
 }
 
 function redirectToProfile() {
@@ -234,5 +278,9 @@ function redirectToProfile() {
 }
 function addMembers(){
     alert("add members")
+}
+
+function addTask(){
+    alert("add task")
 }
 
