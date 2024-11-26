@@ -98,6 +98,12 @@ function displayMembers(members) {
         teamList.appendChild(listItem);
     });
 }
+function formatDate(isoDate) {
+    if (!isoDate) return 'Not available'; // Проверка на наличие даты
+    const date = new Date(isoDate);
+    const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
+    return date.toLocaleDateString('ru-RU', options);
+}
 
 // Display project details
 function displayProjectDetails(project) {
@@ -112,8 +118,8 @@ function displayProjectDetails(project) {
     projectDescription.textContent = project.description || 'No description available';
     projectNameInBreadcrumb.textContent = project.name;
 
-    projectStartDate.textContent = project.start_date || 'Not available';
-    projectEndDate.textContent = project.end_date || 'Not available';
+    projectStartDate.textContent = formatDate(project.start_date);
+    projectEndDate.textContent = formatDate(project.end_date);
     projectStatus.textContent = project.status || 'Not available';
 }
 
