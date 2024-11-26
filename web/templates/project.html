@@ -69,6 +69,36 @@
         </button>
       </div>
 
+      <!-- Модальное окно -->
+      <div id="editProjectModal" class="modal">
+        <div class="modal-content">
+          <h2>Редактировать проект</h2>
+          <form id="editProjectForm" onsubmit="event.preventDefault(); editProject();">
+            <label for="projectName">Название:</label>
+            <input type="text" id="projectName">
+
+            <label for="projectDescription">Описание:</label>
+            <textarea id="projectDescription"></textarea>
+
+            <label for="projectStartDate">Дата начала:</label>
+            <input type="date" id="projectStartDate">
+
+            <label for="projectEndDate">Дата окончания:</label>
+            <input type="date" id="projectEndDate">
+
+            <label for="projectStatus">Статус:</label>
+            <select id="projectStatus">
+              <option value="">Выберите статус</option>
+              <option value="Активный">Активный</option>
+              <option value="Завершённый">Завершённый</option>
+              <option value="На удержании">На удержании</option>
+            </select>
+
+            <button type="submit">Сохранить изменения</button>
+            <button type="button" onclick="closeModal()">Закрыть</button>
+          </form>
+        </div>
+      </div>
       <!-- Tasks Section -->
       <div class="tasks-section">
         <h3 class="section-title">Tasks</h3>

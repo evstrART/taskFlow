@@ -213,9 +213,77 @@ window.onload = function() {
 };
 
 // Edit Project Function
-function editProject() {
-    alert("Edit functionality is not yet implemented.");
+// Функция для открытия модального окна
+function openModal() {
+    document.getElementById('editProjectModal').style.display = 'flex';
 }
+
+// Функция для закрытия модального окна
+function closeModal() {
+    document.getElementById('editProjectModal').style.display = 'none';
+}
+
+// Функция для редактирования проекта
+async function editProject() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+    const urlParts = window.location.href.split('/');
+    const idString = urlParts[urlParts.length - 1];
+    const id = parseInt(idString, 10);
+
+    if (isNaN(id)) {
+        alert('Invalid project ID');
+        return;
+    }
+
+    const name = document.getElementById('projectName').value;
+    const description = document.getElementById('projectDescription').value;
+    const startDate = document.getElementById('projectStartDate').value;
+    const endDate = document.getElementById('projectEndDate').value;
+    const status = document.getElementById('projectStatus').value;
+
+    const input = {
+        name: name ? name : null,
+        description: description ? description : null,
+        start_date: startDate ? startDate : null,
+        end_date: endDate ? endDate : null,
+        status: status ? status : null,
+    };
+
+    const url = `http://localhost:8080/api/projects/${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(input)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error: ${errorData.message} (Status: ${response.status})`);
+        }
+
+        const successData = await response.json();
+        console.log(`Project ${id} updated successfully:`, successData);
+        alert(`Project ${id} updated successfully.`);
+        closeModal(); // Закрываем модальное окно
+        window.location.href = `/projects/${id}`; // Перенаправление на страницу проекта
+    } catch (error) {
+        console.error(`Failed to update project: ${error.message}`);
+        alert(`Failed to update project: ${error.message}`);
+    }
+}
+
+// Добавляем обработчик события для кнопки редактирования
+document.querySelector('.edit-button').onclick = openModal;
 
 // Delete Project Function
 async function deleteProject(projectId) {
