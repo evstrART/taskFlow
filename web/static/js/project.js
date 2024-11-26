@@ -113,8 +113,8 @@ function displayMembers(members) {
 function formatDate(isoDate) {
     if (!isoDate) return 'Not available'; // Проверка на наличие даты
     const date = new Date(isoDate);
-    const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
-    return date.toLocaleDateString('ru-RU', options);
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' }; // Используем 'numeric' для полного года
+    return date.toLocaleDateString('ru-RU', options).replace(/\./g, '.'); // Заменяем точки, если нужно
 }
 
 // Display project details
@@ -152,13 +152,15 @@ function displayTasks(tasks) {
         const taskLink = document.createElement('a');
         taskLink.textContent = task.title;
         taskLink.href = `/projects/${task.project_id}/tasks/${task.task_id}`;
+        taskLink.style.textDecoration = 'none'; // Убираем подчеркивание ссылки
+        taskLink.style.color = 'inherit'; // Наследуем цвет текста от родителя
         taskTitleCell.appendChild(taskLink);
 
         const taskStatusCell = document.createElement('td');
         taskStatusCell.textContent = task.status || 'Not available';
 
         const taskDueDateCell = document.createElement('td');
-        taskDueDateCell.textContent = task.due_date || 'Not available';
+        taskDueDateCell.textContent = formatDate(task.due_date); // Используем функцию formatDate
 
         taskRow.appendChild(taskTitleCell);
         taskRow.appendChild(taskStatusCell);
