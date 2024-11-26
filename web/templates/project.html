@@ -72,6 +72,7 @@
       <!-- Модальное окно -->
       <div id="editProjectModal" class="modal">
         <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
           <h2>Редактировать проект</h2>
           <form id="editProjectForm" onsubmit="event.preventDefault(); editProject();">
             <label for="projectName">Название:</label>
@@ -120,6 +121,43 @@
       </div>
     </div>
 
+    <div id="addTaskModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Добавить новую задачу</h2>
+        <form id="addTaskForm" onsubmit="event.preventDefault(); addTask();">
+          <label for="taskTitle">Название задачи:</label>
+          <input type="text" id="taskTitle" required>
+
+          <label for="taskDescription">Описание:</label>
+          <textarea id="taskDescription"></textarea>
+
+          <label for="taskAssignedTo">Назначить (User ID):</label>
+          <input type="number" id="taskAssignedTo">
+
+          <label for="taskStatus">Статус:</label>
+          <select id="taskStatus" required>
+            <option value="Pending">В ожидании</option>
+            <option value="In Progress">В процессе</option>
+            <option value="Completed">Завершено</option>
+          </select>
+
+          <label for="taskPriority">Приоритет:</label>
+          <select id="taskPriority" required>
+            <option value="Low">Низкий</option>
+            <option value="Medium">Средний</option>
+            <option value="High">Высокий</option>
+          </select>
+
+          <label for="taskDueDate">Срок выполнения:</label>
+          <input type="date" id="taskDueDate" required>
+
+          <button type="submit">Добавить задачу</button>
+          <button type="button" onclick="closeModal()">Закрыть</button>
+        </form>
+      </div>
+    </div>
+
     <!-- Team Section -->
     <div class="team">
       <h2>Team</h2>
@@ -145,6 +183,8 @@
     © <span id="year"></span> Created by Task Flow Team
   </footer>
 </div>
+
+
 
 <script src="/static/js/project.js"></script>
 

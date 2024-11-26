@@ -218,15 +218,22 @@ window.onload = function() {
     }
 };
 
-// Edit Project Function
-// Функция для открытия модального окна
-function openModal() {
-    document.getElementById('editProjectModal').style.display = 'flex';
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
 }
 
-// Функция для закрытия модального окна
 function closeModal() {
-    document.getElementById('editProjectModal').style.display = 'none';
+    const modals = document.getElementsByClassName('modal');
+    for (let modal of modals) {
+        modal.style.display = 'none';
+    }
+}
+
+function openAddTaskModal() {
+    openModal('addTaskModal');
+}
+function openEditProjectModal() {
+    openModal('editProjectModal');
 }
 
 // Функция для редактирования проекта
@@ -289,7 +296,8 @@ async function editProject() {
 }
 
 // Добавляем обработчик события для кнопки редактирования
-document.querySelector('.edit-button').onclick = openModal;
+document.querySelector('.edit-button').onclick = openEditProjectModal;
+document.querySelector('#add-button').onclick = openAddTaskModal;
 
 // Delete Project Function
 async function deleteProject(projectId) {
