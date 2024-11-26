@@ -85,7 +85,11 @@ async function fetchProjectMembers(projectId) {
 // Display members in the team section
 function displayMembers(members) {
     const teamList = document.getElementById('team-list');
-    teamList.innerHTML = ''; // Очищаем список перед добавлением новых участников
+    const assignedToSelect = document.getElementById('taskAssignedTo');
+
+    // Очищаем список участников
+    teamList.innerHTML = '';
+    assignedToSelect.innerHTML = '<option value="">Выберите участника</option>'; // Сбрасываем предыдущие значения
 
     if (members.length === 0) {
         teamList.innerHTML = '<li>No members found</li>';
@@ -93,11 +97,19 @@ function displayMembers(members) {
     }
 
     members.forEach(member => {
+        // Добавляем участника в список
         const listItem = document.createElement('li');
         listItem.textContent = `${member.username} - ${member.role}`; // Выводим имя и роль
         teamList.appendChild(listItem);
+
+        // Добавляем участника в выпадающий список
+        const option = document.createElement('option');
+        option.value = member.user_id; // Предполагается, что id участника доступен
+        option.textContent = member.username; // Имя участника
+        assignedToSelect.appendChild(option);
     });
 }
+
 function formatDate(isoDate) {
     if (!isoDate) return 'Not available'; // Проверка на наличие даты
     const date = new Date(isoDate);
@@ -362,7 +374,64 @@ function addMembers(){
     alert("add members")
 }
 
-function addTask(){
-    alert("add task")
+function addTask() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    // Получаем ID проекта из URL
+    const urlParts = window.location.href.split('/');
+    const idString = urlParts[urlParts.length - 1];
+    const projectId = parseInt(idString, 10); // Преобразование в целое число
+
+    // Сбор данных из формы
+    const taskTitle = document.getElementById('taskTitle').value;
+    const taskDescription = document.getElementById('taskDescription').value;
+
+    // Получаем ID пользователя и преобразуем в целое число
+    const taskAssignedTo = parseInt(document.getElementById('taskAssignedTo').value, 10);
+
+    const taskStatus = document.getElementById('taskStatus').value;
+    const taskPriority = document.getElementById('taskPriority').value;
+    const taskDueDate = new Date(document.getElementById('taskDueDate').value).toISOString()
+
+    // Создание объекта задачи
+    const taskData = {
+        title: taskTitle,
+        description: taskDescription,
+        assigned_to: taskAssignedTo, // Теперь это целое число
+        status: taskStatus,
+        priority: taskPriority,
+        due_date: taskDueDate
+    };
+
+    // Отправка POST-запроса
+    fetch(`http://localhost:8080/api/projects/${projectId}/tasks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Указываем, что отправляем JSON
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(taskData) // Преобразуем объект в строку JSON
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(`Ошибка ${response.status}: ${err.message || 'Unknown error'}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Task added successfully:', data);
+            closeModal(); // Закрываем модальное окно
+            location.reload(); // Перезагружаем страницу
+        })
+        .catch(error => {
+            console.error('Error adding task:', error);
+        });
 }
 

@@ -133,7 +133,10 @@
           <textarea id="taskDescription"></textarea>
 
           <label for="taskAssignedTo">Назначить (User ID):</label>
-          <input type="number" id="taskAssignedTo">
+          <select id="taskAssignedTo" required>
+            <option value="">Выберите участника</option>
+            <!-- Список участников будет добавлен здесь динамически -->
+          </select>
 
           <label for="taskStatus">Статус:</label>
           <select id="taskStatus" required>
