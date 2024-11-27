@@ -25,5 +25,6 @@ type UpdateProjectInput struct {
 	Status      *string `json:"status"`
 }
 type AddMemberRequest struct {
-	Role *string `json:"role"`
+	UserId *int    `json:"user_id" binding:"required"`
+	Role   *string `json:"role" binding:"required"`
 }

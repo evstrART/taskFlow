@@ -211,9 +211,9 @@ func (r *ProjectPostgres) UpdateProject(userID, id int, input taskFlow.UpdatePro
 	return nil
 }
 
-func (r *ProjectPostgres) AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error {
+func (r *ProjectPostgres) AddMembers(projectId int, input taskFlow.AddMemberRequest) error {
 	query := fmt.Sprintf("INSERT INTO %s (project_id, user_id, role) VALUES ($1, $2, $3)", ProjectMemberTable)
-	_, err := r.db.Exec(query, projectId, userId, input.Role)
+	_, err := r.db.Exec(query, projectId, input.UserId, input.Role)
 	if err != nil {
 		return fmt.Errorf("failed to add member to project: %w", err)
 	}

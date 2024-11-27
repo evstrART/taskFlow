@@ -139,16 +139,16 @@
 
           <label for="taskStatus">Статус:</label>
           <select id="taskStatus" required>
-            <option value="Pending">В ожидании</option>
-            <option value="In Progress">В процессе</option>
-            <option value="Completed">Завершено</option>
+            <option value="В ожидании">В ожидании</option>
+            <option value="В процессе">В процессе</option>
+            <option value="Завершено">Завершено</option>
           </select>
 
           <label for="taskPriority">Приоритет:</label>
           <select id="taskPriority" required>
-            <option value="Low">Низкий</option>
-            <option value="Medium">Средний</option>
-            <option value="High">Высокий</option>
+            <option value="Низкий">Низкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Высокий">Высокий</option>
           </select>
 
           <label for="taskDueDate">Срок выполнения:</label>
@@ -166,17 +166,35 @@
       <button class="add-members-button" onclick="addMembers()">
         <img src="/static/images/plus.png" alt="Add Members Icon">
       </button>
-
-      <div id="add-member-modal" style="display:none;">
-        <h3>Add New Member</h3>
-        <input type="text" id="member-username" placeholder="Username" required>
-        <input type="text" id="member-role" placeholder="Role" required>
-        <button id="submit-member" onclick="submitMember()">Submit</button>
-        <button onclick="closeModal()">Cancel</button>
-      </div>
       <ul id="team-list">
         <li>Loading team members...</li>
       </ul>
+    </div>
+    <div id="addMemberModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Добавить участника</h2>
+        <form id="addMemberForm" onsubmit="event.preventDefault(); addMembers();">
+          <label for="memberId">Выберете пользователя:</label>
+          <select id="memberId" required>
+            <option value="">Выберите участника</option>
+          </select>
+
+          <label for="role">Роль:</label>
+          <select id="role" required>
+            <option value="Разработчик">Разработчик</option>
+            <option value="Дизайнер">Дизайнер</option>
+            <option value="Тестировщик">Тестировщик</option>
+            <option value="Системный архитектор">Системный архитектор</option>
+            <option value="Проектный менеджер">Проектный менеджер</option>
+            <option value="DevOps">DevOps</option>
+            <option value="Бизнес-аналитик ">Бизнес-аналитик</option>
+          </select>
+
+          <button type="submit">Добавить участника</button>
+          <button type="button" onclick="closeModal()">Закрыть</button>
+        </form>
+      </div>
     </div>
   </main>
 

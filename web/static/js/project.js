@@ -61,6 +61,45 @@ async function fetchProjectDetails(projectId) {
         alert(error.message);
     }
 }
+async function fetchAllUsers(){
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+    try {
+        const response = await fetch(`http://localhost:8080/api/users`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching users');
+        }
+
+        const users = await response.json();
+        displayUsers(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        alert(error.message);
+    }
+
+}
+function displayUsers(users){
+    const addMembersSelect = document.getElementById('memberId');
+    addMembersSelect.innerHTML = '<option value="">Выберите пользователя</option>'
+
+    users.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.user_id; // Предполагается, что id участника доступен
+        option.textContent = user.username; // Имя участника
+        addMembersSelect.appendChild(option);
+    });
+}
 
 // Fetch project members
 async function fetchProjectMembers(projectId) {
@@ -97,9 +136,11 @@ function displayMembers(members) {
     const teamList = document.getElementById('team-list');
     const assignedToSelect = document.getElementById('taskAssignedTo');
 
+
     // Очищаем список участников
     teamList.innerHTML = '';
     assignedToSelect.innerHTML = '<option value="">Выберите участника</option>'; // Сбрасываем предыдущие значения
+
 
     if (members.length === 0) {
         teamList.innerHTML = '<li>No members found</li>';
@@ -117,6 +158,7 @@ function displayMembers(members) {
         option.value = member.user_id; // Предполагается, что id участника доступен
         option.textContent = member.username; // Имя участника
         assignedToSelect.appendChild(option);
+
     });
 }
 
@@ -252,6 +294,10 @@ function closeModal() {
         modal.style.display = 'none';
     }
 }
+function openAddMemberModal(){
+    fetchAllUsers();
+    openModal('addMemberModal');
+}
 
 function openAddTaskModal() {
     openModal('addTaskModal');
@@ -322,6 +368,7 @@ async function editProject() {
 // Добавляем обработчик события для кнопки редактирования
 document.querySelector('.edit-button').onclick = openEditProjectModal;
 document.querySelector('#add-button').onclick = openAddTaskModal;
+document.querySelector('.add-members-button').onclick= openAddMemberModal;
 
 // Delete Project Function
 async function deleteProject(projectId) {
@@ -382,8 +429,53 @@ function redirectToProfile() {
         window.location.href = '/auth/sign-in';
     }
 }
-function addMembers(){
-    alert("add members")
+function addMembers() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    const urlParts = window.location.href.split('/');
+    const idString = urlParts[urlParts.length - 1];
+    const projectId = parseInt(idString, 10); // Преобразование в целое число
+
+    const memberId = parseInt(document.getElementById('memberId').value, 10);
+    const role = document.getElementById('role').value;
+
+    console.log("Selected Member ID:", memberId);
+    console.log("Selected Role:", role);
+    
+    const memberData = {
+        project_id: projectId,
+        user_id: memberId,
+        role: role
+    };
+
+    fetch(`http://localhost:8080/api/projects/${projectId}/members`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Указываем, что отправляем JSON
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(memberData) // Исправлено на memberData
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Member added successfully!");
+            closeModal(); // Закрываем модальное окно
+            location.reload(); // Перезагружаем страницу
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            alert("Failed to add member. Please try again.");
+        });
 }
 
 function addTask() {

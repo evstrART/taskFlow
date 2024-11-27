@@ -101,16 +101,12 @@ func (h *Handler) addMembers(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
 		return
 	}
-	userId, err := getUserId(c)
-	if err != nil {
-		return
-	}
 	var input taskFlow.AddMemberRequest
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = h.services.Project.AddMembers(projectId, userId, input)
+	err = h.services.Project.AddMembers(projectId, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

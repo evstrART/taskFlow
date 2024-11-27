@@ -32,8 +32,8 @@ func (s *ProjectService) DeleteProject(userID, id int) error {
 func (s *ProjectService) UpdateProject(userId, id int, input taskFlow.UpdateProjectInput) error {
 	return s.repo.UpdateProject(userId, id, input)
 }
-func (s *ProjectService) AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error {
-	return s.repo.AddMembers(projectId, userId, input)
+func (s *ProjectService) AddMembers(projectId int, input taskFlow.AddMemberRequest) error {
+	return s.repo.AddMembers(projectId, input)
 }
 func (s *ProjectService) GetMembers(projectId int) ([]taskFlow.User, error) {
 	return s.repo.GetMembers(projectId)

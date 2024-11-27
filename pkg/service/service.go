@@ -31,7 +31,7 @@ type Project interface {
 	GetProjectById(id int) (taskFlow.Project, error)
 	DeleteProject(userID, id int) error
 	UpdateProject(userId, id int, input taskFlow.UpdateProjectInput) error
-	AddMembers(projectId, userId int, input taskFlow.AddMemberRequest) error
+	AddMembers(projectId int, input taskFlow.AddMemberRequest) error
 	GetMembers(projectId int) ([]taskFlow.User, error)
 }
 

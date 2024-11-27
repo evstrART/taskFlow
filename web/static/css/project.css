@@ -403,6 +403,7 @@ body, html {
 .modal-content input[type="date"],
 .modal-content select,
 .modal-content textarea {
+    font-family: Arial, sans-serif;
     width: 100%; /* Ширина 100% для всех полей ввода */
     padding: 10px; /* Отступы внутри полей */
     margin-bottom: 15px; /* Отступы между полями */
@@ -437,6 +438,7 @@ body, html {
     transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона и эффекта при наведении */
     width: 100%; /* Ширина кнопки 100% */
     margin-top: 10px;
+
 }
 
 .modal-content button:hover {
@@ -484,14 +486,7 @@ body, html {
     outline: none; /* Убираем обводку при фокусе */
 }
 
-/* Стиль для индикатора выбора даты в WebKit браузерах */
-.modal-content input[type="date"]::-webkit-calendar-picker-indicator {
-    background-color: #007bff; /* Цвет иконки выбора даты */
-    border-radius: 50%; /* Закругление иконки */
-    padding: 5px; /* Отступы для иконки */
-}
-
 /* Стили для индикации невалидного состояния */
 .modal-content input[type="date"]:invalid {
-    border-color: red; /* Красная граница для невалидного состояния */
+    border-color: red;
 }
