@@ -1,6 +1,16 @@
 // Display current year in the footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('projectStartDate').setAttribute('min', today);
+
+document.getElementById('taskDueDate').setAttribute('min', today);
+// Обновление минимальной даты окончания при выборе даты начала
+document.getElementById('projectStartDate').addEventListener('change', function() {
+    const startDate = this.value;
+    document.getElementById('projectEndDate').setAttribute('min', startDate);
+});
+
 // Fetch project details
 async function fetchProjectDetails(projectId) {
     const token = localStorage.getItem('token');

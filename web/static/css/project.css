@@ -456,12 +456,42 @@ body, html {
     float: right;
     font-size: 28px;
     font-weight: bold;
-    cursor: pointer; /* Указатель при наведении */
+    cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
-    cursor: pointer; /* Указатель при наведении */
+    cursor: pointer;
+}
+
+.modal-content input[type="date"] {
+    padding: 10px; /* Отступы внутри поля */
+    margin-bottom: 15px; /* Отступы между полями */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 16px; /* Размер шрифта */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине */
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+    background-color: #fff; /* Цвет фона */
+    font-family: Arial, sans-serif;
+}
+
+/* Эффект при фокусе на поле date picker */
+.modal-content input[type="date"]:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем обводку при фокусе */
+}
+
+/* Стиль для индикатора выбора даты в WebKit браузерах */
+.modal-content input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #007bff; /* Цвет иконки выбора даты */
+    border-radius: 50%; /* Закругление иконки */
+    padding: 5px; /* Отступы для иконки */
+}
+
+/* Стили для индикации невалидного состояния */
+.modal-content input[type="date"]:invalid {
+    border-color: red; /* Красная граница для невалидного состояния */
 }
