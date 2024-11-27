@@ -490,3 +490,15 @@ body, html {
 .modal-content input[type="date"]:invalid {
     border-color: red;
 }
+
+.table-container {
+    max-height: 190px; /* Максимальная высота для прокрутки */
+    overflow-y: auto; /* Вертикальный скролл */
+    margin-top: 20px; /* Отступ сверху */
+    width: 100%; /* Занимает всю ширину родителя */
+}
+
+.tasks-table {
+    width: 100%; /* Занимает всю ширину родителя */
+    border-collapse: collapse; /* Убирает двойные границы */
+}

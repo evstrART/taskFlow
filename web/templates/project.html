@@ -100,25 +100,39 @@
           </form>
         </div>
       </div>
+
       <!-- Tasks Section -->
       <div class="tasks-section">
         <h3 class="section-title">Tasks</h3>
         <div class="add-buttons">
           <button id="add-button" onclick="addTask()">Add Task</button>
         </div>
-        <table id="tasks-list" class="tasks-table">
-          <thead>
-          <tr>
-            <th>Task Title</th>
-            <th>Status</th>
-            <th>Due Date</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr><td colspan="3">Loading tasks...</td></tr>
-          </tbody>
-        </table>
+        <div class="table-container"> <!-- Контейнер для прокрутки -->
+          <table id="tasks-list" class="tasks-table">
+            <thead>
+            <tr>
+              <th>Task Title</th>
+              <th>Status</th>
+              <th>Due Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td colspan="3">Loading tasks...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
+
+    <!-- Team Section, вынесенная из контента -->
+    <div class="team">
+      <h2>Team</h2>
+      <button class="add-members-button" onclick="addMembers()">
+        <img src="/static/images/plus.png" alt="Add Members Icon">
+      </button>
+      <ul id="team-list">
+        <li>Loading team members...</li>
+      </ul>
     </div>
 
     <div id="addTaskModal" class="modal">
@@ -160,16 +174,6 @@
       </div>
     </div>
 
-    <!-- Team Section -->
-    <div class="team">
-      <h2>Team</h2>
-      <button class="add-members-button" onclick="addMembers()">
-        <img src="/static/images/plus.png" alt="Add Members Icon">
-      </button>
-      <ul id="team-list">
-        <li>Loading team members...</li>
-      </ul>
-    </div>
     <div id="addMemberModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -203,8 +207,6 @@
     © <span id="year"></span> Created by Task Flow Team
   </footer>
 </div>
-
-
 
 <script src="/static/js/project.js"></script>
 
