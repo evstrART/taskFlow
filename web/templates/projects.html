@@ -32,15 +32,24 @@
   <!-- Content -->
   <main class="content-wrapper">
     <!-- Sidebar for Projects -->
-    <div class="sider">
-      <h2>Projects:</h2>
-      <ul id="projects-list">
-        <li>Loading projects...</li>
-      </ul>
-    </div>
 
     <div class="content">
-      Content Area
+      <div class="head-project">
+        <h2>My Projects:</h2>
+        <button type="add-project">New Project</button>
+      </div>
+      <ul id="projects-list">
+        <!-- Пример элемента списка проекта -->
+        <li class="project-item">
+          <div class="project-info">
+            <h3>Project Title</h3>
+            <p>Description of the project goes here. This can include details about the project.</p>
+            <span class="project-date">Created on: 2024-11-29</span>
+          </div>
+          <button class="view-button">View Project</button>
+        </li>
+        <!-- Конец примера -->
+      </ul>
     </div>
   </main>
 

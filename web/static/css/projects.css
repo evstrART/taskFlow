@@ -141,3 +141,90 @@ body, html {
     background-color: #001529;
     color: white;
 }
+
+.head-project {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5; /* Светлый фон */
+    padding: 15px 20px; /* Отступы */
+    border-radius: 5px; /* Закругленные углы */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для глубины */
+}
+
+.head-project h2 {
+    color: #007BFF; /* Цвет заголовка */
+    font-size: 1.5em; /* Размер шрифта */
+    margin: 0; /* Убираем отступы */
+}
+
+button[type="add-project"] {
+    background-color: #00BFFF; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Закругленные углы */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    font-size: 1em; /* Размер шрифта */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+button[type="add-project"]:hover {
+    background-color: #0099CC; /* Цвет фона кнопки при наведении */
+}
+
+#projects-list {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding: 0; /* Убираем отступы */
+    margin: 20px 0; /* Отступы сверху и снизу */
+}
+
+.project-item {
+    background-color: #ffffff; /* Белый фон для элемента проекта */
+    border: 1px solid #e0e0e0; /* Светлая граница */
+    border-radius: 5px; /* Закругленные углы */
+    padding: 15px; /* Отступы внутри элемента */
+    margin-bottom: 10px; /* Отступ между элементами */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для визуального отделения */
+    transition: transform 0.2s; /* Плавный переход для эффекта при наведении */
+}
+
+.project-item:hover {
+    transform: scale(1.02); /* Увеличение при наведении */
+}
+
+.project-info {
+    margin-bottom: 10px; /* Отступ между информацией и кнопкой */
+}
+
+.project-info h3 {
+    color: #007BFF; /* Цвет заголовка */
+    margin: 0; /* Убираем отступы */
+    font-size: 1.25em; /* Размер шрифта заголовка */
+}
+
+.project-info p {
+    color: #555; /* Цвет текста описания */
+    margin: 5px 0; /* Отступы сверху и снизу */
+}
+
+.project-date {
+    display: block; /* Отображаем как блочный элемент */
+    font-size: 0.9em; /* Уменьшенный размер шрифта */
+    color: #888; /* Серый цвет для даты */
+}
+
+.view-button {
+    background-color: #00BFFF; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Закругленные углы */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    font-size: 1em; /* Размер шрифта */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.view-button:hover {
+    background-color: #0099CC; /* Цвет фона кнопки при наведении */
+}

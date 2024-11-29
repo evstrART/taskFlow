@@ -1,6 +1,13 @@
 // Display current year in the footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
+function formatDate(isoDate) {
+    if (!isoDate) return 'Not available'; // Проверка на наличие даты
+    const date = new Date(isoDate);
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' }; // Используем 'numeric' для полного года
+    return date.toLocaleDateString('ru-RU', options).replace(/\./g, '.'); // Заменяем точки, если нужно
+}
+
 async function fetchProjects() {
     const token = localStorage.getItem('token');
 
@@ -44,14 +51,25 @@ function displayProjects(projects) {
     projects.forEach(project => {
         const projectItem = document.createElement('li');
         projectItem.classList.add('project-item');
-        projectItem.textContent = project.name;
-        projectItem.addEventListener('click', () => {
+
+        projectItem.innerHTML = `
+            <div class="project-info">
+                <h3>${project.name}</h3>
+                <p>${project.description || 'No description available.'}</p>
+                <span class="project-date">Created on: ${formatDate(project.created_at)}</span>
+            </div>
+            <button class="view-button">View Project</button>
+        `;
+
+        // Добавление обработчика событий для кнопки
+        const viewButton = projectItem.querySelector('.view-button');
+        viewButton.addEventListener('click', () => {
             window.location.href = `/projects/${project.project_id}`;
         });
+
         projectsList.appendChild(projectItem);
     });
 }
-
 // Load projects on page load
 window.onload = fetchProjects;
 
