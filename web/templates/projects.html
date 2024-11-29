@@ -44,7 +44,7 @@
           <div class="project-info">
             <h3>Project Title</h3>
             <p>Description of the project goes here. This can include details about the project.</p>
-            <span class="project-date">Created on: 2024-11-29</span>
+            <span class="project-date">Created on:</span>
           </div>
           <button class="view-button">View Project</button>
         </li>
@@ -52,6 +52,35 @@
       </ul>
     </div>
   </main>
+
+  <div id="addProjectModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Add New Project</h2>
+      <form id="addProjectForm">
+        <label for="projectName">Project Name:</label>
+        <input type="text" id="projectName" required>
+
+        <label for="projectDescription">Description:</label>
+        <textarea id="projectDescription"></textarea>
+
+        <label for="projectStatus">Status:</label>
+        <select id="projectStatus" required>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="on-hold">On Hold</option>
+        </select>
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" required>
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" required>
+
+        <button type="submit">Add Project</button>
+      </form>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">

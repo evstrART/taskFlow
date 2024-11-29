@@ -192,8 +192,8 @@ function displayTasks(tasks) {
     const tasksList = document.getElementById('tasks-list').getElementsByTagName('tbody')[0];
     tasksList.innerHTML = '';
 
-    if (tasks.length === 0) {
-        tasksList.innerHTML = '<tr><td colspan="3">No tasks found</td></tr>';
+    if (!Array.isArray(tasks) || tasks.length === 0) {
+        tasksList.innerHTML = '<tr><td colspan="3">Задачи не найдены</td></tr>';
         return;
     }
 
@@ -446,7 +446,7 @@ function addMembers() {
 
     console.log("Selected Member ID:", memberId);
     console.log("Selected Role:", role);
-    
+
     const memberData = {
         project_id: projectId,
         user_id: memberId,

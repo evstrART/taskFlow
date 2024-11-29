@@ -1,6 +1,15 @@
 // Display current year in the footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('startDate').setAttribute('min', today);
+document.getElementById('endDate').setAttribute('min', today);
+
+document.getElementById('startDate').addEventListener('change', function() {
+    const startDate = this.value;
+    document.getElementById('endDate').setAttribute('min', startDate);
+});
+
 function formatDate(isoDate) {
     if (!isoDate) return 'Not available'; // Проверка на наличие даты
     const date = new Date(isoDate);
@@ -82,5 +91,76 @@ function redirectToProfile() {
     } else {
         // Если нет токена, перенаправить на страницу входа
         window.location.href = '/auth/sign-in';
+    }
+}
+
+// Открытие модального окна
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+// Закрытие модального окна
+function closeModal() {
+    const modals = document.getElementsByClassName('modal');
+    for (let modal of modals) {
+        modal.style.display = 'none';
+    }
+}
+
+// Открытие модального окна для добавления проекта
+const addProjectButton = document.querySelector('button[type="add-project"]');
+addProjectButton.onclick = function() {
+    openModal('addProjectModal');
+}
+
+// Закрытие модального окна при нажатии на крестик
+const closeModalButton = document.getElementById('closeModal');
+closeModalButton.onclick = closeModal;
+
+// Закрытие модального окна при клике вне содержимого
+window.onclick = function(event) {
+    const modal = document.getElementById('addProjectModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+// Обработка отправки формы
+document.getElementById('addProjectForm').onsubmit = async function(event) {
+    event.preventDefault(); // Предотвращаем перезагрузку страницы
+
+    const token = localStorage.getItem('token');
+    const name = document.getElementById('projectName').value;
+    const description = document.getElementById('projectDescription').value;
+    const status = document.getElementById('projectStatus').value;
+    const startDate = document.getElementById('startDate').value + 'T00:00:00Z'; // Добавляем временную метку
+    const endDate = document.getElementById('endDate').value + 'T00:00:00Z'; // Добавляем временную метку
+
+    try {
+        const response = await fetch('/api/projects', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: name,
+                description: description,
+                status: status,
+                start_date: startDate, // Добавляем дату начала
+                end_date: endDate      // Добавляем дату окончания
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json(); // Получаем данные об ошибке
+            throw new Error(errorData.message || 'Failed to create project');
+        }
+
+        closeModal(); // Закрываем модальное окно
+        document.getElementById('addProjectForm').reset(); // Очищаем форму
+        fetchProjects(); // Обновляем список проектов
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
     }
 }

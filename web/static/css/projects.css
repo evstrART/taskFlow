@@ -133,6 +133,8 @@ body, html {
     margin-left: 24px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-height: 650px;
+    overflow-y: auto;
 }
 
 .footer {
@@ -180,6 +182,7 @@ button[type="add-project"]:hover {
 }
 
 .project-item {
+    overflow-y: auto;
     background-color: #ffffff; /* Белый фон для элемента проекта */
     border: 1px solid #e0e0e0; /* Светлая граница */
     border-radius: 5px; /* Закругленные углы */
@@ -227,4 +230,103 @@ button[type="add-project"]:hover {
 
 .view-button:hover {
     background-color: #0099CC; /* Цвет фона кнопки при наведении */
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Темный фон для контраста */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Модальное окно выше других элементов */
+}
+
+.modal-content {
+    background: white;
+    padding: 30px; /* Увеличенные отступы */
+    border-radius: 10px; /* Скругленные углы */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Тень для глубины */
+    width: 400px; /* Ширина модального окна */
+    max-width: 90%; /* Максимальная ширина для мобильных устройств */
+    position: relative; /* Чтобы z-index работал */
+}
+
+.modal-content h2 {
+    margin: 0 0 20px; /* Отступы для заголовка */
+    font-size: 24px; /* Размер шрифта заголовка */
+    color: #333; /* Цвет заголовка */
+    text-align: center; /* Центрирование текста заголовка */
+    font-weight: bold; /* Жирный шрифт для заголовка */
+}
+
+.modal-content label {
+    display: block; /* Отображение меток как блоков */
+    margin: 10px 0 5px; /* Отступы для меток */
+    font-weight: bold; /* Жирный шрифт для меток */
+    color: #555; /* Цвет меток */
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content select,
+.modal-content textarea {
+    font-family: Arial, sans-serif;
+    width: 100%; /* Ширина 100% для всех полей ввода */
+    padding: 10px; /* Отступы внутри полей */
+    margin-bottom: 15px; /* Отступы между полями */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 16px; /* Размер шрифта */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине */
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="date"]:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем обводку при фокусе */
+}
+
+.modal-content textarea {
+    resize: vertical; /* Позволяет изменять размер вертикально */
+    min-height: 100px; /* Минимальная высота текстовой области */
+}
+
+.modal-content button {
+    background-color: #007bff; /* Основной цвет кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругление углов кнопки */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 16px; /* Размер шрифта кнопки */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона и эффекта при наведении */
+    width: 100%; /* Ширина кнопки 100% */
+    margin-top: 10px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3; /* Цвет кнопки при наведении */
+    transform: translateY(-2px); /* Легкий подъем кнопки при наведении */
+}
+
+.modal-content button[type="button"] {
+    background-color: #ccc; /* Цвет кнопки "Закрыть" */
+}
+
+.modal-content button[type="button"]:hover {
+    background-color: #bbb; /* Цвет кнопки "Закрыть" при наведении */
+}
+
+.close {
+    color: #aaa; /* Цвет кнопки закрытия */
+    float: right;
+    font-size: 28px; /* Размер шрифта кнопки закрытия */
+    font-weight: bold;
+    cursor: pointer; /* Указатель при наведении */
 }
