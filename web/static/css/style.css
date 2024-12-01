@@ -1,54 +1,241 @@
-/* General styling for both forms */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* Global styling */
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-}
-
-.container {
-    width: 350px;
-    padding: 2em;
-    background: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    text-align: center;
-}
-
-h2 {
-    margin-bottom: 1.5em;
-    font-size: 24px;
-    color: #333;
-}
-
-input[type="text"], input[type="password"], input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 0;
     box-sizing: border-box;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Layout styling */
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #001529;
     color: white;
+    padding: 0 20px;
+    height: 64px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.header .logo .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.header .auth-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.header .auth-buttons button {
+    background-color: #1890ff;
     border: none;
-    border-radius: 5px;
+    color: white;
+    padding: 8px 16px;
+    font-size: 1em;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #45a049;
+.header .auth-buttons button:hover {
+    background-color: #40a9ff;
 }
 
-.error-message {
-    color: red;
-    font-size: 0.9em;
+/* Breadcrumb styling */
+.breadcrumb {
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    color: #555;
+    margin-left: 20px;
+}
+
+.breadcrumb li {
+    display: inline;
+}
+
+.breadcrumb li:after {
+    content: '/';
+    margin-left: 8px;
+    color: #aaa;
+}
+
+.breadcrumb li:last-child:after {
+    content: '';
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    padding: 24px;
+    background-color: #f0f2f5;
+}
+
+.content {
+    flex: 1;
+    background-color: #fff;
+    padding: 24px;
+    margin-left: 24px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-height: 650px;
+    overflow-y: auto;
+}
+
+.footer {
+    text-align: center;
+    padding: 16px;
+    background-color: #001529;
+    color: white;
+}
+
+
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Темный фон для контраста */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Модальное окно выше других элементов */
+}
+
+.modal-content {
+    background: white;
+    padding: 30px; /* Увеличенные отступы */
+    border-radius: 10px; /* Скругленные углы */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Тень для глубины */
+    width: 400px; /* Ширина модального окна */
+    max-width: 90%; /* Максимальная ширина для мобильных устройств */
+    position: relative; /* Чтобы z-index работал */
+}
+
+.modal-content h2 {
+    margin: 0 0 20px; /* Отступы для заголовка */
+    font-size: 24px; /* Размер шрифта заголовка */
+    color: #333; /* Цвет заголовка */
+    text-align: center; /* Центрирование текста заголовка */
+    font-weight: bold; /* Жирный шрифт для заголовка */
+}
+
+.modal-content label {
+    display: block; /* Отображение меток как блоков */
+    margin: 10px 0 5px; /* Отступы для меток */
+    font-weight: bold; /* Жирный шрифт для меток */
+    color: #555; /* Цвет меток */
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content select,
+.modal-content textarea {
+    font-family: Arial, sans-serif;
+    width: 100%; /* Ширина 100% для всех полей ввода */
+    padding: 10px; /* Отступы внутри полей */
+    margin-bottom: 15px; /* Отступы между полями */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 16px; /* Размер шрифта */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине */
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="date"]:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем обводку при фокусе */
+}
+
+.modal-content textarea {
+    resize: vertical; /* Позволяет изменять размер вертикально */
+    min-height: 100px; /* Минимальная высота текстовой области */
+}
+
+.modal-content button {
+    background-color: #007bff; /* Основной цвет кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругление углов кнопки */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 16px; /* Размер шрифта кнопки */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона и эффекта при наведении */
+    width: 100%; /* Ширина кнопки 100% */
     margin-top: 10px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3; /* Цвет кнопки при наведении */
+    transform: translateY(-2px); /* Легкий подъем кнопки при наведении */
+}
+
+.modal-content button[type="button"] {
+    background-color: #ccc; /* Цвет кнопки "Закрыть" */
+}
+
+.modal-content button[type="button"]:hover {
+    background-color: #bbb; /* Цвет кнопки "Закрыть" при наведении */
+}
+.modal-content input[type="date"]:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем обводку при фокусе */
+}
+
+/* Стили для индикации невалидного состояния */
+.modal-content input[type="date"]:invalid {
+    border-color: red;
+}
+.modal-content input[type="date"] {
+    padding: 10px; /* Отступы внутри поля */
+    margin-bottom: 15px; /* Отступы между полями */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 16px; /* Размер шрифта */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине */
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+    background-color: #fff; /* Цвет фона */
+    font-family: Arial, sans-serif;
+}
+
+.close {
+    color: #aaa; /* Цвет кнопки закрытия */
+    float: right;
+    font-size: 28px; /* Размер шрифта кнопки закрытия */
+    font-weight: bold;
+    cursor: pointer; /* Указатель при наведении */
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

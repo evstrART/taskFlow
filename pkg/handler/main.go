@@ -22,3 +22,6 @@ func (h *Handler) getProjectsPage(c *gin.Context) {
 func (h *Handler) profileGet(c *gin.Context) {
 	c.HTML(http.StatusOK, "profile.html", gin.H{})
 }
+func (h *Handler) taskGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "task.html", gin.H{})
+}

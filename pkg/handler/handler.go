@@ -26,6 +26,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		main.GET("/projects", h.getProjectsPage)
 		main.GET("/projects/:id", h.projectGet)
 		main.GET("/profile", h.profileGet)
+		main.GET("/projects/:id/tasks/:task_id", h.taskGet)
 	}
 	auth := router.Group("/auth")
 	{
