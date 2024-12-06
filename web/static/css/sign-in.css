@@ -1,0 +1,84 @@
+html, body {
+    height: 100%; /* Высота 100% для правильного центрирования */
+    margin: 0; /* Убираем отступы по умолчанию */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Светлый фон */
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+}
+
+.container {
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение элементов */
+    justify-content: center; /* Центрирование содержимого */
+    align-items: center; /* Центрирование по горизонтали */
+    background-color: #ffffff; /* Белый фон контейнера */
+    padding: 20px; /* Внутренние отступы */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень */
+    width: 300px; /* Ширина контейнера */
+    text-align: center; /* Центрирование текста */
+}
+
+h2 {
+    margin-bottom: 20px; /* Отступ снизу заголовка */
+    color: #333; /* Цвет текста заголовка */
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%; /* Ширина 100% от родительского контейнера */
+    padding: 10px; /* Внутренние отступы */
+    margin: 10px 0; /* Отступы сверху и снизу */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 4px; /* Скругленные углы */
+    font-size: 14px; /* Размер шрифта */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: #1890ff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем стандартный контур */
+}
+
+button {
+    background-color: #1890ff; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 4px; /* Скругленные углы */
+    padding: 10px; /* Внутренние отступы */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 14px; /* Размер шрифта */
+    width: 100%; /* Ширина 100% от контейнера */
+    margin-top: 10px; /* Отступ сверху */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+}
+
+button:hover {
+    background-color: #40a9ff; /* Цвет фона при наведении */
+}
+
+.error-message {
+    color: red; /* Цвет текста сообщения об ошибке */
+    margin-top: 10px; /* Отступ сверху */
+}
+
+p {
+    margin-top: 15px; /* Отступ сверху */
+    color: #666; /* Цвет текста */
+}
+
+a {
+    color: #1890ff; /* Цвет ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
