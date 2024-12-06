@@ -21,37 +21,51 @@
       color: #333;
     }
 
-    /* Стили навигации */
-    .navbar {
-      width: 100%;
-      padding: 1em;
-      background-color: #333;
+    /* Стили заголовка */
+    .header {
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      background-color: #001529; /* Цвет фона */
+      color: white; /* Цвет текста */
+      padding: 0 20px; /* Отступы */
+      height: 64px; /* Высота заголовка */
+      width: 100%; /* Ширина заголовка */
+    }
+
+    .header .logo {
+      display: flex;
       align-items: center;
     }
 
-    .navbar h1 {
-      color: #fff;
+    .header .logo img {
+      height: 40px; /* Высота логотипа */
+      width: 40px; /* Ширина логотипа */
+      margin-right: 10px; /* Отступ справа от логотипа */
     }
 
-    .navbar .buttons {
+    .header .logo .title {
+      font-size: 1.5em; /* Размер шрифта для названия */
+      font-weight: bold; /* Жирный шрифт для названия */
+    }
+
+    .header .auth-buttons {
       display: flex;
-      gap: 1em;
+      gap: 16px; /* Расстояние между кнопками */
     }
 
-    .navbar button {
-      padding: 0.5em 1em;
-      font-size: 1em;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
+    .header .auth-buttons button {
+      background-color: #1890ff; /* Цвет кнопки */
+      border: none; /* Убираем рамку */
+      color: white; /* Цвет текста кнопки */
+      padding: 8px 16px; /* Отступы внутри кнопки */
+      font-size: 1em; /* Размер шрифта кнопки */
+      border-radius: 4px; /* Закругленные углы кнопки */
+      cursor: pointer; /* Указатель при наведении на кнопку */
     }
 
-    .navbar button:hover {
-      background-color: #0056b3;
+    .header .auth-buttons button:hover {
+      background-color: #40a9ff; /* Цвет кнопки при наведении */
     }
 
     /* Стили контейнера описания проекта */
@@ -87,10 +101,13 @@
 </head>
 <body>
 
-<!-- Навигация -->
-<div class="navbar">
-  <h1>Task Flow</h1>
-  <div class="buttons">
+<!-- Заголовок -->
+<div class="header">
+  <div class="logo">
+    <img src="/static/images/flow.svg" alt="Task Flow Logo">
+    <div class="title">Task Flow</div>
+  </div>
+  <div class="auth-buttons">
     <button onclick="navigateTo('auth/sign-in')">Sign In</button>
     <button onclick="navigateTo('auth/sign-up')">Sign Up</button>
   </div>
@@ -108,11 +125,11 @@
     Проект включает следующие функции:
   </p>
   <ul>
-      <li>  Создание и управление проектами</li>
-      <li>  Добавление и назначение задач участникам команды</li>
-      <li>  Отслеживание статуса и сроков выполнения задач</li>
-      <li>  Возможность комментировать и обсуждать задачи в реальном времени</li>
-      <li>  Гибкая система тегов для организации задач по категориям</li>
+    <li>Создание и управление проектами</li>
+    <li>Добавление и назначение задач участникам команды</li>
+    <li>Отслеживание статуса и сроков выполнения задач</li>
+    <li>Возможность комментировать и обсуждать задачи в реальном времени</li>
+    <li>Гибкая система тегов для организации задач по категориям</li>
   </ul>
   <p>
     Task Flow использует JWT-токены для безопасной аутентификации пользователей и защищает данные с использованием современных технологий.
@@ -121,7 +138,6 @@
 </div>
 
 <script>
-  // Функция для навигации
   function navigateTo(page) {
     if (page === 'auth/sign-in') {
       window.location.href = '/auth/sign-in';
