@@ -1,0 +1,75 @@
+/* Styling for task info */
+.task-info {
+    position: absolute; /* Делаем позиционирование абсолютным */
+    bottom: 0; /* Прикрепляем к нижней части родителя */
+    right: 0; /* Прикрепляем к правой части родителя */
+    color: #888; /* Цвет текста */
+    font-size: 0.9em; /* Размер шрифта */
+    display: flex; /* Используем flex для выравнивания */
+    flex-direction: column; /* Вертикальное расположение элементов */
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.created-by, .created-time {
+    font-size: 0.9em;
+    color: #888;
+    margin-right: 10px;
+
+}
+
+
+.add-tag {
+    margin-top: 8px; /* Отступ сверху для отделения от информации */
+    background-color: #f0f2f5; /* Цвет фона кнопки */
+    color: #1890ff; /* Цвет текста кнопки */
+    border: 1px solid #1890ff; /* Граница кнопки */
+    border-radius: 4px; /* Скругленные углы */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 12px; /* Размер шрифта кнопки */
+    max-width: 100px; /* Максимальная ширина кнопки */
+    width: 100%; /* Ширина кнопки 100% от родительского контейнера */
+    padding: 8px; /* Отступы внутри кнопки */
+    text-align: center; /* Центрирование текста */
+    transition: background-color 0.3s, border-color 0.3s; /* Плавный переход цвета фона и границы */
+}
+
+.add-tag:hover {
+    background-color: #e6f7ff; /* Цвет фона при наведении */
+    border-color: #40a9ff; /* Цвет границы при наведении */
+}
+
+.task-header {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Вертикальное выравнивание элементов */
+    padding: 16px; /* Отступы вокруг заголовка */
+    background-color: #ffffff; /* Белый фон */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+.task-header h1 {
+    font-size: 1.8em; /* Увеличенный размер шрифта заголовка */
+    color: #333; /* Цвет заголовка */
+    margin-bottom: 10px; /* Отступ снизу заголовка */
+}
+
+.task-description {
+    background-color: #f9f9f9; /* Светло-серый фон */
+    border: 1px solid #ddd; /* Светло-серая граница */
+    border-radius: 8px; /* Скругленные углы */
+    padding: 16px; /* Отступы вокруг описания */
+    margin-top: 16px; /* Отступ сверху, чтобы отделить от заголовка */
+    font-size: 1em; /* Размер шрифта */
+    color: #555; /* Цвет текста */
+}
+.sidebar {
+    margin-left: 20px;
+    width: 300px; /* Ширина правой колонки */
+    background-color: #ffffff; /* Белый фон для боковой колонки */
+    padding: 16px; /* Отступы вокруг содержимого */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень для боковой колонки */
+}

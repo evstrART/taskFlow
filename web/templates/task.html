@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow - Task Layout</title>
+  <!-- Подключение стилей -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/task.css">
+</head>
+<body>
+<div class="layout">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow</div>
+    </div>
+    <div class="auth-buttons">
+      <!-- Кнопка профиля -->
+      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/" class="home-link">Home</a></li>
+      <li><a href="/projects" class="projects-link">Projects</a></li>
+      <li><a href="#" id="project-link" class="projects-title">Project Title</a></li> <!-- Добавлен ID для проекта -->
+      <li><a href="#" id="tasks-link" class="tasks">Tasks</a></li> <!-- Добавлен ID для задач -->
+      <li class="current-page" id="task-name">Loading Tasks...</li> <!-- ID для текущей задачи -->
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <main class="content-wrapper">
+    <div class="content">
+      <div class="task-header">
+        <h1 id="task-title">#1 test</h1>
+        <div class="task-info">
+          <span id="created-by" class="created-by">Created by </span>
+          <span id="created-time" class="created-time">time</span>
+        </div>
+        <button class="add-tag">Add tag</button>
+      </div>
+      <div class="task-description">
+        <p>Здесь будет описание задачи. Вы можете добавить важные детали и инструкции. </p>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <!-- Здесь будет содержимое правой колонки -->
+      <p>Правый боковой контент (заполните позже).</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
+</div>
+
+<!-- Подключение JavaScript -->
+<script src="/static/js/task.js"></script> <!-- Подключение вашего JavaScript файла -->
+</body>
+</html>
