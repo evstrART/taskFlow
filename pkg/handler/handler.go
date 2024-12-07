@@ -87,7 +87,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		users := api.Group("/users")
 		{
 			users.GET("/", h.getUsers)
-			users.GET("/:user_id", h.getUser)
+			users.GET("/:user_id", h.getUserProfile)
 		}
 	}
 

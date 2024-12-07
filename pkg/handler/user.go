@@ -3,14 +3,21 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
-func (h *Handler) getUser(c *gin.Context) {
-	userId, err := strconv.Atoi(c.Param("user_id"))
+func (h *Handler) getUserProfile(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
 	user, err := h.services.User.GetUser(userId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if err.Error() == "user not found" {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, user)

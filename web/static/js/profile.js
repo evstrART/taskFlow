@@ -10,11 +10,11 @@ async function fetchUserProfile() {
         return;
     }
 
-    const userId = parseJwt(token).UserId; // Извлекаем UserId из токена
-    console.log("User ID:", userId); // Проверка полученного UserId
+    const user_id = parseJwt(token).UserId; // Извлекаем UserId из токена
+    console.log("User ID:", user_id); // Проверка полученного UserId
 
     try {
-        const userResponse = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const userResponse = await fetch(`http://localhost:8080/api/users/${user_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,8 +38,8 @@ async function fetchUserProfile() {
 // Display user profile
 function displayUserProfile(user) {
     console.log("User Data:", user); // Проверяем, что пришло от API
-    document.getElementById('username').textContent = user.username;
-    document.getElementById('email').textContent = user.email;
+    document.getElementById('username').textContent = user.username || 'Not available';
+    document.getElementById('email').textContent = user.email || 'Not available';
     document.getElementById('role').textContent = user.role || 'Not available';
 }
 
@@ -58,8 +58,9 @@ function parseJwt(token) {
 function editProfile() {
     alert("Edit profile functionality is not yet implemented.");
 }
-function deleteProfile(){
-    alert("Delete Account")
+
+function deleteProfile() {
+    alert("Delete Account");
 }
 
 // Fetch user profile on window load

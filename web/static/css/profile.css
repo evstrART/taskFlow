@@ -1,72 +1,3 @@
-/* Global styling */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body, html {
-    height: 100%;
-    font-family: Arial, sans-serif;
-}
-
-/* Layout styling */
-.layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Гарантируем, что минимальная высота будет равна высоте экрана */
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #001529;
-    color: white;
-    padding: 0 20px;
-    height: 64px;
-}
-
-.header .logo {
-    display: flex;
-    align-items: center;
-}
-
-.header .logo img {
-    height: 40px;
-    width: 40px;
-    margin-right: 10px;
-}
-
-.header .logo .title {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-/* Breadcrumb styling */
-.breadcrumb {
-    margin: 16px 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    gap: 8px;
-    color: #555;
-    margin-left: 20px;
-}
-
-.breadcrumb li {
-    display: inline;
-}
-
-.breadcrumb li:after {
-    content: '/';
-    margin-left: 8px;
-    color: #aaa;
-}
-
-.breadcrumb li:last-child:after {
-    content: '';
-}
 
 /* Profile card styling */
 .content-wrapper {
@@ -167,13 +98,7 @@ body, html {
     background-color: #40a9ff; /* Цвет фона при наведении */
 }
 
-/* Footer styling */
-.footer {
-    text-align: center;
-    padding: 16px;
-    background-color: #001529;
-    color: white;
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
