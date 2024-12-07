@@ -51,7 +51,11 @@ func (s *CommentPostgres) AddComment(taskId, userId int, input taskFlow.CommentI
 
 func (s *CommentPostgres) GetComments(taskId int) ([]taskFlow.Comment, error) {
 	var comments []taskFlow.Comment
-	query := fmt.Sprintf("SELECT * FROM %s WHERE task_id = $1", CommentTable)
+	query := fmt.Sprintf(`
+		SELECT c.comment_id, c.task_id, c.user_id, c.content, c.created_at, u.username 
+		FROM %s c 
+		JOIN %s u ON c.user_id = u.user_id 
+		WHERE c.task_id = $1`, CommentTable, UserTable)
 	err := s.db.Select(&comments, query, taskId)
 	if err != nil {
 		return nil, err

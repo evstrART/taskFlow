@@ -57,8 +57,9 @@ async function fetchProjectAndTask() {
         const task = await taskResponse.json();
 
         updateBreadcrumb(projectId, project.name, task.title);
-        updateTaskTitle(taskId, task.title )
+        updateTaskTitle(taskId, task.title );
         displayTaskDescription(task.description);
+        displayStatus(task.status);
         fetchUser(task.assigned_to);
 
 
@@ -96,7 +97,6 @@ function displayTaskDescription(taskDescription) {
     }
 }
 
-// Функция для загрузки комментариев
 function loadComments() {
     const { projectId, taskId } = getIdsFromUrl(); // Получаем ID из URL
     const url = `/api/projects/${projectId}/tasks/${taskId}/comments`;
@@ -134,14 +134,97 @@ function loadComments() {
             data.forEach(comment => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-                commentDiv.textContent = comment.content; // Предполагается, что текст комментария находится в поле `text`
+                commentDiv.dataset.commentId = comment.comment_id;
+
+                // Добавляем содержимое комментария с учетом структуры Comment
+                commentDiv.innerHTML = `
+                <div class="comment-avatar">🙂</div>
+                <div class="comment-content">
+                    <p>${comment.content}</p>
+                    <div class="comment-meta">
+                        <div class="comment-username">${comment.username}</div>
+                        <div class="comment-time">${new Date(comment.created_at).toLocaleString()}</div>   
+                    </div>
+                </div>
+                <div class="comment-actions">
+                    <button class="edit-comment" title="Edit">✏️</button>
+                    <button class="delete-comment" title="Delete">🗑️</button>
+                </div>
+            `;
+
                 commentList.appendChild(commentDiv);
+            });
+            document.querySelectorAll('.edit-comment').forEach(button => {
+                button.addEventListener('click', handleEditComment);
+            });
+
+            document.querySelectorAll('.delete-comment').forEach(button => {
+                button.addEventListener('click', handleDeleteComment);
             });
         })
         .catch(error => {
             console.error('Ошибка при загрузке комментариев:', error);
         });
 }
+function handleEditComment(event) {
+    const commentDiv = event.target.closest('.comment');
+    const commentId = commentDiv.dataset.commentId;
+    const newContent = prompt("Введите новый текст комментария:");
+
+    if (newContent) {
+        const url = `/api/projects/${projectId}/tasks/${taskId}/comments/${commentId}`;
+        const token = localStorage.getItem('token');
+
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ comment: newContent }) // Форматируем данные для отправки
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при редактировании комментария: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(() => {
+                loadComments(); // Обновляем комментарии после редактирования
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    }
+}
+
+function handleDeleteComment(event) {
+    const commentDiv = event.target.closest('.comment');
+    const commentId = commentDiv.dataset.commentId;
+    const url = `/api/projects/${projectId}/tasks/${taskId}/comments/${commentId}`;
+    const token = localStorage.getItem('token');
+
+    if (confirm("Вы уверены, что хотите удалить этот комментарий?")) {
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при удалении комментария: ' + response.statusText);
+                }
+                loadComments(); // Обновляем список комментариев после удаления
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    }
+}
+// Вызов функции загрузки комментариев при загрузке страницы
+document.addEventListener('DOMContentLoaded', loadComments);
 
 // Обработчик события для отправки нового комментария
 document.getElementById('submit-comment').addEventListener('click', function() {
@@ -222,5 +305,14 @@ function displayUser(user){
         assignedUserElement.textContent = user.username; // Обновляем текст элемента
     } else {
         console.error('Элемент с ID "assigned-user" не найден.');
+    }
+}
+
+function displayStatus(taskStatus) {
+    const statusElement = document.getElementById("task-status");
+    if (statusElement) {
+        statusElement.textContent = taskStatus; // Обновляем текст элемента
+    } else {
+        console.error('Статус не найден');
     }
 }
