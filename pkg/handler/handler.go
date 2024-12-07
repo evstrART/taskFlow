@@ -64,7 +64,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			tag.PUT("/:tag_id", h.updateTag)
 
 			comment := task.Group(":task_id/comments")
-			comment.POST("/", h.addCooment)
+			comment.POST("/", h.addComment)
 			comment.GET("/", h.getAllComments)
 			comment.GET("/:comment_id", h.getCommentById)
 			comment.DELETE("/:comment_id", h.deleteComment)

@@ -38,21 +38,37 @@
     <div class="content">
       <div class="task-header">
         <h1 id="task-title">#1 test</h1>
-        <div class="task-info">
-          <span id="created-by" class="created-by">Created by </span>
-          <span id="created-time" class="created-time">time</span>
-        </div>
         <button class="add-tag">Add tag</button>
       </div>
       <div class="task-description">
         <p>Здесь будет описание задачи. Вы можете добавить важные детали и инструкции. </p>
       </div>
+      <div class="comments">
+        <h2>Comments</h2>
+        <div class="comment-input">
+          <textarea id="comment-text" placeholder="Добавьте ваш комментарий..."></textarea>
+          <button id="submit-comment">Отправить</button>
+        </div>
+        <div id="comment-list">
+          <p>Нет комментариев.</p> <!-- Сообщение по умолчанию -->
+        </div>
+      </div>
     </div>
 
+
     <div class="sidebar">
-      <!-- Здесь будет содержимое правой колонки -->
-      <p>Правый боковой контент (заполните позже).</p>
+      <div class="status">
+        <h3>Status:</h3>
+        <p><span id="task-status">Выполняется</span></p> <!-- Статус задачи -->
+      </div>
+
+      <div class="assigned">
+        <h3>Assigned to:</h3>
+        <p><span id="assigned-user">Иван Иванов</span></p> <!-- Имя пользователя -->
+      </div>
+
     </div>
+
   </main>
 
   <!-- Footer -->

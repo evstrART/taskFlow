@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func (h *Handler) addCooment(c *gin.Context) {
+func (h *Handler) addComment(c *gin.Context) {
 	userID, err := getUserId(c)
 	if err != nil {
 		return
