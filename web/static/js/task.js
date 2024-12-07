@@ -316,3 +316,127 @@ function displayStatus(taskStatus) {
         console.error('Статус не найден');
     }
 }
+
+document.querySelector('.add-tag').addEventListener('click', function() {
+    document.getElementById('tag-modal').style.display = 'block'; // Открываем модальное окно
+});
+
+document.querySelector('.close').addEventListener('click', function() {
+    document.getElementById('tag-modal').style.display = 'none'; // Закрываем модальное окно
+});
+
+document.getElementById('save-tag').addEventListener('click', function() {
+    const tagInput = document.getElementById('tag-input');
+    const tagColor = document.querySelector('.color.selected'); // Получаем выбранный цвет
+    if (tagInput.value && tagColor) {
+        const tagData = {
+            name: tagInput.value,
+            color: tagColor.getAttribute('data-color'),
+        };
+
+        // Используем глобальные переменные projectId и taskId
+        fetch(`/api/projects/${projectId}/tasks/${taskId}/tags`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Если требуется авторизация
+            },
+            body: JSON.stringify(tagData),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при добавлении тега: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tag = document.createElement('div');
+                tag.style.backgroundColor = tagData.color;
+                tag.textContent = tagData.name;
+                tag.className = 'tag'; // Добавьте класс для стилей
+                document.querySelector('.task-header').appendChild(tag); // Добавляем тег в заголовок задачи
+                tagInput.value = ''; // Очищаем поле ввода
+                tagColor.classList.remove('selected'); // Сбрасываем выбор цвета
+                document.getElementById('tag-modal').style.display = 'none'; // Закрываем модальное окно
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    }
+});
+
+// Обработчик для выбора цвета
+document.querySelectorAll('.color').forEach(color => {
+    color.addEventListener('click', function() {
+        document.querySelectorAll('.color').forEach(c => c.classList.remove('selected')); // Сбрасываем выделение
+        color.classList.add('selected'); // Выделяем выбранный цвет
+    });
+});
+
+// Функция для получения и отображения тегов при загрузке страницы
+function loadTags() {
+    fetch(`/api/projects/${projectId}/tasks/${taskId}/tags`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Если требуется авторизация
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка при загрузке тегов: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(tags => {
+            const tagContainer = document.querySelector('.tag-container');
+            tagContainer.innerHTML = ''; // Очищаем контейнер перед добавлением тегов
+
+            tags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.style.backgroundColor = tag.color; // Устанавливаем цвет фона тега
+                tagElement.textContent = tag.name;
+                tagElement.className = 'tag'; // Добавляем класс для стилей
+
+                // Создаем элемент крестика для удаления
+                const deleteIcon = document.createElement('span');
+                deleteIcon.textContent = '✖'; // Символ крестика
+                deleteIcon.className = 'delete-icon'; // Класс для стилей
+
+                // Обработчик события на крестик
+                deleteIcon.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Останавливаем событие, чтобы не срабатывало на родителе
+                    deleteTag(tag.tag_id, tagElement); // Удаляем тег
+                });
+
+                tagElement.appendChild(deleteIcon); // Добавляем крестик в тег
+                tagContainer.appendChild(tagElement); // Добавляем тег в контейнер
+            });
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+}
+
+// Функция для удаления тега
+function deleteTag(tag_id, tagElement) {
+    console.log(`Удаление тега с ID: ${tag_id}`);
+    fetch(`/api/projects/${projectId}/tasks/${taskId}/tags/${tag_id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Если требуется авторизация
+        }
+    })
+        .then(response => {
+            console.log('Ответ сервера:', response);
+            if (!response.ok) {
+                throw new Error('Ошибка при удалении тега: ' + response.statusText);
+            }
+            tagElement.remove(); // Удаляем элемент из DOM
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+}
+
+// Вызываем функцию для загрузки тегов при загрузке страницы
+document.addEventListener('DOMContentLoaded', loadTags);

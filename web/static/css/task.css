@@ -219,3 +219,83 @@
     font-size: 0.9em; /* Размер шрифта для времени */
     color: #888; /* Цвет текста для времени */
 }
+
+.modal {
+    display: none; /* Скрываем модальное окно по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Полупрозрачный фон */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.color-picker .colors {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.color {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+.tag-container {
+    margin-top: 10px; /* Отступ сверху для контейнера тегов */
+    display: flex; /* Используем flexbox для выравнивания тегов в строку */
+    flex-wrap: wrap; /* Теги будут переходить на новую строку при недостатке места */
+}
+
+.tag {
+    background-color: transparent; /* Прозрачный фон, цвет будет устанавливаться через JS */
+    color: #000; /* Цвет текста */
+    padding: 4px 8px; /* Уменьшаем отступы внутри тега */
+    margin: 5px; /* Отступы между тегами */
+    border-radius: 12px; /* Закругленные углы */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer; /* Указатель при наведении */
+    position: relative; /* Для позиционирования крестика */
+    display: flex; /* Используем flexbox для выравнивания текста и крестика */
+    align-items: center; /* Центрируем элементы по вертикали */
+}
+
+.tag:hover {
+    opacity: 0.8; /* Уменьшаем непрозрачность при наведении */
+}
+
+.tag .delete-icon {
+    display: none; /* Скрываем крестик по умолчанию */
+    margin-left: 5px; /* Отступ слева от крестика */
+    font-size: 16px; /* Размер крестика */
+}
+
+.tag:hover .delete-icon {
+    display: inline; /* Показываем крестик при наведении */
+}
