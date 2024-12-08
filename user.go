@@ -14,3 +14,11 @@ type User struct {
 	CreatedAt time.Time    `json:"created_at" db:"created_at"`  // Дата и время создания пользователя.
 	UpdatedAt sql.NullTime `json:"updated_at" db:"updated_at"`  // Дата и время последнего обновления данных пользователя.
 }
+type UpdateUserInput struct {
+	Username *string `db:"username"` // Добавляем теги для связывания с колонками
+	Email    *string `db:"email"`
+}
+type ChangePasswordInput struct {
+	OldPassword string `json:"old_password" binding:"required"`
+	NewPassword string `json:"new_password" binding:"required"`
+}

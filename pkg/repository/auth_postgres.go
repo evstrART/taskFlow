@@ -33,3 +33,9 @@ func (r *AuthPostgres) GetUser(username, password string) (taskFlow.User, error)
 
 	return user, err
 }
+
+func (r *AuthPostgres) ChangePassword(userId int, newPassword string) error {
+	query := fmt.Sprintf("UPDATE %s SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2", UserTable)
+	_, err := r.db.Exec(query, newPassword, userId)
+	return err
+}

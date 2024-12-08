@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/evstrART/taskFlow"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -30,4 +31,23 @@ func (h *Handler) getUsers(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, users)
+}
+
+func (h *Handler) updateUser(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
+	var input taskFlow.UpdateUserInput
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = h.services.User.UpdateUser(userId, input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
 }

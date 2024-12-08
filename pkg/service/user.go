@@ -20,3 +20,13 @@ func (s *UserService) GetUser(userId int) (taskFlow.User, error) {
 func (s *UserService) GetUsers() ([]taskFlow.User, error) {
 	return s.repo.GetUsers()
 }
+func (s *UserService) UpdateUser(userId int, input taskFlow.UpdateUserInput) error {
+	return s.repo.UpdateUser(userId, input)
+}
+func (s *UserService) CheckOldPassword(userId int, oldPassword string) (bool, error) {
+	user, err := s.repo.GetUser(userId) // Получаем пользователя из базы данных
+	if err != nil {
+		return false, err
+	}
+	return checkPasswordHash(oldPassword, user.Password), nil // Используем новую функцию
+}

@@ -1,14 +1,91 @@
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
 
-/* Profile card styling */
+/* Контейнер для содержимого */
 .content-wrapper {
-    flex: 1; /* Занимает оставшееся пространство */
+    flex: 1;
     display: flex;
     justify-content: center; /* Центрируем содержимое */
     align-items: flex-start; /* Выравнивание по верхнему краю */
     padding: 20px;
-    background-color: #f0f2f5;
 }
-/* Delete button styling */
+
+/* Карточка профиля */
+.profile-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Ограничиваем максимальную ширину */
+}
+
+/* Заголовок профиля */
+.profile-card h2 {
+    font-size: 2em; /* Размер заголовка */
+    margin-bottom: 20px; /* Отступ снизу */
+    color: #333;
+    text-align: center; /* Центрируем заголовок */
+}
+
+/* Информация о пользователе */
+.user-info {
+    margin-top: 20px; /* Отступ сверху */
+}
+
+.profile-info {
+    margin-bottom: 20px; /* Отступ снизу для каждого поля */
+}
+
+.profile-info label {
+    font-weight: 600; /* Жирный шрифт для меток */
+    color: #333; /* Цвет меток */
+    display: block; /* Отображаем метки как блочные элементы */
+    margin-bottom: 5px; /* Отступ снизу для меток */
+}
+
+.profile-info p {
+    font-size: 1.1em; /* Увеличенный размер текста для информации */
+    margin: 0; /* Убираем отступы */
+    color: #555; /* Цвет текста */
+    background: #e6f7ff; /* Светлый фон для выделения информации */
+    padding: 10px; /* Отступы внутри абзаца */
+    border-radius: 6px; /* Скругление углов */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень для выделения */
+}
+
+/* Стили для кнопок */
+.button-container {
+    text-align: center;
+    margin-top: 30px; /* Отступ сверху для кнопки */
+}
+
+.button-container button {
+    background-color: #1890ff; /* Цвет фона кнопки */
+    border: none; /* Убираем рамку */
+    color: white; /* Цвет текста */
+    padding: 12px 20px; /* Отступы внутри кнопки */
+    font-size: 1.1em; /* Размер шрифта */
+    border-radius: 5px; /* Скругление углов */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона и эффект нажатия */
+}
+
+.button-container button:hover {
+    background-color: #40a9ff; /* Цвет фона при наведении */
+    transform: translateY(-2px); /* Эффект при наведении */
+}
+
+.button-container button:active {
+    transform: translateY(1px); /* Эффект нажатия */
+}
+
+/* Стили для кнопки удаления */
 .delete-buttons {
     text-align: center; /* Центрируем кнопку */
     margin-top: 20px; /* Отступ сверху для кнопки */
@@ -20,94 +97,53 @@
     color: white; /* Цвет текста */
     padding: 10px 15px; /* Отступы внутри кнопки */
     font-size: 1em; /* Размер шрифта */
-    margin-bottom: 10px;
-    border-radius: 4px; /* Скругление углов */
+    border-radius: 5px; /* Скругление углов */
     cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета фона */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона */
+    margin-bottom: 10px;
 }
 
 #delete-button:hover {
-    background-color: #ff7875; /* Цвет фона при наведении (светлее красного) */
-}
-.profile-card {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Занимает всю ширину родительского контейнера */
-    max-width: 600px; /* Ограничиваем максимальную ширину */
+    background-color: #ff7875; /* Цвет фона при наведении */
+    transform: translateY(-2px); /* Эффект при наведении */
 }
 
-/* User information styling */
-
-
-.user-info h2 {
-    font-size: 1.5em; /* Размер заголовка */
-    margin-bottom: 10px; /* Отступ снизу */
-    color: #333; /* Цвет текста */
+#delete-button:active {
+    transform: translateY(1px); /* Эффект нажатия */
 }
 
-.user-info p {
-    font-size: 1em; /* Размер текста */
-    margin: 5px 0; /* Отступы для абзацев */
-    color: #555; /* Цвет текста */
-}
-/* User information styling */
-.user-info {
-    margin-top: 20px; /* Отступ сверху */
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+    .profile-card {
+        margin: 10px; /* Отступы для мобильных устройств */
+        padding: 20px; /* Уменьшаем отступы внутри карточки */
+    }
+
+    .profile-card h2 {
+        font-size: 1.8em; /* Уменьшаем размер заголовка */
+    }
 }
 
-.profile-info {
-    margin-bottom: 15px; /* Отступ снизу для каждого поля */
-}
-
-.profile-info label {
-    font-weight: bold; /* Жирный шрифт для меток */
-    color: #333; /* Цвет меток */
-}
-
-.profile-info p {
-    font-size: 1.1em; /* Увеличенный размер текста для информации */
-    margin: 5px 0; /* Отступы для абзацев */
-    color: #555; /* Цвет текста */
-    background: #e6f7ff; /* Светлый фон для выделения информации */
-    padding: 10px; /* Отступы внутри абзаца */
-    border-radius: 4px; /* Скругление углов */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень для выделения */
-}
-
-/* Остальная часть CSS остается без изменений */
-/* Button styling */
-.button-container {
-    text-align: center;
-    margin-top: 20px; /* Отступ сверху для кнопки */
-}
-
-.button-container button {
-    background-color: #1890ff; /* Цвет фона кнопки */
+#logout-button {
+    background-color: #28a745; /* Зеленый цвет фона */
     border: none; /* Убираем рамку */
     color: white; /* Цвет текста */
     padding: 10px 15px; /* Отступы внутри кнопки */
     font-size: 1em; /* Размер шрифта */
-    border-radius: 4px; /* Скругление углов */
+    border-radius: 5px; /* Скругление углов */
     cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета фона */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета фона */
+    margin-left: 10px; /* Отступ слева от кнопки удаления */
 }
 
-.button-container button:hover {
-    background-color: #40a9ff; /* Цвет фона при наведении */
+#logout-button:hover {
+    background-color: #218838; /* Темнее зеленый цвет при наведении */
+    transform: translateY(-2px); /* Эффект при наведении */
 }
 
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .profile-card {
-        margin: 10px;
-    }
+#logout-button:active {
+    transform: translateY(1px); /* Эффект нажатия */
+}
+input.error {
+    border: 1px solid red; /* Красная рамка */
 }

@@ -17,6 +17,7 @@
     </div>
     <div class="delete-buttons">
       <button id="delete-button" onclick="deleteProfile()">Delete Profile</button>
+      <button id="logout-button" onclick="logout()">Logout</button>
     </div>
   </header>
 
@@ -48,9 +49,32 @@
       </div>
       <div class="button-container">
         <button onclick="editProfile()">Edit Profile</button>
+        <button onclick="openChangePasswordModal()">Change Password</button> <!-- Новая кнопка -->
       </div>
     </div>
   </main>
+
+  <!-- Модальное окно для смены пароля -->
+  <div id="change-password-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeChangePasswordModal()">&times;</span>
+      <h2>Change Password</h2>
+      <label for="old-password">Old Password:</label>
+      <input type="password" id="old-password" placeholder="Enter old password" required>
+      <span id="old-password-error" class="error-message" style="display: none; color: red;"></span>
+
+      <label for="new-password">New Password:</label>
+      <input type="password" id="new-password" placeholder="Enter new password" required>
+      <span id="new-password-error" class="error-message" style="display: none; color: red;"></span> <!-- Контейнер для ошибки -->
+
+      <label for="confirm-new-password">Confirm New Password:</label>
+      <input type="password" id="confirm-new-password" placeholder="Confirm new password" required>
+      <span id="confirm-new-password-error" class="error-message" style="display: none; color: red;"></span> <!-- Контейнер для ошибки -->
+
+
+      <button onclick="changePassword()">Submit</button>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">

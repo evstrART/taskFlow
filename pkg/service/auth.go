@@ -34,6 +34,10 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
+func checkPasswordHash(password, hash string) bool {
+	generatedHash := generatePasswordHash(password)
+	return generatedHash == hash
+}
 
 type tokenClaims struct {
 	jwt.StandardClaims
@@ -55,7 +59,7 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 	return token.SignedString([]byte(signingKey))
 }
 
-func (a *AuthService) ParseToken(accessToken string) (int, error) {
+func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -71,4 +75,9 @@ func (a *AuthService) ParseToken(accessToken string) (int, error) {
 		return 0, errors.New("token claims are not of type")
 	}
 	return claims.UserId, nil
+}
+
+func (s *AuthService) ChangePassword(userId int, input taskFlow.ChangePasswordInput) error {
+	newPassword := generatePasswordHash(input.NewPassword)
+	return s.repo.ChangePassword(userId, newPassword)
 }
