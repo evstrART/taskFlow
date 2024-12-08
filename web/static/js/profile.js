@@ -54,15 +54,6 @@ function parseJwt(token) {
     return JSON.parse(jsonPayload);
 }
 
-// Edit profile function
-function editProfile() {
-    alert("Edit profile functionality is not yet implemented.");
-}
-
-function deleteProfile() {
-    alert("Delete Account");
-}
-
 function logout() {
     // Удаляем токен из localStorage
     localStorage.removeItem('token');
@@ -174,3 +165,103 @@ function openChangePasswordModal() {
     document.getElementById('change-password-modal').style.display = 'flex';
 }
 
+// Открытие модального окна редактирования пользователя
+function openEditUserModal() {
+    // Заполняем поля текущими данными пользователя
+    document.getElementById('edit-username').value = document.getElementById('username').textContent;
+    document.getElementById('edit-email').value = document.getElementById('email').textContent;
+
+    document.getElementById('edit-user-modal').style.display = 'flex';
+}
+
+// Закрытие модального окна редактирования пользователя
+function closeEditUserModal() {
+    document.getElementById('edit-user-modal').style.display = 'none';
+}
+
+// Функция обновления информации о пользователе
+async function updateUser() {
+    const username = document.getElementById('edit-username').value;
+    const email = document.getElementById('edit-email').value;
+
+    // Проверка на пустые поля
+    if (!username || !email) {
+        alert("Пожалуйста, заполните все поля.");
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("Токен не найден. Пожалуйста, войдите в систему.");
+        return;
+    }
+
+    const userId = parseJwt(token).UserId; // Предполагается, что у вас есть функция parseJwt
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ username, email }) // Отправляем данные для обновления
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Ошибка при обновлении пользователя: ${errorText}`);
+        }
+
+        alert("Информация о пользователе успешно обновлена!");
+        closeEditUserModal(); // Закрываем модальное окно после успешного обновления
+        fetchUserProfile(); // Обновляем профиль после изменения
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert(error.message);
+    }
+}
+
+// Открытие модального окна подтверждения удаления
+function openDeleteConfirmationModal() {
+    document.getElementById('delete-confirmation-modal').style.display = 'flex';
+}
+
+// Закрытие модального окна подтверждения удаления
+function closeDeleteConfirmationModal() {
+    document.getElementById('delete-confirmation-modal').style.display = 'none';
+}
+
+// Функция для удаления пользователя
+async function deleteProfile() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("Токен не найден. Пожалуйста, войдите в систему.");
+        return;
+    }
+
+    const userId = parseJwt(token).user_id;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+
+        alert("Профиль успешно удалён!");
+        logout(); // Выход из системы после успешного удаления
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert(error.message);
+    }
+}

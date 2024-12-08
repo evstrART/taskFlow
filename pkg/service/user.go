@@ -30,3 +30,7 @@ func (s *UserService) CheckOldPassword(userId int, oldPassword string) (bool, er
 	}
 	return checkPasswordHash(oldPassword, user.Password), nil // Используем новую функцию
 }
+
+func (s *UserService) DeleteUser(userId int) error {
+	return s.repo.DeleteUser(userId)
+}

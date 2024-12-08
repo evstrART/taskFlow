@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/evstrART/taskFlow"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"strings"
 )
 
@@ -69,6 +70,61 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 	_, err = tx.Exec(query, args...)
 	if err != nil {
 		tx.Rollback() // Откат в случае ошибки
+		return err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+func (r *UserPostgres) DeleteUser(userId int) error {
+	// Проверяем наличие незавершенных проектов
+	var unfinishedProjectsCount int
+	err := r.db.QueryRow("SELECT COUNT(*) FROM Projects WHERE owner_id = $1 AND status != 'completed'", userId).Scan(&unfinishedProjectsCount)
+	if err != nil {
+		return err
+	}
+
+	// Проверяем наличие незавершенных задач
+	var unfinishedTasksCount int
+	err = r.db.QueryRow("SELECT COUNT(*) FROM Tasks WHERE assigned_to = $1 AND status != 'completed'", userId).Scan(&unfinishedTasksCount)
+	if err != nil {
+		return err
+	}
+
+	// Если есть незавершенные проекты или задачи, возвращаем ошибку
+	if unfinishedProjectsCount > 0 || unfinishedTasksCount > 0 {
+		return fmt.Errorf("у вас остались незавершенные проекты или задачи. Выполните или удалите их перед удалением профиля.")
+	}
+
+	// Начинаем транзакцию
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Обеспечиваем откат в случае ошибки
+	defer func() {
+		if err != nil {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("failed to rollback transaction: %v", rbErr)
+			}
+		}
+	}()
+
+	// Удаляем записи из ActivityLogs
+	_, err = tx.Exec("DELETE FROM ActivityLogs WHERE user_id = $1", userId)
+	if err != nil {
+		return err
+	}
+
+	// Удаляем пользователя
+	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", UserTable)
+	_, err = tx.Exec(query, userId)
+	if err != nil {
 		return err
 	}
 

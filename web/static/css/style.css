@@ -244,3 +244,37 @@ body, html {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Стилизация всех полей ввода */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    font-family: Arial, sans-serif; /* Шрифт для всех полей */
+    width: 100%; /* Ширина 100% для всех полей ввода */
+    padding: 10px; /* Отступы внутри полей */
+    margin-bottom: 15px; /* Отступы между полями */
+    border: 1px solid #ccc; /* Цвет границы */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 16px; /* Размер шрифта */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине */
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+}
+
+/* Стилизация индикации невалидного состояния (красная рамка)*/
+input.error,
+textarea.error,
+select.error {
+    border-color: red; /* Красная рамка при ошибке */
+}
+
+/* Стилизация при фокусе на полях ввода */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем обводку при фокусе */
+}

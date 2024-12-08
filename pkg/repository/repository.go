@@ -24,6 +24,7 @@ type User interface {
 	GetUser(userId int) (taskFlow.User, error)
 	GetUsers() ([]taskFlow.User, error)
 	UpdateUser(userId int, input taskFlow.UpdateUserInput) error
+	DeleteUser(userId int) error
 }
 type Comment interface {
 	AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error)

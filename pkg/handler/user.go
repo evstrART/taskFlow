@@ -51,3 +51,17 @@ func (h *Handler) updateUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
 }
+
+func (h *Handler) deleteUser(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
+	err = h.services.User.DeleteUser(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
+}

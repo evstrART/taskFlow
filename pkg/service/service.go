@@ -26,6 +26,7 @@ type User interface {
 	GetUsers() ([]taskFlow.User, error)
 	UpdateUser(userId int, input taskFlow.UpdateUserInput) error
 	CheckOldPassword(userId int, oldPassword string) (bool, error)
+	DeleteUser(userId int) error
 }
 
 type Project interface {

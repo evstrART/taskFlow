@@ -16,10 +16,21 @@
       <div class="title">Task Flow</div>
     </div>
     <div class="delete-buttons">
-      <button id="delete-button" onclick="deleteProfile()">Delete Profile</button>
+      <button id="delete-button" onclick="openDeleteConfirmationModal()">Delete Profile</button>
       <button id="logout-button" onclick="logout()">Logout</button>
     </div>
   </header>
+  <!-- Модальное окно для подтверждения удаления -->
+  <div id="delete-confirmation-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeDeleteConfirmationModal()">&times;</span>
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
+      <button onclick="deleteProfile()">Yes, Delete My Profile</button>
+      <button onclick="closeDeleteConfirmationModal()">Cancel</button>
+    </div>
+  </div>
+
 
   <!-- Breadcrumb -->
   <div class="breadcrumb">
@@ -48,11 +59,27 @@
         </div>
       </div>
       <div class="button-container">
-        <button onclick="editProfile()">Edit Profile</button>
         <button onclick="openChangePasswordModal()">Change Password</button> <!-- Новая кнопка -->
+        <button onclick="openEditUserModal()">Edit Profile</button> <!-- Кнопка редактирования пользователя -->
       </div>
     </div>
   </main>
+
+  <!-- Модальное окно для редактирования пользователя -->
+  <div id="edit-user-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditUserModal()">&times;</span>
+      <h2>Edit User</h2>
+      <label for="edit-username">Username:</label>
+      <input type="text" id="edit-username" placeholder="Enter username" required>
+
+      <label for="edit-email">Email:</label>
+      <input type="email" id="edit-email" placeholder="Enter email" required>
+
+      <button onclick="updateUser()">Submit</button>
+    </div>
+  </div>
+
 
   <!-- Модальное окно для смены пароля -->
   <div id="change-password-modal" class="modal" style="display:none;">
@@ -75,6 +102,15 @@
       <button onclick="changePassword()">Submit</button>
     </div>
   </div>
+  <!-- Модальное окно для уведомлений об ошибках -->
+  <div id="notification-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeNotificationModal()">&times;</span>
+      <h2>Уведомление</h2>
+      <p id="notification-message">У вас остались незавершенные проекты или задачи. Выполните или удалите их перед удалением профиля.</p>
+    </div>
+  </div>
+
 
   <!-- Footer -->
   <footer class="footer">
