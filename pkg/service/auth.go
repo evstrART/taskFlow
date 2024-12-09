@@ -93,9 +93,9 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func (s *AuthService) ChangePassword(userId int, input taskFlow.ChangePasswordInput) error {
-	newPassword := generatePasswordHash(input.NewPassword)
-	return s.repo.ChangePassword(userId, newPassword)
+func (s *AuthService) ChangePassword(userId int, newPasswordInput string) error {
+	newPasswordHex := generatePasswordHash(newPasswordInput)
+	return s.repo.ChangePassword(userId, newPasswordHex)
 }
 func (s *AuthService) UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error) {
 	return s.repo.UserExistsForReset(input)

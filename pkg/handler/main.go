@@ -25,6 +25,9 @@ func (h *Handler) profileGet(c *gin.Context) {
 func (h *Handler) taskGet(c *gin.Context) {
 	c.HTML(http.StatusOK, "task.html", gin.H{})
 }
-func (h *Handler) resetPassGet(c *gin.Context) {
-	c.HTML(http.StatusOK, "resetpass.html", gin.H{})
+func (h *Handler) forgotPasswordGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "forgotPass.html", gin.H{})
+}
+func (h *Handler) resetPasswordGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "resetPass.html", gin.H{})
 }

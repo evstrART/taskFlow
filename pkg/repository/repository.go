@@ -8,7 +8,7 @@ import (
 type AutorisationService interface {
 	CreateUser(user taskFlow.User) (int, error)
 	GetUser(username, password string) (taskFlow.User, error)
-	ChangePassword(userId int, newPassword string) error
+	ChangePassword(userId int, newPasswordHex string) error
 	UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error)
 	GetUserByNameAndEmail(username, email string) (taskFlow.User, error)
 }

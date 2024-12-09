@@ -1,11 +1,28 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// Получаем токен из URL
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token');
+
 document.getElementById('reset-password-form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Отменяем стандартное поведение формы
 
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    // Проверяем совпадение паролей
+    if (newPassword !== confirmPassword) {
+        alert("Пароли не совпадают. Пожалуйста, попробуйте снова.");
+        return;
+    }
+
+    // Получаем токен из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
     const formData = {
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value
+        new_password: newPassword,
+        token: token // Добавляем токен в данные формы
     };
 
     try {
@@ -22,9 +39,11 @@ document.getElementById('reset-password-form').addEventListener('submit', async 
             throw new Error(errorText);
         }
 
-        alert("Ссылка для сброса пароля отправлена на вашу электронную почту.");
+        alert("Пароль успешно сброшен.");
+        window.location.href = '/auth/sign-in'; // Перенаправление на страницу входа
     } catch (error) {
         console.error('Ошибка:', error);
         alert("Ошибка при отправке запроса: " + error.message);
     }
 });
+

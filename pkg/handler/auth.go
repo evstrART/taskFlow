@@ -79,7 +79,7 @@ func (h *Handler) changePassword(c *gin.Context) {
 		return
 	}
 
-	err = h.services.AutorisationService.ChangePassword(userId, input)
+	err = h.services.AutorisationService.ChangePassword(userId, input.NewPassword)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -117,7 +117,7 @@ func sendEmail(to string, resetLink string) error {
 	return nil
 }
 
-func (h *Handler) resetPassword(c *gin.Context) {
+func (h *Handler) forgotPassword(c *gin.Context) {
 	var input taskFlow.ResetPasswordInput
 
 	// Привязываем входящие данные к структуре
@@ -155,4 +155,24 @@ func (h *Handler) resetPassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Ссылка для сброса пароля отправлена на вашу электронную почту."})
+}
+
+func (h *Handler) changeForgotPassword(c *gin.Context) {
+	var input taskFlow.ForgotPasswordInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	userId, err := h.services.AutorisationService.ParseToken(input.Token)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+	err = h.services.AutorisationService.ChangePassword(userId, input.NewPassword)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
+
 }

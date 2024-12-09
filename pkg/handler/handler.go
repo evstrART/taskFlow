@@ -27,7 +27,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		main.GET("/projects/:id", h.projectGet)
 		main.GET("/profile", h.profileGet)
 		main.GET("/projects/:id/tasks/:task_id", h.taskGet)
-		main.GET("/reset-password", h.resetPassGet)
+		main.GET("/forgot-password", h.forgotPasswordGet)
+		main.GET("/reset-password", h.resetPasswordGet)
 	}
 	auth := router.Group("/auth")
 	{
@@ -35,7 +36,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.signIn)
 		auth.GET("/sign-up", h.signUpGet)
 		auth.POST("/sign-up", h.signUp)
-		auth.POST("/reset-password", h.resetPassword)
+		auth.POST("/forgot-password", h.forgotPassword)
+		auth.POST("/reset-password", h.changeForgotPassword)
 
 	}
 	api := router.Group("/api", h.userIdentity)

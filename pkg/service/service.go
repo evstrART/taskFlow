@@ -9,7 +9,7 @@ type AutorisationService interface {
 	CreateUser(user taskFlow.User) (int, error)
 	GenerateToken(username, password string) (string, error)
 	ParseToken(token string) (int, error)
-	ChangePassword(userId int, input taskFlow.ChangePasswordInput) error
+	ChangePassword(userId int, newPasswordInput string) error
 	UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error)
 	GenerateTokenForReset(username, email string) (taskFlow.User, string, error)
 }
