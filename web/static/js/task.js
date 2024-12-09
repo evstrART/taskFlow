@@ -320,14 +320,26 @@ function displayStatus(taskStatus) {
     }
 }
 
-document.querySelector('.add-tag').addEventListener('click', function() {
-    document.getElementById('tag-modal').style.display = 'block'; // Открываем модальное окно
-});
+function openTagModal() {
+    document.getElementById('tag-modal').style.display = 'block';
+}
 
-document.querySelector('.close').addEventListener('click', function() {
-    document.getElementById('tag-modal').style.display = 'none'; // Закрываем модальное окно
-});
+// Функция для закрытия модального окна для тегов
+function closeTagModal() {
+    document.getElementById('tag-modal').style.display = 'none';
+}
+document.querySelector('.add-tag').addEventListener('click', openTagModal);
 
+// Закрытие модального окна для тегов
+    document.getElementById('close-tag-modal').addEventListener('click', closeTagModal);
+
+// Закрытие модального окна при клике вне его
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('tag-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none'; // Закрываем модальное окно
+    }
+});
 document.getElementById('save-tag').addEventListener('click', function() {
     const tagInput = document.getElementById('tag-input');
     const tagColor = document.querySelector('.color.selected'); // Получаем выбранный цвет
@@ -353,14 +365,33 @@ document.getElementById('save-tag').addEventListener('click', function() {
                 return response.json();
             })
             .then(data => {
+                console.log('Response data:', data); // Проверяем, что возвращает сервер
+
                 const tag = document.createElement('div');
-                tag.style.backgroundColor = tagData.color;
+                tag.style.backgroundColor = tagData.color; // Устанавливаем цвет фона
                 tag.textContent = tagData.name;
-                tag.className = 'tag'; // Добавьте класс для стилей
+                tag.className = 'tag'; // Добавляем класс для стилей
+                tag.setAttribute('data-tag-id', data.tag_id); // Сохраняем ID тега в атрибуте
+
                 document.querySelector('.task-header').appendChild(tag); // Добавляем тег в заголовок задачи
+
+                // Создаем элемент крестика для удаления
+                const deleteIcon = document.createElement('span');
+                deleteIcon.textContent = '✖'; // Символ крестика
+                deleteIcon.className = 'delete-icon'; // Класс для стилей
+
+                // Обработчик события на крестик
+                deleteIcon.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Останавливаем событие, чтобы не срабатывало на родителе
+                    deleteTag(data.tag_id, tag); // Удаляем тег
+                });
+
+                tag.appendChild(deleteIcon); // Добавляем крестик в тег
+                document.querySelector('.tag-container').appendChild(tag); // Добавляем тег в контейнер
                 tagInput.value = ''; // Очищаем поле ввода
                 tagColor.classList.remove('selected'); // Сбрасываем выбор цвета
-                document.getElementById('tag-modal').style.display = 'none'; // Закрываем модальное окно
+                document.getElementById('tag-modal').style.display = 'none';// Закрываем модальное окно
+                loadTags();
             })
             .catch(error => {
                 console.error('Ошибка:', error);
