@@ -299,3 +299,60 @@
 .tag:hover .delete-icon {
     display: inline; /* Показываем крестик при наведении */
 }
+
+.task-buttons {
+    position: absolute;
+    top: 24px; /* Adjust as needed */
+    right: 24px; /* Adjust as needed */
+    display: flex;
+    gap: 16px; /* Space between buttons */
+}
+
+.task-buttons button {
+    background: none; /* Remove default button background */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Change cursor to pointer */
+    padding: 10px; /* Padding around buttons */
+}
+
+.task-buttons button img {
+    width: 35px; /* Increased size of icons */
+    height: 35px; /* Maintain aspect ratio */
+}
+
+.task-buttons button:hover {
+    opacity: 0.8; /* Slightly transparent on hover */
+}
+
+.task-buttons .edit-button img {
+    filter: invert(60%) sepia(80%) saturate(150%) hue-rotate(180deg); /* Example styling for edit icon */
+}
+
+.task-buttons .delete-button img {
+    filter: invert(40%) sepia(100%) saturate(200%) hue-rotate(350deg); /* Example styling for delete icon */
+}
+
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed; /* Открывается поверх страницы */
+    z-index: 1; /* Слой поверх */
+    left: 0;
+    top: 0;
+    width: 100%; /* Полная ширина */
+    height: 100%; /* Полная высота */
+    overflow: auto; /* Прокрутка при необходимости */
+    background-color: rgba(0, 0, 0, 0.4); /* Фон с прозрачностью */
+    padding-top: 100px; /* Отступ сверху */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Центрируем модальное окно */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ширина модального окна */
+    max-width: 500px; /* Максимальная ширина */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для эффекта поднятия */
+    border-radius: 8px; /* Закругленные углы */
+}
+

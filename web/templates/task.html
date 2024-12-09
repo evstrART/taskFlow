@@ -40,8 +40,47 @@
         <h1 id="task-title">#1 test</h1>
         <button class="add-tag">Add tag</button>
         <div class="tag-container"></div>
+        <div class="task-buttons">
+          <button id="edit-project" class="edit-button" onclick="editTask()">
+            <img src="/static/images/edit.svg" alt="Edit Project" />
+          </button>
+          <button id="delete-task" class="delete-button" onclick="deleteTask()">
+            <img src="/static/images/delete.svg" alt="Delete Task" />
+          </button>
+        </div>
       </div>
 
+      <div id="editTaskModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeEditTaskModal()">&times;</span>
+          <h2>Edit Task</h2>
+          <label for="taskTitle">Title:</label>
+          <input type="text" id="taskTitle" placeholder="Enter task title" required>
+
+          <label for="taskDescription">Description:</label>
+          <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+
+          <label for="assignedTo">Assigned To:</label>
+          <select id="assignedTo">
+            <!-- Здесь будут опции для выбора исполнителя -->
+          </select>
+
+          <label for="taskStatus">Status:</label>
+          <select id="taskStatus" required>
+            <option value="В ожидании">В ожидании</option>
+            <option value="В процессе">В процессе</option>
+            <option value="Завершено">Завершено</option>
+          </select>
+
+          <label for="taskPriority">Priority:</label>
+          <input type="text" id="taskPriority" placeholder="Enter task priority">
+
+          <label for="taskDueDate">Due Date:</label>
+          <input type="date" id="taskDueDate">
+
+          <button onclick="updateTask()">Submit</button>
+        </div>
+      </div>
       <!-- Модальное окно для добавления тега -->
       <div id="tag-modal" class="modal">
         <div class="modal-content">

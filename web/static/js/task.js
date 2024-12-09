@@ -7,6 +7,9 @@ function getIdsFromUrl() {
 }
 const {projectId, taskId} = getIdsFromUrl()
 
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('taskDueDate').setAttribute('min', today);
+
 // Функция для обновления Breadcrumb
 function updateBreadcrumb(projectId, projectTitle, taskTitle) {
     const breadcrumb = document.querySelector('.breadcrumb ul');
@@ -440,3 +443,164 @@ function deleteTag(tag_id, tagElement) {
 
 // Вызываем функцию для загрузки тегов при загрузке страницы
 document.addEventListener('DOMContentLoaded', loadTags);
+
+function openEditTaskModal() {
+    document.getElementById('editTaskModal').style.display = 'block';
+}
+
+function closeEditTaskModal() {
+    document.getElementById('editTaskModal').style.display = 'none';
+}
+
+async function editTask() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    // Получаем данные задачи
+    const taskUrl = `http://localhost:8080/api/projects/${projectId}/tasks/${taskId}`; // Замените projectId на актуальный ID проекта
+
+    try {
+        const response = await fetch(taskUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error fetching task: ${errorData.message}`);
+        }
+
+        const taskData = await response.json();
+        document.getElementById('taskTitle').value = taskData.title || '';
+        document.getElementById('taskDescription').value = taskData.description || '';
+        document.getElementById('taskStatus').value = taskData.status || '';
+        document.getElementById('taskPriority').value = taskData.priority || '';
+        document.getElementById('taskDueDate').value = taskData.dueDate || '';
+
+        // Заполнение выпадающего списка "Assigned To"
+        await loadAssignedToOptions(taskData.assignedTo); // Загружаем исполнителей
+
+        openEditTaskModal(); // Открываем модальное окно
+    } catch (error) {
+        console.error(`Failed to fetch task: ${error.message}`);
+        alert(`Failed to fetch task: ${error.message}`);
+    }
+}
+async function loadAssignedToOptions(selectedId) {
+    const token = localStorage.getItem('token');
+    const usersUrl = 'http://localhost:8080/api/users'; // URL для получения списка пользователей
+
+    try {
+        const response = await fetch(usersUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch users');
+        }
+
+        const users = await response.json();
+        const assignedToSelect = document.getElementById('assignedTo');
+        assignedToSelect.innerHTML = ''; // Очистка предыдущих опций
+
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id; // Предполагается, что у пользователя есть поле `id`
+            option.textContent = user.username; // Предполагается, что у пользователя есть поле `username`
+            if (user.id === selectedId) {
+                option.selected = true; // Устанавливаем выбранным текущего исполнителя
+            }
+            assignedToSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error(`Failed to load users: ${error.message}`);
+        alert(`Failed to load users: ${error.message}`);
+    }
+}
+
+async function updateTask() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    const input = {
+        title: document.getElementById('taskTitle').value || null,
+        description: document.getElementById('taskDescription').value || null,
+        assigned_to: parseInt(document.getElementById('assignedTo').value) || null,
+        status: document.getElementById('taskStatus').value || null,
+        priority: document.getElementById('taskPriority').value || null,
+        due_date: document.getElementById('taskDueDate').value || null
+    };
+
+    const taskUrl = `http://localhost:8080/api/projects/${projectId}/tasks/${taskId}`; // Замените projectId на актуальный ID проекта
+
+    try {
+        const response = await fetch(taskUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(input)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error updating task: ${errorData.message}`);
+        }
+
+        alert(`Task ${taskId} updated successfully.`);
+        closeEditTaskModal(); // Закрываем модальное окно
+        // Обновление страницы или перенаправление, если необходимо
+        window.location.reload(); // Перезагружаем страницу, чтобы увидеть изменения
+    } catch (error) {
+        console.error(`Failed to update task: ${error.message}`);
+        alert(`Failed to update task: ${error.message}`);
+    }
+}
+
+async function deleteTask() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    const taskUrl = `http://localhost:8080/api/projects/${projectId}/tasks/${taskId}`; // Замените projectId на актуальный ID проекта
+
+    if (confirm("Вы уверены, что хотите удалить эту задачу?")) {
+        try {
+            const response = await fetch(taskUrl, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Error deleting task: ${errorData.message}`);
+            }
+
+            alert(`Task ${taskId} deleted successfully.`);
+            // Обновление страницы или перенаправление, если необходимо
+            window.location.href = `http://localhost:8080/projects/${projectId}/`;
+        } catch (error) {
+            console.error(`Failed to delete task: ${error.message}`);
+            alert(`Failed to delete task: ${error.message}`);
+        }
+    }
+}
