@@ -261,11 +261,15 @@
 }
 
 .color {
+    display: inline-block;
     width: 30px;
     height: 30px;
     margin: 5px;
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 2px solid transparent; /* Для выделения */
+}
+.color.selected {
+    border: 2px solid #000; /* Обводка для выделенного цвета */
 }
 .tag-container {
     margin-top: 10px; /* Отступ сверху для контейнера тегов */
