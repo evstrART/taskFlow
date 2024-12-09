@@ -9,6 +9,8 @@ type AutorisationService interface {
 	CreateUser(user taskFlow.User) (int, error)
 	GetUser(username, password string) (taskFlow.User, error)
 	ChangePassword(userId int, newPassword string) error
+	UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error)
+	GetUserByNameAndEmail(username, email string) (taskFlow.User, error)
 }
 
 type Task interface {
@@ -25,6 +27,7 @@ type User interface {
 	GetUsers() ([]taskFlow.User, error)
 	UpdateUser(userId int, input taskFlow.UpdateUserInput) error
 	DeleteUser(userId int) error
+	GetUserByNameAndEmail(username, email string) (taskFlow.User, error)
 }
 type Comment interface {
 	AddComment(taskId, userId int, input taskFlow.CommentInput) (int, error)

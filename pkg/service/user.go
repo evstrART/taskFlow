@@ -34,3 +34,6 @@ func (s *UserService) CheckOldPassword(userId int, oldPassword string) (bool, er
 func (s *UserService) DeleteUser(userId int) error {
 	return s.repo.DeleteUser(userId)
 }
+func (s *UserService) GetUserByNameAndEmail(username, email string) (taskFlow.User, error) {
+	return s.repo.GetUserByNameAndEmail(username, email)
+}

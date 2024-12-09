@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	salt       = "taskFlow123"
-	tokenTTL   = time.Hour * 12
-	signingKey = "dvkdvkdfvsfvhg"
+	salt             = "taskFlow123"
+	tokenTTL         = time.Hour * 12
+	signingKey       = "dvkdvkdfvsfvhg"
+	tokenTTLForEmail = 15 * time.Minute
 )
 
 type AuthService struct {
@@ -58,6 +59,21 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 	})
 	return token.SignedString([]byte(signingKey))
 }
+func (a *AuthService) GenerateTokenForReset(username, email string) (taskFlow.User, string, error) {
+	user, err := a.repo.GetUserByNameAndEmail(username, email)
+	if err != nil {
+		return taskFlow.User{}, "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(tokenTTLForEmail).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		UserId: user.UserID,
+	})
+	tokenString, err := token.SignedString([]byte(signingKey))
+	return user, tokenString, err
+}
 
 func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -80,4 +96,7 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 func (s *AuthService) ChangePassword(userId int, input taskFlow.ChangePasswordInput) error {
 	newPassword := generatePasswordHash(input.NewPassword)
 	return s.repo.ChangePassword(userId, newPassword)
+}
+func (s *AuthService) UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error) {
+	return s.repo.UserExistsForReset(input)
 }

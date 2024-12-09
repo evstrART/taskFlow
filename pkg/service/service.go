@@ -10,6 +10,8 @@ type AutorisationService interface {
 	GenerateToken(username, password string) (string, error)
 	ParseToken(token string) (int, error)
 	ChangePassword(userId int, input taskFlow.ChangePasswordInput) error
+	UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error)
+	GenerateTokenForReset(username, email string) (taskFlow.User, string, error)
 }
 
 type Task interface {
@@ -27,6 +29,7 @@ type User interface {
 	UpdateUser(userId int, input taskFlow.UpdateUserInput) error
 	CheckOldPassword(userId int, oldPassword string) (bool, error)
 	DeleteUser(userId int) error
+	GetUserByNameAndEmail(username, email string) (taskFlow.User, error)
 }
 
 type Project interface {

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/evstrART/taskFlow"
 	"github.com/jmoiron/sqlx"
@@ -38,4 +39,26 @@ func (r *AuthPostgres) ChangePassword(userId int, newPassword string) error {
 	query := fmt.Sprintf("UPDATE %s SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2", UserTable)
 	_, err := r.db.Exec(query, newPassword, userId)
 	return err
+}
+func (r *AuthPostgres) UserExistsForReset(input taskFlow.ResetPasswordInput) (bool, error) {
+	var user taskFlow.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username = $1 OR email = $2", UserTable)
+
+	err := r.db.Get(&user, query, input.Username, input.Email)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil // Пользователь не найден
+		}
+		return false, err // Возвращаем ошибку, если произошла другая ошибка
+	}
+
+	return true, nil // Пользователь найден
+}
+
+func (r *AuthPostgres) GetUserByNameAndEmail(username, email string) (taskFlow.User, error) {
+	var user taskFlow.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username = $1 AND email = $2", UserTable)
+	err := r.db.Get(&user, query, username, email)
+	return user, err
 }

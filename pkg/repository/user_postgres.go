@@ -135,3 +135,10 @@ func (r *UserPostgres) DeleteUser(userId int) error {
 
 	return nil
 }
+
+func (r *UserPostgres) GetUserByNameAndEmail(username, email string) (taskFlow.User, error) {
+	var user taskFlow.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username = $1 AND email = $2", UserTable)
+	err := r.db.Get(&user, query, username, email)
+	return user, err
+}
