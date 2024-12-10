@@ -96,14 +96,17 @@ func (r *TaskPostgres) DeleteTask(userID, projectId, taskId int) error {
 		}
 	}()
 
-	// Устанавливаем локальный user_id
-	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID)); err != nil {
-		return err
-	}
-
 	// Запрос для удаления задачи
 	query := fmt.Sprintf("DELETE FROM %s WHERE project_id = $1 AND task_id = $2", TaskTable)
 	_, err = tx.Exec(query, projectId, taskId)
+	if err != nil {
+		return err
+	}
+
+	// Записываем действие в ActivityLogs
+	logQuery := `INSERT INTO ActivityLogs (user_id, action, related_entity, entity_id)
+                  VALUES ($1, 'DELETE', 'tasks', $2)`
+	_, err = tx.Exec(logQuery, userID, taskId)
 	if err != nil {
 		return err
 	}

@@ -95,7 +95,10 @@ func (r *UserPostgres) DeleteUser(userId int) error {
 			}
 		}
 	}()
-
+	// Устанавливаем локальный user_id
+	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userId)); err != nil {
+		return err
+	}
 	// Удаляем пользователя
 	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", UserTable)
 	_, err = tx.Exec(query, userId)
