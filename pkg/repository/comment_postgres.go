@@ -101,16 +101,22 @@ func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
 		}
 	}()
 
-	if _, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userId)); err != nil {
-		return err
-	}
-
+	// Удаляем комментарий
 	query := fmt.Sprintf("DELETE FROM %s WHERE comment_id = $1 AND user_id = $2", CommentTable)
 	_, err = tx.Exec(query, commentId, userId)
 	if err != nil {
 		return err
 	}
 
+	// Записываем действие в ActivityLogs
+	logQuery := `INSERT INTO ActivityLogs (user_id, action, related_entity, entity_id)
+                  VALUES ($1, 'DELETE', 'comments', $2)`
+	_, err = tx.Exec(logQuery, userId, commentId)
+	if err != nil {
+		return err
+	}
+
+	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}

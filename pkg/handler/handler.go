@@ -93,7 +93,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		users := api.Group("/users")
 		{
 			users.GET("/", h.getUsers)
-			users.GET("/:user_id", h.getUserProfile)
+			users.GET("/:user_id", h.getUserById)
+			users.GET("/profile", h.getUserProfile)
 			users.PUT("/:user_id", h.updateUser)
 			users.DELETE("/:user_id", h.deleteUser)
 			users.PUT(":user_id/change-password", h.changePassword)

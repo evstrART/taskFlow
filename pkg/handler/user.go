@@ -4,7 +4,26 @@ import (
 	"github.com/evstrART/taskFlow"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
+
+func (h *Handler) getUserById(c *gin.Context) {
+	userId, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
+		return
+	}
+	user, err := h.services.User.GetUser(userId)
+	if err != nil {
+		if err.Error() == "user not found" {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+	c.JSON(http.StatusOK, user)
+}
 
 func (h *Handler) getUserProfile(c *gin.Context) {
 	userId, err := getUserId(c)
@@ -34,7 +53,7 @@ func (h *Handler) getUsers(c *gin.Context) {
 }
 
 func (h *Handler) updateUser(c *gin.Context) {
-	userId, err := getUserId(c)
+	userId, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
 		return

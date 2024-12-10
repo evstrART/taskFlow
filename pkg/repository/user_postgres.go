@@ -81,25 +81,6 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 	return nil
 }
 func (r *UserPostgres) DeleteUser(userId int) error {
-	// Проверяем наличие незавершенных проектов
-	var unfinishedProjectsCount int
-	err := r.db.QueryRow("SELECT COUNT(*) FROM Projects WHERE owner_id = $1 AND status != 'completed'", userId).Scan(&unfinishedProjectsCount)
-	if err != nil {
-		return err
-	}
-
-	// Проверяем наличие незавершенных задач
-	var unfinishedTasksCount int
-	err = r.db.QueryRow("SELECT COUNT(*) FROM Tasks WHERE assigned_to = $1 AND status != 'completed'", userId).Scan(&unfinishedTasksCount)
-	if err != nil {
-		return err
-	}
-
-	// Если есть незавершенные проекты или задачи, возвращаем ошибку
-	if unfinishedProjectsCount > 0 || unfinishedTasksCount > 0 {
-		return fmt.Errorf("у вас остались незавершенные проекты или задачи. Выполните или удалите их перед удалением профиля.")
-	}
-
 	// Начинаем транзакцию
 	tx, err := r.db.Begin()
 	if err != nil {
@@ -114,12 +95,6 @@ func (r *UserPostgres) DeleteUser(userId int) error {
 			}
 		}
 	}()
-
-	// Удаляем записи из ActivityLogs
-	_, err = tx.Exec("DELETE FROM ActivityLogs WHERE user_id = $1", userId)
-	if err != nil {
-		return err
-	}
 
 	// Удаляем пользователя
 	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", UserTable)

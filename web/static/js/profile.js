@@ -10,11 +10,8 @@ async function fetchUserProfile() {
         return;
     }
 
-    const user_id = parseJwt(token).UserId; // Извлекаем UserId из токена
-    console.log("User ID:", user_id); // Проверка полученного UserId
-
     try {
-        const userResponse = await fetch(`http://localhost:8080/api/users/${user_id}`, {
+        const userResponse = await fetch(`http://localhost:8080/api/users/profile`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
