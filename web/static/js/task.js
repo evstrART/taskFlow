@@ -545,7 +545,7 @@ async function loadAssignedToOptions(selectedId) {
 
         users.forEach(user => {
             const option = document.createElement('option');
-            option.value = user.id; // Предполагается, что у пользователя есть поле `id`
+            option.value = user.user_id; // Предполагается, что у пользователя есть поле `id`
             option.textContent = user.username; // Предполагается, что у пользователя есть поле `username`
             if (user.id === selectedId) {
                 option.selected = true; // Устанавливаем выбранным текущего исполнителя
@@ -574,7 +574,6 @@ async function updateTask() {
         priority: document.getElementById('taskPriority').value || null,
         due_date: document.getElementById('taskDueDate').value || null
     };
-
     const taskUrl = `http://localhost:8080/api/projects/${projectId}/tasks/${taskId}`; // Замените projectId на актуальный ID проекта
 
     try {
