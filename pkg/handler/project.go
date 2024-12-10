@@ -127,3 +127,22 @@ func (h *Handler) getMembers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, users)
 }
+
+func (h *Handler) deleteMembers(c *gin.Context) {
+	projectId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	memberId, err := strconv.Atoi(c.Param("member_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid member id")
+		return
+	}
+	err = h.services.Project.DeleteMember(projectId, memberId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{"ok"})
+}

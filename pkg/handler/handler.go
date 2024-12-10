@@ -53,6 +53,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			members := project.Group(":id/members")
 			members.GET("/", h.getMembers)
 			members.POST("/", h.addMembers)
+			members.DELETE("/:member_id", h.deleteMembers)
 
 			task := project.Group(":id/tasks")
 			task.POST("/", h.createTask)

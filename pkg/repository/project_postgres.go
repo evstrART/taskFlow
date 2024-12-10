@@ -231,3 +231,23 @@ func (r *ProjectPostgres) GetMembers(projectId int) ([]taskFlow.User, error) {
 	err := r.db.Select(&users, query, projectId)
 	return users, err
 }
+
+// add delete member
+func (r *ProjectPostgres) DeleteMember(projectId, memberId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE project_id = $1 AND user_id = $2", ProjectMemberTable)
+	result, err := r.db.Exec(query, projectId, memberId)
+	if err != nil {
+		return fmt.Errorf("failed to delete member from project: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to retrieve rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no member found with user_id %d in project %d", memberId, projectId)
+	}
+
+	return nil
+}

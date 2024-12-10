@@ -40,6 +40,7 @@ type Project interface {
 	UpdateProject(userId, id int, input taskFlow.UpdateProjectInput) error
 	AddMembers(projectId int, input taskFlow.AddMemberRequest) error
 	GetMembers(projectId int) ([]taskFlow.User, error)
+	DeleteMember(projectId, memberId int) error
 }
 
 type Comment interface {

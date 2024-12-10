@@ -1,3 +1,11 @@
+function getProjectIdFromUrl() {
+    const pathSegments = window.location.pathname.split('/'); // Разбиваем URL на части
+    const projectId = pathSegments[2]; // ID проекта находится на 3-й позиции (индекс 2)
+    return projectId; // Возвращаем только projectId
+}
+
+const projectId = getProjectIdFromUrl();
+
 // Display current year in the footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -136,11 +144,9 @@ function displayMembers(members) {
     const teamList = document.getElementById('team-list');
     const assignedToSelect = document.getElementById('taskAssignedTo');
 
-
     // Очищаем список участников
     teamList.innerHTML = '';
     assignedToSelect.innerHTML = '<option value="">Выберите участника</option>'; // Сбрасываем предыдущие значения
-
 
     if (members.length === 0) {
         teamList.innerHTML = '<li>No members found</li>';
@@ -148,18 +154,74 @@ function displayMembers(members) {
     }
 
     members.forEach(member => {
-        // Добавляем участника в список
+        // Создаем элемент списка
         const listItem = document.createElement('li');
-        listItem.textContent = `${member.username} - ${member.role}`; // Выводим имя и роль
-        teamList.appendChild(listItem);
+
+        // Имя и роль участника
+        listItem.textContent = `${member.username} - ${member.role}`;
+
+        // Создаем значок корзины
+        const deleteIcon = document.createElement('span');
+        deleteIcon.textContent = '🗑️'; // Символ корзины
+        deleteIcon.style.fontSize = '11px';
+        deleteIcon.className = 'delete-icon'; // Присваиваем класс для стилей
+
+
+        // Обработчик события для удаления участника
+        deleteIcon.addEventListener('click', async () => {
+            const confirmed = confirm(`Удалить участника ${member.username}?`);
+            if (confirmed) {
+                await deleteMember(member.user_id); // Вызов функции удаления
+                fetchProjectMembers(currentProjectId); // Обновить список участников
+            }
+        });
+
+        // Показываем корзину при наведении
+        listItem.addEventListener('mouseenter', () => {
+            deleteIcon.style.display = 'inline'; // Показываем значок
+        });
+        listItem.addEventListener('mouseleave', () => {
+            deleteIcon.style.display = 'none'; // Скрываем значок
+        });
+
+        listItem.appendChild(deleteIcon); // Добавляем значок в элемент списка
+        teamList.appendChild(listItem); // Добавляем элемент списка в контейнер
 
         // Добавляем участника в выпадающий список
         const option = document.createElement('option');
         option.value = member.user_id; // Предполагается, что id участника доступен
         option.textContent = member.username; // Имя участника
         assignedToSelect.appendChild(option);
-
     });
+}
+
+async function deleteMember(memberId) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/projects/${projectId}/members/${memberId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error deleting member');
+        }
+
+        alert('Member deleted successfully'); // Уведомление об успешном удалении
+        location.reload()
+    } catch (error) {
+        console.error('Error deleting member:', error);
+        alert(error.message);
+    }
 }
 
 function formatDate(isoDate) {

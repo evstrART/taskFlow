@@ -104,6 +104,23 @@
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
+
+#team-list li {
+    display: flex; /* Для выравнивания элементов внутри списка */
+    justify-content: space-between; /* Отодвигает корзину к правому краю */
+    align-items: center; /* Выравнивание по вертикали */
+}
+.delete-icon {
+    display: none; /* Скрыть значок по умолчанию */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 11px; /* Размер значка */
+}
+
+#team-list li span {
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 14px; /* Размер значка */
+}
+
 .add-members-button {
     position: absolute; /* Позволяет разместить кнопку в правом верхнем углу */
     top: 10px; /* Отступ сверху */
