@@ -61,6 +61,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			task.GET("/:task_id", h.getTaskById)
 			task.PUT("/:task_id", h.updateTask)
 			task.DELETE("/:task_id", h.deleteTask)
+			task.PUT("/:task_id/complete", h.completeTask)
 
 			tag := task.Group(":task_id/tags")
 			tag.GET("/", h.getTags)

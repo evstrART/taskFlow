@@ -131,3 +131,22 @@ func (h *Handler) getAllTasksForUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, tasks)
 }
+
+func (h *Handler) completeTask(c *gin.Context) {
+	userID, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	taskID, err := strconv.Atoi(c.Param("task_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = h.services.CompleteTask(taskID, userID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{Status: "ok"})
+}

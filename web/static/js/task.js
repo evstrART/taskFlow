@@ -635,3 +635,30 @@ async function deleteTask() {
         }
     }
 }
+document.getElementById('complete-task-btn').addEventListener('click', function() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    fetch(`http://localhost:8080/api/projects/${projectId}/tasks/${taskId}/complete`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            // Перенаправление на страницу проекта после успешного завершения задачи
+            window.location.href = `http://localhost:8080/projects/${projectId}`;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            alert('Failed to complete the task: ' + error.message);
+        });
+});

@@ -72,6 +72,9 @@
     padding: 16px; /* Отступы вокруг содержимого */
     border-radius: 8px; /* Скругленные углы */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень для боковой колонки */
+    display: flex; /* Используем flexbox */
+    flex-direction: column; /* Вертикальное выравнивание */
+    justify-content: space-between; /* Разделяем элементы */
 }
 /* Стили для области комментариев */
 .comments {
@@ -360,3 +363,20 @@
     border-radius: 8px; /* Закругленные углы */
 }
 
+#complete-task-btn {
+    margin-top: auto; /* Отодвигаем кнопку вниз */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    background-color: #4CAF50; /* Цвет фона кнопки */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Закругляем углы */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 16px; /* Размер текста */
+    transition: background-color 0.3s; /* Плавный переход */
+    align-self: center; /* Центрируем кнопку */
+    width: 80%; /* Ширина кнопки */
+}
+
+#complete-task-btn:hover {
+    background-color: #45a049; /* Цвет при наведении */
+}

@@ -72,8 +72,13 @@
             <option value="Завершено">Завершено</option>
           </select>
 
-          <label for="taskPriority">Priority:</label>
-          <input type="text" id="taskPriority" placeholder="Enter task priority">
+          <label for="taskPriority">Приоритет:</label>
+          <select id="taskPriority" required>
+            <option value="Низкий">Низкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Высокий">Высокий</option>
+          </select>
+
 
           <label for="taskDueDate">Due Date:</label>
           <input type="date" id="taskDueDate">
@@ -130,7 +135,7 @@
         <h3>Assigned to:</h3>
         <p><span id="assigned-user">Иван Иванов</span></p> <!-- Имя пользователя -->
       </div>
-
+      <button id="complete-task-btn">Complete Task</button>
     </div>
 
   </main>

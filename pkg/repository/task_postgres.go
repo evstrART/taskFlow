@@ -208,3 +208,41 @@ func (r *TaskPostgres) GetAllTasksForUser(userID int) ([]taskFlow.Task, error) {
 
 	return tasks, nil
 }
+
+func (r *TaskPostgres) CompleteTask(taskId, userId int) error {
+	// Начинаем транзакцию
+	tx, err := r.db.Beginx()
+	if err != nil {
+		return err
+	}
+
+	// Отменяем транзакцию в случае ошибки
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userId)); err != nil {
+		return err
+	}
+
+	// Обновляем статус задачи на "Завершено"
+	_, err = tx.Exec(`UPDATE tasks SET status = $1 WHERE task_id = $2`, "Завершено", taskId)
+	if err != nil {
+		return err
+	}
+
+	// Добавляем запись в activitylogs
+	_, err = tx.Exec(`INSERT INTO activitylogs (action, related_entity, user_id, entity_id) VALUES ($1, $2, $3, $4)`,
+		"COMPLETE", "tasks", userId, taskId)
+	if err != nil {
+		return err
+	}
+
+	// Подтверждаем транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}

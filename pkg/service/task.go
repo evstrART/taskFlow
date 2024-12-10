@@ -43,12 +43,12 @@ func (s *TaskService) DeleteTask(userID, projectId int, taskId int) error {
 }
 
 func (s *TaskService) UpdateTask(userID, projectId int, taskId int, input taskFlow.UpdateTaskInput) error {
-	_, err := s.projectRepo.GetProjectById(projectId)
-	if err != nil {
-		return err
-	}
 	return s.repo.UpdateTask(userID, projectId, taskId, input)
 }
 func (s *TaskService) GetAllTasksForUser(userID int) ([]taskFlow.Task, error) {
 	return s.repo.GetAllTasksForUser(userID)
+}
+
+func (s *TaskService) CompleteTask(taskId, userId int) error {
+	return s.repo.CompleteTask(taskId, userId)
 }
