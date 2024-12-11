@@ -42,3 +42,6 @@ func (s *ProjectService) GetMembers(projectId int) ([]taskFlow.User, error) {
 func (s *ProjectService) DeleteMember(projectId, memberId int) error {
 	return s.repo.DeleteMember(projectId, memberId)
 }
+func (s *ProjectService) CompleteProject(projectId, userID int) error {
+	return s.repo.CompleteProject(projectId, userID)
+}

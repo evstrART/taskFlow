@@ -146,3 +146,26 @@ func (h *Handler) deleteMembers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
+
+func (h *Handler) completeProject(c *gin.Context) {
+	projectId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid project id")
+		return
+	}
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+	err = h.services.Project.CompleteProject(projectId, userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = h.services.Project.DeleteProject(userId, projectId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, statusResponse{"ok"})
+}

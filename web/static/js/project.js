@@ -601,3 +601,35 @@ function addTask() {
         });
 }
 
+async function completeProject() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
+
+    const url = `http://localhost:8080/api/projects/${projectId}/complete`; // URL для завершения проекта
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error completing project: ${errorData.message}`);
+        }
+
+        alert("Project completed successfully!"); // Успешное завершение проекта
+        window.location.href = "http://localhost:8080/projects";
+    } catch (error) {
+        console.error(`Failed to complete project: ${error.message}`);
+        alert(`Failed to complete project: ${error.message}`);
+    }
+}
+

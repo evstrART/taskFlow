@@ -251,3 +251,46 @@ func (r *ProjectPostgres) DeleteMember(projectId, memberId int) error {
 
 	return nil
 }
+
+func (r *ProjectPostgres) CompleteProject(projectId, userID int) error {
+	// Начинаем транзакцию
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Обеспечиваем откат в случае ошибки
+	defer func() {
+		if err != nil {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("failed to rollback transaction: %v", rbErr)
+			}
+		}
+	}()
+
+	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID))
+	if err != nil {
+		return err
+	}
+	// Обновляем статус проекта на "Завершен"
+	updateQuery := fmt.Sprintf("UPDATE %s SET status = 'Completed' WHERE project_id = $1", ProjectTable)
+	_, err = tx.Exec(updateQuery, projectId)
+	if err != nil {
+		return err
+	}
+
+	// Записываем действие в ActivityLogs
+	logQuery := `INSERT INTO ActivityLogs (user_id, action, related_entity, entity_id)
+                  VALUES ($1, 'COMPLETE', 'projects', $2)`
+	_, err = tx.Exec(logQuery, userID, projectId)
+	if err != nil {
+		return err
+	}
+
+	// Коммитим транзакцию
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -299,3 +299,20 @@
     width: 100%; /* Занимает всю ширину родителя */
     border-collapse: collapse; /* Убирает двойные границы */
 }
+#complete-project-btn {
+    margin-top: auto; /* Отодвигаем кнопку вниз */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    background-color: #4CAF50; /* Цвет фона кнопки */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Закругляем углы */
+    cursor: pointer; /* Указатель при наведении */
+    font-size: 16px; /* Размер текста */
+    transition: background-color 0.3s; /* Плавный переход */
+    align-self: center; /* Центрируем кнопку */
+    width: 80%; /* Ширина кнопки */
+}
+
+#complete-project-btn:hover {
+    background-color: #45a049; /* Цвет при наведении */
+}
