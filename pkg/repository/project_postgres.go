@@ -124,10 +124,7 @@ func (r *ProjectPostgres) DeleteProject(userID, id int) error {
 			}
 		}
 	}()
-	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID))
-	if err != nil {
-		return err
-	}
+
 	// Запрос для удаления проекта
 	query := fmt.Sprintf(`DELETE FROM %s WHERE project_id = $1`, ProjectTable)
 	_, err = tx.Exec(query, id)
@@ -138,6 +135,15 @@ func (r *ProjectPostgres) DeleteProject(userID, id int) error {
 	// Запрос для удаления участников проекта
 	memberQuery := fmt.Sprintf(`DELETE FROM %s WHERE project_id = $1`, ProjectMemberTable)
 	_, err = tx.Exec(memberQuery, id)
+	if err != nil {
+		return err // Если ошибка, возвращаем её
+	}
+
+	// Добавляем запись в ActivityLogs
+	logQuery := fmt.Sprintf(`INSERT INTO %s (user_id, action, related_entity, entity_id) 
+                             VALUES ($1, 'DELETE', 'projects', $2)`, ActivityLogsTable)
+
+	_, err = tx.Exec(logQuery, userID, id)
 	if err != nil {
 		return err // Если ошибка, возвращаем её
 	}
