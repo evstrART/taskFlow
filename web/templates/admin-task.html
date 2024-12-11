@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Flow - Task Layout</title>
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/task.css">
+</head>
+<body>
+<div class="layout">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="/static/images/flow.svg" alt="Task Flow Logo">
+            <div class="title">Task Flow Admin</div>
+        </div>
+        <div class="auth-buttons">
+            <!-- Кнопка профиля -->
+            <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <ul>
+            <li><a href="/" class="home-link">Home</a></li>
+            <li><a href="/admin/projects" class="projects-link">Projects</a></li>
+            <li><a href="#" id="project-link" class="projects-title">Project Title</a></li> <!-- Добавлен ID для проекта -->
+            <li><a href="#" id="tasks-link" class="tasks">Tasks</a></li> <!-- Добавлен ID для задач -->
+            <li class="current-page" id="task-name">Loading Tasks...</li> <!-- ID для текущей задачи -->
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <main class="content-wrapper">
+        <div class="content">
+            <div class="task-header">
+                <h1 id="task-title">#1 test</h1>
+                <button class="add-tag">Add tag</button>
+                <div class="tag-container"></div>
+                <div class="task-buttons">
+                    <button id="edit-project" class="edit-button" onclick="editTask()">
+                        <img src="/static/images/edit.svg" alt="Edit Project" />
+                    </button>
+                    <button id="delete-task" class="delete-button" onclick="deleteTask()">
+                        <img src="/static/images/delete.svg" alt="Delete Task" />
+                    </button>
+                </div>
+            </div>
+
+            <div id="editTaskModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditTaskModal()">&times;</span>
+                    <h2>Edit Task</h2>
+                    <label for="taskTitle">Title:</label>
+                    <input type="text" id="taskTitle" placeholder="Enter task title" required>
+
+                    <label for="taskDescription">Description:</label>
+                    <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+
+                    <label for="assignedTo">Assigned To:</label>
+                    <select id="assignedTo">
+                        <!-- Здесь будут опции для выбора исполнителя -->
+                    </select>
+
+                    <label for="taskStatus">Status:</label>
+                    <select id="taskStatus" required>
+                        <option value="В ожидании">В ожидании</option>
+                        <option value="В процессе">В процессе</option>
+                        <option value="Завершено">Завершено</option>
+                    </select>
+
+                    <label for="taskPriority">Приоритет:</label>
+                    <select id="taskPriority" required>
+                        <option value="Низкий">Низкий</option>
+                        <option value="Средний">Средний</option>
+                        <option value="Высокий">Высокий</option>
+                    </select>
+
+
+                    <label for="taskDueDate">Due Date:</label>
+                    <input type="date" id="taskDueDate">
+
+                    <button onclick="updateTask()">Submit</button>
+                </div>
+            </div>
+            <!-- Модальное окно для добавления тега -->
+            <div id="tag-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="close-tag-modal">&times;</span>
+                    <h2>Add Tag</h2>
+                    <input type="text" id="tag-input" placeholder="Enter tag" />
+                    <div class="color-picker">
+                        <h3>Choose Color:</h3>
+                        <div class="colors">
+                            <!-- Цветовые кнопки -->
+                            <div class="color" style="background-color: #ff0000;" data-color="#ff0000"></div>
+                            <div class="color" style="background-color: #00ff00;" data-color="#00ff00"></div>
+                            <div class="color" style="background-color: #0000ff;" data-color="#0000ff"></div>
+                            <div class="color" style="background-color: #ffff00;" data-color="#ffff00"></div>
+                            <div class="color" style="background-color: #ff00ff;" data-color="#ff00ff"></div>
+                            <div class="color" style="background-color: #00ffff;" data-color="#00ffff"></div>
+                            <div class="color" style="background-color: #000000;" data-color="#000000"></div>
+                            <div class="color" style="background-color: #ffffff;" data-color="#ffffff"></div>
+                        </div>
+                    </div>
+                    <button id="save-tag">Save Tag</button>
+                </div>
+            </div>
+            <div class="task-description">
+                <p>Здесь будет описание задачи. Вы можете добавить важные детали и инструкции. </p>
+            </div>
+            <div class="comments">
+                <h2>Comments</h2>
+                <div class="comment-input">
+                    <textarea id="comment-text" placeholder="Добавьте ваш комментарий..."></textarea>
+                    <button id="submit-comment">Отправить</button>
+                </div>
+                <div id="comment-list">
+                    <p>Нет комментариев.</p> <!-- Сообщение по умолчанию -->
+                </div>
+            </div>
+        </div>
+
+
+        <div class="sidebar">
+            <div class="status">
+                <h3>Status:</h3>
+                <p><span id="task-status">Выполняется</span></p> <!-- Статус задачи -->
+            </div>
+
+            <div class="assigned">
+                <h3>Assigned to:</h3>
+                <p><span id="assigned-user">Иван Иванов</span></p> <!-- Имя пользователя -->
+            </div>
+            <button id="complete-task-btn">Complete Task</button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        © <span id="year"></span> Created by Task Flow Team
+    </footer>
+</div>
+
+<!-- Подключение JavaScript -->
+<script src="/static/js/admin-task.js"></script> <!-- Подключение вашего JavaScript файла -->
+</body>
+</html>

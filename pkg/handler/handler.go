@@ -29,6 +29,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		main.GET("/projects/:id/tasks/:task_id", h.taskGet)
 		main.GET("/forgot-password", h.forgotPasswordGet)
 		main.GET("/reset-password", h.resetPasswordGet)
+		admin := router.Group("/admin")
+		{
+			admin.GET("/projects", h.getAdminProjectsPage)
+			admin.GET("/projects/:id", h.adminProjectGet)
+			admin.GET("/profile", h.profileGet)
+			admin.GET("/projects/:id/tasks/:task_id", h.adminTaskGet)
+		}
 	}
 	auth := router.Group("/auth")
 	{
@@ -38,6 +45,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/forgot-password", h.forgotPassword)
 		auth.POST("/reset-password", h.changeForgotPassword)
+		auth.POST("/check-admin", h.checkAdmin)
 
 	}
 	api := router.Group("/api", h.userIdentity)
@@ -46,6 +54,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			project.POST("/", h.createProject)
 			project.GET("/", h.getAllProjects)
+			project.GET("/user", h.getAllProjectsForUser)
 			project.GET("/:id", h.getProjectById)
 			project.PUT("/:id", h.updateProject)
 			project.DELETE("/:id", h.deleteProject)
@@ -101,6 +110,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.PUT(":user_id/change-password", h.changePassword)
 		}
 	}
-
+	admin := router.Group("/admin", h.userIdentity, h.userIdentity, h.checkAdmin)
+	{
+		admin.GET("/", h.getAllProjects)
+	}
 	return router
 }

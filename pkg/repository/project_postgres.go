@@ -85,6 +85,23 @@ func (r *ProjectPostgres) GetAllProjects() ([]taskFlow.Project, error) {
 	err := r.db.Select(&projects, query)
 	return projects, err
 }
+func (r *ProjectPostgres) GetAllProjectsForUser(userId int) ([]taskFlow.Project, error) {
+	var projects []taskFlow.Project
+
+	query := fmt.Sprintf(`
+        SELECT p.* 
+        FROM %s p
+        JOIN %s pm ON p.project_id = pm.project_id
+        WHERE pm.user_id = $1`, ProjectTable, ProjectMemberTable)
+
+	// Выполняем запрос и передаем userId как параметр
+	err := r.db.Select(&projects, query, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return projects, nil
+}
 
 func (r *ProjectPostgres) GetProjectById(id int) (taskFlow.Project, error) {
 	var project taskFlow.Project

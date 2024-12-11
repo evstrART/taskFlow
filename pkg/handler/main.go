@@ -31,3 +31,15 @@ func (h *Handler) forgotPasswordGet(c *gin.Context) {
 func (h *Handler) resetPasswordGet(c *gin.Context) {
 	c.HTML(http.StatusOK, "resetPass.html", gin.H{})
 }
+
+func (h *Handler) getAdminProjectsPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin-projects.html", gin.H{
+		"breadcrumb": "Projects",
+	})
+}
+func (h *Handler) adminProjectGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin-project.html", gin.H{})
+}
+func (h *Handler) adminTaskGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin-task.html", gin.H{})
+}

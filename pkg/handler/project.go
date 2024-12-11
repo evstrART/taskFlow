@@ -169,3 +169,17 @@ func (h *Handler) completeProject(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
+
+func (h *Handler) getAllProjectsForUser(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid user id")
+		return
+	}
+	projects, err := h.services.Project.GetAllProjectsForUser(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, projects)
+}

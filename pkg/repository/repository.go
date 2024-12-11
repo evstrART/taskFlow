@@ -47,7 +47,8 @@ type Tag interface {
 	UpdateTag(tagId int, input taskFlow.TagInput) error
 	GetAllTags() ([]taskFlow.Tag, error)
 }
-type Log interface {
+type Admin interface {
+	SelectAdminId(userId int) ([]int, error)
 }
 
 type Project interface {
@@ -60,6 +61,7 @@ type Project interface {
 	GetMembers(projectId int) ([]taskFlow.User, error)
 	DeleteMember(projectId, memberId int) error
 	CompleteProject(projectId, userID int) error
+	GetAllProjectsForUser(userID int) ([]taskFlow.Project, error)
 }
 
 type Repository struct {
@@ -69,7 +71,7 @@ type Repository struct {
 	User
 	Comment
 	Tag
-	Log
+	Admin
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
@@ -80,5 +82,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Comment:             NewCommentPostgres(db),
 		Tag:                 NewTagPostgres(db),
 		User:                NewUserPostgres(db),
+		Admin:               NewAdminPostgres(db),
 	}
 }

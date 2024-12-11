@@ -27,7 +27,7 @@ async function fetchProjects() {
 
     try {
         console.log('Fetching projects...');  // Для отладки
-        const response = await fetch('/api/projects/user', {
+        const response = await fetch('/api/projects', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function displayProjects(projects) {
         // Добавление обработчика событий для кнопки
         const viewButton = projectItem.querySelector('.view-button');
         viewButton.addEventListener('click', () => {
-            window.location.href = `/projects/${project.project_id}`;
+            window.location.href = `/admin/projects/${project.project_id}`;
         });
 
         projectsList.appendChild(projectItem);

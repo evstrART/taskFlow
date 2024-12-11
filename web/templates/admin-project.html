@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow - Project Details</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/project.css">
+</head>
+<body>
+<div class="layout">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow Admin</div>
+    </div>
+    <div class="auth-buttons">
+      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/" class="home-link">Home</a></li>
+      <li><a href="/admin/projects" class="projects-link">Projects</a></li>
+      <li class="current-page" id="project-name">Loading Project...</li>
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <main class="content-wrapper">
+    <!-- Sidebar for Projects -->
+    <div class="sider">
+      <h2>Projects:</h2>
+      <ul id="projects-list">
+        <li>Loading projects...</li>
+      </ul>
+    </div>
+
+    <!-- Project Information Area -->
+    <div class="content">
+      <!-- Project Details Section -->
+      <div class="project-details">
+        <h2 id="project-title" class="project-title">Project Title</h2>
+        <p id="project-description" class="project-description">Project description will appear here...</p>
+
+        <div class="project-info">
+          <h3 class="section-title">Project Details</h3>
+          <div class="project-info-item">
+            <strong>Start Date:</strong> <span id="project-start-date">Loading...</span>
+          </div>
+          <div class="project-info-item">
+            <strong>End Date:</strong> <span id="project-end-date">Loading...</span>
+          </div>
+          <div class="project-info-item">
+            <strong>Status:</strong> <span id="project-status">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons for Edit and Delete -->
+      <div class="project-buttons">
+        <button class="edit-button" onclick="editProject()">
+          <img src="/static/images/edit.svg" alt="Edit Icon">
+        </button>
+        <button class="delete-button" onclick="deleteProject()">
+          <img src="/static/images/delete.svg" alt="Delete Icon">
+        </button>
+      </div>
+
+      <!-- Модальное окно -->
+      <div id="editProjectModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h2>Редактировать проект</h2>
+          <form id="editProjectForm" onsubmit="event.preventDefault(); editProject();">
+            <label for="projectName">Название:</label>
+            <input type="text" id="projectName">
+
+            <label for="projectDescription">Описание:</label>
+            <textarea id="projectDescription"></textarea>
+
+            <label for="projectStartDate">Дата начала:</label>
+            <input type="date" id="projectStartDate">
+
+            <label for="projectEndDate">Дата окончания:</label>
+            <input type="date" id="projectEndDate">
+
+            <label for="projectStatus">Статус:</label>
+            <select id="projectStatus">
+              <option value="">Выберите статус</option>
+              <option value="Активный">Активный</option>
+              <option value="Завершённый">Завершённый</option>
+              <option value="На удержании">На удержании</option>
+            </select>
+
+            <button type="submit">Сохранить изменения</button>
+            <button type="button" onclick="closeModal()">Закрыть</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tasks Section -->
+      <div class="tasks-section">
+        <h3 class="section-title">Tasks</h3>
+        <div class="add-buttons">
+          <button id="add-button" onclick="addTask()">Add Task</button>
+        </div>
+        <div class="table-container"> <!-- Контейнер для прокрутки -->
+          <table id="tasks-list" class="tasks-table">
+            <thead>
+            <tr>
+              <th>Task Title</th>
+              <th>Status</th>
+              <th>Due Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td colspan="3">Loading tasks...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Section, вынесенная из контента -->
+    <div class="team">
+      <h2>Team</h2>
+      <button class="add-members-button" onclick="addMembers()">
+        <img src="/static/images/plus.png" alt="Add Members Icon">
+      </button>
+      <ul id="team-list">
+        <li>Loading team members...</li>
+      </ul>
+      <button id="complete-project-btn" onclick="completeProject()">
+        Complete Project
+      </button>
+    </div>
+
+    <div id="addTaskModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Добавить новую задачу</h2>
+        <form id="addTaskForm" onsubmit="event.preventDefault(); addTask();">
+          <label for="taskTitle">Название задачи:</label>
+          <input type="text" id="taskTitle" required>
+
+          <label for="taskDescription">Описание:</label>
+          <textarea id="taskDescription"></textarea>
+
+          <label for="taskAssignedTo">Назначить (User ID):</label>
+          <select id="taskAssignedTo" required>
+            <option value="">Выберите участника</option>
+          </select>
+
+          <label for="taskStatus">Статус:</label>
+          <select id="taskStatus" required>
+            <option value="В ожидании">В ожидании</option>
+            <option value="В процессе">В процессе</option>
+            <option value="Завершено">Завершено</option>
+          </select>
+
+          <label for="taskPriority">Приоритет:</label>
+          <select id="taskPriority" required>
+            <option value="Низкий">Низкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Высокий">Высокий</option>
+          </select>
+
+          <label for="taskDueDate">Срок выполнения:</label>
+          <input type="date" id="taskDueDate" required>
+
+          <button type="submit">Добавить задачу</button>
+          <button type="button" onclick="closeModal()">Закрыть</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="addMemberModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Добавить участника</h2>
+        <form id="addMemberForm" onsubmit="event.preventDefault(); addMembers();">
+          <label for="memberId">Выберете пользователя:</label>
+          <select id="memberId" required>
+            <option value="">Выберите участника</option>
+          </select>
+
+          <label for="role">Роль:</label>
+          <select id="role" required>
+            <option value="Разработчик">Разработчик</option>
+            <option value="Дизайнер">Дизайнер</option>
+            <option value="Тестировщик">Тестировщик</option>
+            <option value="Системный архитектор">Системный архитектор</option>
+            <option value="Проектный менеджер">Проектный менеджер</option>
+            <option value="DevOps">DevOps</option>
+            <option value="Бизнес-аналитик ">Бизнес-аналитик</option>
+          </select>
+
+          <button type="submit">Добавить участника</button>
+          <button type="button" onclick="closeModal()">Закрыть</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
+</div>
+
+<script src="/static/js/admin-project.js"></script>
+
+</body>
+</html>

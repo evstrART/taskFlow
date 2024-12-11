@@ -43,6 +43,7 @@ type Project interface {
 	GetMembers(projectId int) ([]taskFlow.User, error)
 	DeleteMember(projectId, memberId int) error
 	CompleteProject(projectId, userID int) error
+	GetAllProjectsForUser(userID int) ([]taskFlow.Project, error)
 }
 
 type Comment interface {
@@ -62,7 +63,8 @@ type Tag interface {
 	UpdateTag(tagId int, input taskFlow.TagInput) error
 	GetAllTags() ([]taskFlow.Tag, error)
 }
-type Log interface {
+type Admin interface {
+	CheckAdmin(userId int) (bool, error)
 }
 type Service struct {
 	AutorisationService
@@ -71,7 +73,7 @@ type Service struct {
 	User
 	Comment
 	Tag
-	Log
+	Admin
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -82,5 +84,6 @@ func NewService(repos *repository.Repository) *Service {
 		Comment:             NewCommentService(repos.Comment),
 		Tag:                 NewTagService(repos.Tag),
 		User:                NewUserService(repos.User),
+		Admin:               NewAdminService(repos.Admin),
 	}
 }
