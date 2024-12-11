@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/evstrART/taskFlow/pkg/repository"
-	"github.com/signintech/gopdf"
+	"github.com/jung-kurt/gofpdf"
 	"os"
 )
 
@@ -16,7 +16,7 @@ const (
 	ProjectTable       = "projects"
 	CommentTable       = "comments"
 	ActivityLogsTable  = "activitylogs"
-	TaskTagTable       = "task_tags"
+	TaskTagTable       = "tasktags"
 	ProjectMemberTable = "projectmembers"
 )
 
@@ -46,69 +46,76 @@ func (s *AdminService) CheckAdmin(userId int) (bool, error) {
 }
 
 func (a *AdminService) GetReportPDF() (string, error) {
-	var content string
-	// Получаем логи активности из базы данных
-	logs, err := a.repo.SelectActivityLogs() // Используем метод для получения логов активности
+	logs, err := a.repo.SelectActivityLogs() // Получаем логи активности
 	if err != nil {
-		return "", err // Обработка ошибки, если запрос не удался
+		return "", err // Обработка ошибки при получении логов
 	}
 
-	pdf := gopdf.GoPdf{}
-	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
+	pdf := gofpdf.New("P", "mm", "A4", "") // Создаем новый PDF документ
 	pdf.AddPage()
+	pdf.SetFont("Arial", "B", 14)
+	pdf.Cell(0, 10, "Activity Logs Report") // Заголовок отчета
+	pdf.Ln(20)                              // Перенос строки
 
-	// Установка стандартного шрифта без кастомизации
-	err = pdf.SetFont("Helvetica", "", 12) // Используем стандартный шрифт Helvetica
-	if err != nil {
-		return "", err // Обработка ошибки при установке шрифта
+	// Устанавливаем шрифт для содержимого
+	pdf.SetFont("Arial", "", 12)
+
+	// Заголовки таблицы с учетом ширины ячеек
+	headers := []string{"Log ID", "User ID", "Action", "Timestamp", "Related Entity", "Entity ID"}
+
+	// Устанавливаем ширину ячеек для заголовков
+	headerWidths := []float64{30, 30, 30, 50, 30, 30} // Ширина для каждого заголовка
+
+	for i, header := range headers {
+		pdf.Cell(headerWidths[i], 10, header) // Используем ширину из массива
 	}
+	pdf.Ln(-1) // Перенос строки
 
+	// Добавляем данные логов
 	for _, log := range logs {
-		content = fmt.Sprintf("Log ID: %d\nUser ID: %d\nAction: %s\nTimestamp: %s\nRelated Entity: %s\nEntity ID: %d\n",
-			log.LogID, log.UserID, log.Action, log.Timestamp.Format("2006-01-02 15:04:05"), log.RelatedEntity, log.EntityID)
+		pdf.Cell(headerWidths[0], 10, fmt.Sprintf("%d", log.LogID))  // Log ID
+		pdf.Cell(headerWidths[1], 10, fmt.Sprintf("%d", log.UserID)) // User ID
+		pdf.Cell(headerWidths[2], 10, log.Action)                    // Action
 
-		if pdf.GetY() > 800 { // Проверка на переполнение страницы
-			pdf.AddPage() // Добавляем новую страницу при необходимости
-		}
+		// Увеличиваем расстояние между Timestamp и Related Entity
+		pdf.Cell(headerWidths[3], 10, log.Timestamp.Format("2006-01-02 15:04:05")) // Timestamp
+		pdf.Cell(headerWidths[4], 10, log.RelatedEntity)                           // Related Entity
 
-		err = pdf.Cell(nil, content) // Запись полного содержимого в PDF
-		if err != nil {
-			return "", err // Обработка ошибки при записи в PDF
-		}
-		pdf.Br(20) // Перенос строки после каждой записи
+		pdf.Cell(headerWidths[5], 10, fmt.Sprintf("%d", log.EntityID)) // Entity ID
+		pdf.Ln(-1)                                                     // Перенос строки после каждой записи
 	}
 
 	// Указываем путь для сохранения PDF-файла
 	pathPDF := "/Users/Учеба/3 курс/CУБД/reports/report.pdf"
 
-	err = pdf.WritePdf(pathPDF) // Запись PDF-файла на диск
-	if err != nil {
-		return "", err // Обработка ошибки при записи PDF-файла
+	if err := pdf.OutputFileAndClose(pathPDF); err != nil {
+		return "", err // Обработка ошибки при сохранении PDF-файла
 	}
 
-	return pathPDF, nil // Возврат пути к созданному PDF-файлу и nil как ошибку
+	return pathPDF, nil // Возврат пути к созданному PDF-файлу
 }
 
 func (a *AdminService) GetReportExcel() (string, error) {
-	file := excelize.NewFile()
-	sheetName := "Report"
-	index := file.NewSheet(sheetName)
+	file := excelize.NewFile() // Создаем новый файл Excel
+	sheetName := "Activity Logs"
 
-	// Устанавливаем заголовки
+	index := file.NewSheet(sheetName) // Создаем новый лист
+	file.SetActiveSheet(index)
+
+	// Заголовки таблицы
 	headers := []string{"Log ID", "User ID", "Action", "Timestamp", "Related Entity", "Entity ID"}
 	for colNum, header := range headers {
-		cell := excelize.ToAlphaString(colNum+1) + "1"
+		cell := excelize.ToAlphaString(colNum) + "1"
 		file.SetCellValue(sheetName, cell, header)
 	}
 
-	// Добавляем данные из ActivityLogs
 	logs, err := a.repo.SelectActivityLogs() // Получаем логи активности
 	if err != nil {
-		return "", err // Обработка ошибки
+		return "", err // Обработка ошибки при получении логов
 	}
 
 	for rowNum, log := range logs {
-		colNum := 1
+		colNum := 0
 		file.SetCellValue(sheetName, excelize.ToAlphaString(colNum)+fmt.Sprintf("%d", rowNum+2), log.LogID)
 		colNum++
 		file.SetCellValue(sheetName, excelize.ToAlphaString(colNum)+fmt.Sprintf("%d", rowNum+2), log.UserID)
@@ -122,13 +129,8 @@ func (a *AdminService) GetReportExcel() (string, error) {
 		file.SetCellValue(sheetName, excelize.ToAlphaString(colNum)+fmt.Sprintf("%d", rowNum+2), log.EntityID)
 	}
 
-	// Устанавливаем активный лист
-	file.SetActiveSheet(index)
+	pathExcel := "/Users/Учеба/3 курс/CУБД/reports/report3.xlsx" // Указываем путь для сохранения Excel-файла
 
-	// Указываем путь для сохранения Excel-файла
-	pathExcel := "/Users/Учеба/3 курс/CУБД/reports/report.xlsx"
-
-	// Сохраняем файл
 	if err := file.SaveAs(pathExcel); err != nil {
 		return "", err // Обработка ошибки при сохранении файла
 	}

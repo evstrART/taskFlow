@@ -28,26 +28,23 @@ func (h *Handler) checkAdmin(c *gin.Context) {
 func (h *Handler) getReport(ctx *gin.Context) {
 	var path string
 	var err error
-	format := ctx.Param("format") // Получаем формат из параметров URL
+	format := ctx.Param("format")
 
 	if format == "pdf" {
-		path, err = h.services.Admin.GetReportPDF() // Генерация PDF-отчета
-		if err != nil {
-			newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
-			return
-		}
+		path, err = h.services.Admin.GetReportPDF()
 	} else if format == "excel" {
-		path, err = h.services.Admin.GetReportExcel() // Генерация Excel-отчета
-		if err != nil {
-			newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
-			return
-		}
+		path, err = h.services.Admin.GetReportExcel()
 	} else {
 		newErrorResponse(ctx, http.StatusBadRequest, "Invalid format")
 		return
 	}
 
-	ctx.File(path) // Отправляем файл клиенту
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.File(path)
 	ctx.Status(http.StatusOK)
 }
 

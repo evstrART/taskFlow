@@ -5,9 +5,8 @@ document.getElementById('report').addEventListener("submit", function (event) {
     var selectedRadio = document.querySelector('input[name="format"]:checked');
 
     if (selectedRadio) {
-        var url = '/admin/reports/' + selectedRadio.value; // Конструируем URL для запроса
+        var url = '/admin/reports/' + selectedRadio.value;
 
-        // Отправляем запрос
         SendRequest(url, token, selectedRadio.value);
     } else {
         alert('Please select a report format.');
@@ -26,46 +25,54 @@ function SendRequest(url, token, fileType) {
             if (!response.ok) {
                 throw new Error('Error: ' + response.statusText);
             }
-            return response.blob(); // Получаем blob-данные
+            return response.blob();
         })
         .then(blob => {
-            // Сохраняем файл в зависимости от типа
             var fileName = fileType === 'pdf' ? 'report.pdf' : 'report.xlsx';
-            saveAs(blob, fileName); // Используем библиотеку FileSaver.js для сохранения файла
+            saveAs(blob, fileName);
         })
         .catch(error => {
             console.error('Error downloading file:', error);
+            alert('Error downloading file: ' + error.message); // User feedback
+        })
+        .finally(() => {
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
         });
 }
 
-
-document.getElementById('export').addEventListener("click",function (){
+document.getElementById('export').addEventListener("click", function () {
     var token = localStorage.getItem('token');
+
+    // Проверяем наличие токена
+    if (!token) {
+        console.error('Токен не найден. Пожалуйста, войдите в систему.');
+        return;
+    }
+
     fetch('/admin/export', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization-1': 'Bearer ' + token,
-
+            'Authorization': 'Bearer ' + token, // Исправлено здесь
         },
     })
-        .then(response =>
-        {
-            if (!response.ok){
-                throw Error(response.json().message)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { // Изменено для получения сообщения об ошибке
+                    throw new Error(err.message || 'Ошибка при загрузке файла');
+                });
             }
-            return response.blob()
+            return response.blob();
         })
         .then(blob => {
-            // Запрашиваем у пользователя выбор директории для сохранения файла
-
             saveAs(blob, 'export.json');
-
         })
         .catch(error => {
             console.error('Ошибка при скачивании файла:', error);
         });
-})
+});
+
 
 document.getElementById('import').addEventListener('submit', function (event) {
     event.preventDefault();

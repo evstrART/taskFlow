@@ -12,7 +12,7 @@ const (
 	ProjectTable       = "projects"
 	CommentTable       = "comments"
 	ActivityLogsTable  = "activitylogs"
-	TaskTagTable       = "task_tags"
+	TaskTagTable       = "tasktags"
 	ProjectMemberTable = "projectmembers"
 )
 
