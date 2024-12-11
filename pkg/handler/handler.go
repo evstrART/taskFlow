@@ -33,8 +33,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			admin.GET("/projects", h.getAdminProjectsPage)
 			admin.GET("/projects/:id", h.adminProjectGet)
-			admin.GET("/profile", h.profileGet)
+			admin.GET("/profile", h.adminProfileGet)
 			admin.GET("/projects/:id/tasks/:task_id", h.adminTaskGet)
+			//admin.GET("/profile", h.adminProfileGet)
 		}
 	}
 	auth := router.Group("/auth")

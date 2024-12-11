@@ -25,10 +25,17 @@ func (r *UserPostgres) GetUser(userId int) (taskFlow.User, error) {
 
 func (r *UserPostgres) GetUsers() ([]taskFlow.User, error) {
 	var users []taskFlow.User
-	query := fmt.Sprintf("SELECT * FROM %s", UserTable)
-	err := r.db.Select(&users, query)
-	return users, err
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username != $1", UserTable)
+
+	// Выполняем запрос и передаем "admin" как параметр
+	err := r.db.Select(&users, query, "admin")
+	if err != nil {
+		return nil, err // Возвращаем ошибку, если запрос не удался
+	}
+
+	return users, nil // Возвращаем список пользователей
 }
+
 func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)

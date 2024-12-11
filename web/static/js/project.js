@@ -294,7 +294,7 @@ async function fetchProjects() {
     }
 
     try {
-        const response = await fetch('/api/projects', {
+        const response = await fetch('/api/projects/user', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

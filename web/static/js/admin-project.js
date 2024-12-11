@@ -485,7 +485,7 @@ function redirectToProfile() {
     const token = localStorage.getItem('token');
     if (token) {
         // Если есть токен, перенаправить на страницу профиля
-        window.location.href = '/profile';  // Замените на актуальный путь к профилю
+        window.location.href = '/admin/profile';  // Замените на актуальный путь к профилю
     } else {
         // Если нет токена, перенаправить на страницу входа
         window.location.href = '/auth/sign-in';

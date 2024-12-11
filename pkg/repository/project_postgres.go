@@ -89,7 +89,7 @@ func (r *ProjectPostgres) GetAllProjectsForUser(userId int) ([]taskFlow.Project,
 	var projects []taskFlow.Project
 
 	query := fmt.Sprintf(`
-        SELECT p.* 
+        SELECT DISTINCT p.* 
         FROM %s p
         JOIN %s pm ON p.project_id = pm.project_id
         WHERE pm.user_id = $1`, ProjectTable, ProjectMemberTable)
