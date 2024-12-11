@@ -1,0 +1,125 @@
+/* Main content styling */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+/* Заголовок в секции main */
+.main-container {
+    margin-bottom: 16px;
+}
+
+h1.recommendation {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Content Main */
+.content-main {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.report {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report .button {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.report .button:hover {
+    background-color: #40a9ff;
+}
+
+/* Radio button styling */
+.radio {
+    margin-right: 10px;
+}
+
+.radio-text {
+    margin-left: 5px;
+    font-size: 1em;
+}
+
+/* Import form styling */
+.import-form {
+    margin-top: 20px;
+}
+
+.form-field {
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: calc(100% - 12px); /* Учитываем отступы */
+}
+
+.send {
+    background-color: #28a745; /* Цвет фона для кнопки импорта */
+    color: white;
+}
+
+.send:hover {
+    background-color: #218838; /* Цвет кнопки импорта при наведении */
+}
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    padding: 16px;
+    background-color: #001529;
+    color: white;
+    position: relative; /* Убедитесь, что футер не фиксированный */
+    bottom: 0;
+    width: 100%;
+}
+
+/* Основные стили для кнопок */
+.button {
+    background-color: #1890ff; /* Цвет фона кнопки по умолчанию */
+    color: white; /* Цвет текста */
+    border: none; /* Без рамки */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    border-radius: 4px; /* Закругленные углы */
+    cursor: pointer; /* Указатель курсора при наведении */
+    font-size: 1em; /* Размер шрифта */
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета и эффекта нажатия */
+    margin-right: 10px; /* Отступ справа для кнопок */
+}
+
+/* Эффект наведения для кнопки экспорта */
+#export.button:hover {
+    background-color: #40a9ff; /* Цвет кнопки при наведении */
+    transform: scale(1.05); /* Увеличение кнопки при наведении */
+}
+
+/* Стили для кнопки импорта */
+.send {
+    margin-top: 20px;
+    background-color: #28a745; /* Цвет фона для кнопки импорта */
+}
+
+/* Эффект наведения для кнопки импорта */
+.send:hover {
+    background-color: #218838; /* Цвет кнопки импорта при наведении */
+    transform: scale(1.05); /* Увеличение кнопки при наведении */
+}

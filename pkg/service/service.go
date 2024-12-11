@@ -65,6 +65,9 @@ type Tag interface {
 }
 type Admin interface {
 	CheckAdmin(userId int) (bool, error)
+	GetReportPDF() (string, error)
+	GetReportExcel() (string, error)
+	GetDBInJSON() (string, error)
 }
 type Service struct {
 	AutorisationService

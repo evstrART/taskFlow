@@ -24,3 +24,39 @@ func (h *Handler) checkAdmin(c *gin.Context) {
 		return
 	}
 }
+
+func (h *Handler) getReport(ctx *gin.Context) {
+	var path string
+	var err error
+	format := ctx.Param("format") // Получаем формат из параметров URL
+
+	if format == "pdf" {
+		path, err = h.services.Admin.GetReportPDF() // Генерация PDF-отчета
+		if err != nil {
+			newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+			return
+		}
+	} else if format == "excel" {
+		path, err = h.services.Admin.GetReportExcel() // Генерация Excel-отчета
+		if err != nil {
+			newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+			return
+		}
+	} else {
+		newErrorResponse(ctx, http.StatusBadRequest, "Invalid format")
+		return
+	}
+
+	ctx.File(path) // Отправляем файл клиенту
+	ctx.Status(http.StatusOK)
+}
+
+func (h *Handler) exportJSON(ctx *gin.Context) {
+	filePath, err := h.services.Admin.GetDBInJSON()
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.File(filePath)
+	ctx.Status(http.StatusOK)
+}

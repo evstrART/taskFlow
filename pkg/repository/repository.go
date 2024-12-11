@@ -49,6 +49,8 @@ type Tag interface {
 }
 type Admin interface {
 	SelectAdminId(userId int) ([]int, error)
+	SelectActivityLogs() ([]taskFlow.ActivityLog, error)
+	SelectTable(tableName string) ([]map[string]interface{}, error)
 }
 
 type Project interface {
