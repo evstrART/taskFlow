@@ -69,14 +69,14 @@
   <div id="edit-user-modal" class="modal" style="display:none;">
     <div class="modal-content">
       <span class="close" onclick="closeEditUserModal()">&times;</span>
-      <h2>Edit User</h2>
-      <label for="edit-username">Username:</label>
-      <input type="text" id="edit-username" placeholder="Enter username" required>
+      <h2>Редактирование профиля</h2>
+      <label for="edit-username">Имя пользователя:</label>
+      <input type="text" id="edit-username" placeholder="Введите имя пользователя" required>
 
       <label for="edit-email">Email:</label>
-      <input type="email" id="edit-email" placeholder="Enter email" required>
+      <input type="email" id="edit-email" placeholder="Введите email" required>
 
-      <button onclick="updateUser()">Submit</button>
+      <button onclick="updateUser()">Сохранить изменения</button>
     </div>
   </div>
 
@@ -85,21 +85,21 @@
   <div id="change-password-modal" class="modal" style="display:none;">
     <div class="modal-content">
       <span class="close" onclick="closeChangePasswordModal()">&times;</span>
-      <h2>Change Password</h2>
-      <label for="old-password">Old Password:</label>
-      <input type="password" id="old-password" placeholder="Enter old password" required>
+      <h2>Изменить пароль</h2>
+      <label for="old-password">Старый пароль:</label>
+      <input type="password" id="old-password" placeholder="Введите старый пароль" required>
       <span id="old-password-error" class="error-message" style="display: none; color: red;"></span>
 
-      <label for="new-password">New Password:</label>
-      <input type="password" id="new-password" placeholder="Enter new password" required>
-      <span id="new-password-error" class="error-message" style="display: none; color: red;"></span> <!-- Контейнер для ошибки -->
+      <label for="new-password">Новый пароль:</label>
+      <input type="password" id="new-password" placeholder="Введите новый пароль" required>
+      <span id="new-password-error" class="error-message" style="display: none; color: red;"></span>
 
-      <label for="confirm-new-password">Confirm New Password:</label>
-      <input type="password" id="confirm-new-password" placeholder="Confirm new password" required>
-      <span id="confirm-new-password-error" class="error-message" style="display: none; color: red;"></span> <!-- Контейнер для ошибки -->
+      <label for="confirm-new-password">Подтвердите новый пароль:</label>
+      <input type="password" id="confirm-new-password" placeholder="Подтвердите новый пароль" required>
+      <span id="confirm-new-password-error" class="error-message" style="display: none; color: red;"></span>
 
 
-      <button onclick="changePassword()">Submit</button>
+      <button onclick="changePassword()">Сохранить изменения</button>
     </div>
   </div>
   <!-- Модальное окно для уведомлений об ошибках -->
