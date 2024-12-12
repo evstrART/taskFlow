@@ -44,7 +44,7 @@ async function fetchProjects() {
         displayProjects(allProjects); // Отображаем все проекты
     } catch (error) {
         console.error('Error:', error);  // Для отладки
-        alert(error.message);
+
     }
 }
 

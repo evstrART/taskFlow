@@ -84,7 +84,7 @@ async function fetchProjectDetails(projectId) {
         displayTasks(tasks);
 
         // Fetch project members
-        await fetchProjectMembers(projectId); // Добавлено для загрузки участников
+        await fetchProjectMembers(projectId);
 
     } catch (error) {
         console.error('Error:', error);

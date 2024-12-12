@@ -17,6 +17,7 @@ type User struct {
 type UpdateUserInput struct {
 	Username *string `db:"username"` // Добавляем теги для связывания с колонками
 	Email    *string `db:"email"`
+	Role     *string `db:"role"`
 }
 type ChangePasswordInput struct {
 	OldPassword string `json:"old_password" binding:"required"`

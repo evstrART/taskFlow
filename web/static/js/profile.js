@@ -107,7 +107,7 @@ async function changePassword() {
         return;
     }
 
-    const userId = parseJwt(token).UserId; // Предполагается, что у вас есть функция parseJwt
+    const userId = parseJwt(token).user_id; // Предполагается, что у вас есть функция parseJwt
 
     try {
         const response = await fetch(`http://localhost:8080/api/users/${userId}/change-password`, {
@@ -194,8 +194,8 @@ async function updateUser() {
         return;
     }
 
-    const userId = parseJwt(token).UserId; // Предполагается, что у вас есть функция parseJwt
-
+    const userId = parseJwt(token).user_id;
+    console.log("userId:", userId);
     try {
         const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
             method: 'PUT',

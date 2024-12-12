@@ -7,6 +7,7 @@ import (
 	"gopkg.in/gomail.v2"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) signUp(ctx *gin.Context) {
@@ -60,7 +61,7 @@ func (h *Handler) signUpGet(ctx *gin.Context) {
 }
 
 func (h *Handler) changePassword(c *gin.Context) {
-	userId, err := getUserId(c)
+	userId, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return

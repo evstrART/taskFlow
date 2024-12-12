@@ -49,3 +49,6 @@ func (h *Handler) adminProfileGet(c *gin.Context) {
 func (h *Handler) adminReportsGet(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin-report.html", gin.H{})
 }
+func (h *Handler) adminUsersGet(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin-users.html", gin.H{})
+}

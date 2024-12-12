@@ -72,7 +72,7 @@ func (h *Handler) updateUser(c *gin.Context) {
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {
-	userId, err := getUserId(c)
+	userId, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "Invalid user ID")
 		return

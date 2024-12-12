@@ -53,6 +53,12 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 		argId++
 	}
 
+	if input.Role != nil { // Проверяем наличие нового поля Role
+		setValues = append(setValues, fmt.Sprintf("role=$%d", argId)) // Добавляем обновление роли
+		args = append(args, *input.Role)
+		argId++
+	}
+
 	// Если ничего не обновляется, возвращаем nil
 	if len(setValues) == 0 {
 		return nil
@@ -87,6 +93,7 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 
 	return nil
 }
+
 func (r *UserPostgres) DeleteUser(userId int) error {
 	// Начинаем транзакцию
 	tx, err := r.db.Begin()

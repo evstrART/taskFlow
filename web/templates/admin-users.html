@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow - Users</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/admin-users.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <header class="header">
+    <div class="logo">
+      <img src="/static/images/flow.svg" alt="Task Flow Logo">
+      <div class="title">Task Flow Admin</div>
+    </div>
+    <div class="auth-buttons">
+      <button id="reports-button" onclick="window.location.href='http://localhost:8080/admin/reports'">Отчеты</button>
+      <button id="profile-button" onclick="redirectToProfile()">Профиль</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <ul>
+      <li><a href="/admin/projects" class="home-link">Home</a></li>
+      <li class="current-page" id="Users">Users</li>
+    </ul>
+  </div>
+
+  <main class="content-wrapper">
+    <table id="users-table">
+      <thead>
+      <tr>
+        <th>Имя</th>
+        <th>Email</th>
+        <th>Роль</th>
+        <th>Действия</th> <!-- Новый столбец для действий -->
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Пользователи будут добавлены сюда с помощью JavaScript -->
+      </tbody>
+    </table>
+
+    <!-- Модальное окно для редактирования пользователя -->
+    <div id="edit-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Редактировать пользователя</h2>
+        <label for="edit-name">Имя:</label>
+        <input type="text" id="edit-name"><br><br>
+
+        <label for="edit-email">Email:</label>
+        <input type="email" id="edit-email"><br><br>
+
+        <label for="edit-role">Роль:</label>
+        <input type="text" id="edit-role"><br><br>
+
+        <button onclick="saveChanges()">Сохранить изменения</button>
+      </div>
+    </div>
+
+    <!-- Подтверждение удаления -->
+    <div id="delete-confirmation" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeDeleteConfirmation()">&times;</span>
+        <h2>Подтверждение удаления</h2>
+        <p>Вы уверены, что хотите удалить этого пользователя?</p>
+        <button onclick="confirmDelete()">Да</button>
+        <button onclick="closeDeleteConfirmation()">Нет</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    © <span id="year"></span> Created by Task Flow Team
+  </footer>
+</div>
+
+<script src="/static/js/admin-users.js"></script>
+
+</body>
+</html>
