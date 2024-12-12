@@ -316,3 +316,6 @@
 #complete-project-btn:hover {
     background-color: #45a049; /* Цвет при наведении */
 }
+th {
+    cursor: pointer; /* Устанавливаем курсор в виде указателя при наведении */
+}

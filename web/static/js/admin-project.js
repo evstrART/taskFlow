@@ -19,6 +19,28 @@ document.getElementById('projectStartDate').addEventListener('change', function(
     document.getElementById('projectEndDate').setAttribute('min', startDate);
 });
 
+let tasks = []; // Хранит список задач
+let sortOrder = {
+    title: 1, // 1 для прямой сортировки, -1 для обратной
+    status: 1,
+    due_date: 1
+};
+
+function sortTasks(criteria) {
+    tasks.sort((a, b) => {
+        if (criteria === 'due_date') {
+            return (new Date(a.due_date) - new Date(b.due_date)) * sortOrder[criteria];
+        }
+        return a[criteria].localeCompare(b[criteria]) * sortOrder[criteria];
+    });
+
+    // Переключаем порядок сортировки
+    sortOrder[criteria] *= -1;
+
+    // Обновляем отображение задач
+    displayTasks(tasks);
+}
+
 // Fetch project details
 async function fetchProjectDetails(projectId) {
     const token = localStorage.getItem('token');
@@ -58,7 +80,7 @@ async function fetchProjectDetails(projectId) {
             throw new Error('Error fetching tasks');
         }
 
-        const tasks = await tasksResponse.json();
+         tasks = await tasksResponse.json();
         displayTasks(tasks);
 
         // Fetch project members
@@ -252,7 +274,7 @@ function displayProjectDetails(project) {
 // Display tasks list in table
 function displayTasks(tasks) {
     const tasksList = document.getElementById('tasks-list').getElementsByTagName('tbody')[0];
-    tasksList.innerHTML = '';
+    tasksList.innerHTML = ''; // Очищаем текущее содержимое
 
     if (!Array.isArray(tasks) || tasks.length === 0) {
         tasksList.innerHTML = '<tr><td colspan="3">Задачи не найдены</td></tr>';
@@ -262,24 +284,29 @@ function displayTasks(tasks) {
     tasks.forEach(task => {
         const taskRow = document.createElement('tr');
 
+        // Создаем ячейку для названия задачи
         const taskTitleCell = document.createElement('td');
         const taskLink = document.createElement('a');
         taskLink.textContent = task.title;
-        taskLink.href = `/admin/projects/${task.project_id}/tasks/${task.task_id}`;
+        taskLink.href = `/projects/${task.project_id}/tasks/${task.task_id}`;
         taskLink.style.textDecoration = 'none'; // Убираем подчеркивание ссылки
         taskLink.style.color = 'inherit'; // Наследуем цвет текста от родителя
         taskTitleCell.appendChild(taskLink);
 
+        // Создаем ячейку для статуса задачи
         const taskStatusCell = document.createElement('td');
-        taskStatusCell.textContent = task.status || 'Not available';
+        taskStatusCell.textContent = task.status || 'Не доступен';
 
+        // Создаем ячейку для даты выполнения задачи
         const taskDueDateCell = document.createElement('td');
         taskDueDateCell.textContent = formatDate(task.due_date); // Используем функцию formatDate
 
+        // Добавляем ячейки в строку задачи
         taskRow.appendChild(taskTitleCell);
         taskRow.appendChild(taskStatusCell);
         taskRow.appendChild(taskDueDateCell);
 
+        // Добавляем строку в таблицу задач
         tasksList.appendChild(taskRow);
     });
 }
