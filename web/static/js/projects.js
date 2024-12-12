@@ -67,7 +67,7 @@ function displayProjects(projects) {
                 <p>${project.description || 'No description available.'}</p>
                 <span class="project-date">Created on: ${formatDate(project.created_at)}</span>
             </div>
-            <button class="view-button">View Project</button>
+            <button class="view-button">Посмотреть проект</button>
         `;
 
         // Добавление обработчика событий для кнопки

@@ -79,12 +79,16 @@ document.getElementById('import').addEventListener('submit', function (event) {
 
     var formData = new FormData(event.target);
 
-    var token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
+    if (!token) {
+        alert("No token found. Please log in.");
+        return;
+    }
     fetch('/admin/import', {
         method: 'POST',
         headers: {
-            'Authorization-1': 'Bearer ' + token,
+            'Authorization': `Bearer ${token}`
         },
         body: formData
     })
@@ -110,85 +114,3 @@ document.getElementById('import').addEventListener('submit', function (event) {
 
 });
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    var token = localStorage.getItem('token');
-
-
-    const trackListContainer = document.getElementById('track-list');
-
-
-    fetch('/admin/history', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization-1': 'Bearer ' + token,
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 401) {
-                    alert('You need to enter to your account.');
-                    window.location.assign('/auth/sign-in');
-                }
-                throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const history = data.history;
-
-
-            // Используем функцию для создания элемента трека
-            function createTrackElement(track) {
-                const trackElement = document.createElement('div');
-                trackElement.classList.add('track');
-
-
-                trackElement.innerHTML = `
-                    <div class="title">
-                        <p class="text">${track.id}</p>
-                        <div class="names">
-                            <p>Name: </p>
-                            <p>Type: </p>
-                            <p>Reason: </p>
-                        </div>
-                        <div class="track-names">
-                            <p class="link-names">${track.name}</p>
-                            <p class="link-names">${track.type}</p>
-                            <p class="link-names" >${track.reason}</p>
-                        </div>
-                        <div class="names">
-                            <p>Deleted Date: </p>
-                        </div>
-                        <div class="track-names">
-                            <p class="link-names">${track.deletedDate}</p>
-                        </div>
-                    </div>
-                    
-                `;
-                return trackElement;
-            }
-
-            if (history === null) {
-                const noAlbumsMessage = document.createElement('div');
-                noAlbumsMessage.classList.add('alert');
-
-                const messageParagraph = document.createElement('p');
-                messageParagraph.textContent = `We haven't albums to suggest you.`;
-                noAlbumsMessage.classList.add('text-alert');
-
-                noAlbumsMessage.appendChild(messageParagraph);
-                albumListContainer.appendChild(noAlbumsMessage);
-            }else{
-                // Создаем элементы для каждого альбома и добавляем их в контейнер
-                history.forEach(record => {
-                    const Element = createTrackElement(record);
-                    trackListContainer.appendChild(Element);
-
-                });
-            }
-
-
-        });
-})

@@ -51,6 +51,14 @@ type Admin interface {
 	SelectAdminId(userId int) ([]int, error)
 	SelectActivityLogs() ([]taskFlow.ActivityLog, error)
 	SelectTable(tableName string) ([]map[string]interface{}, error)
+	InsertUser(user taskFlow.User) error
+	InsertProject(project taskFlow.Project) error
+	InsertTask(task taskFlow.Task) error
+	InsertComment(comment taskFlow.Comment) error
+	InsertProjectMember(member taskFlow.ProjectMember) error
+	InsertActivityLog(log taskFlow.ActivityLog) error
+	InsertTag(tag taskFlow.Tag) error
+	InsertTaskTag(taskTag taskFlow.TaskTag) error
 }
 
 type Project interface {

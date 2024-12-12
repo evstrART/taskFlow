@@ -16,14 +16,16 @@
       <div class="title">Task Flow Admin</div>
     </div>
     <div class="auth-buttons">
-      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+      <button id="reports-button" onclick="window.location.href='http://localhost:8080/admin/reports'">Отчеты</button>
+      <button id="profile-button" onclick="redirectToProfile()">Профиль</button>
+
     </div>
   </header>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb">
     <ul>
-      <li><a href="/" class="home-link">Home</a></li>
+      <li><a href="/admin/projects" class="home-link">Home</a></li>
       <li><a href="/admin/projects" class="projects-link">Projects</a></li>
       <li class="current-page" id="project-name">Loading Project...</li>
     </ul>
@@ -31,7 +33,6 @@
 
   <!-- Content -->
   <main class="content-wrapper">
-    <!-- Sidebar for Projects -->
     <div class="sider">
       <h2>Projects:</h2>
       <ul id="projects-list">
@@ -39,23 +40,21 @@
       </ul>
     </div>
 
-    <!-- Project Information Area -->
     <div class="content">
-      <!-- Project Details Section -->
       <div class="project-details">
-        <h2 id="project-title" class="project-title">Project Title</h2>
-        <p id="project-description" class="project-description">Project description will appear here...</p>
+        <h2 id="project-title" class="project-title">Название проекта</h2>
+        <p id="project-description" class="project-description">Здесь появится описание проекта...</p>
 
         <div class="project-info">
-          <h3 class="section-title">Project Details</h3>
+          <h3 class="section-title">Детали проекта</h3>
           <div class="project-info-item">
-            <strong>Start Date:</strong> <span id="project-start-date">Loading...</span>
+            <strong>Дата начала:</strong> <span id="project-start-date">Loading...</span>
           </div>
           <div class="project-info-item">
-            <strong>End Date:</strong> <span id="project-end-date">Loading...</span>
+            <strong>Дата окончания:</strong> <span id="project-end-date">Loading...</span>
           </div>
           <div class="project-info-item">
-            <strong>Status:</strong> <span id="project-status">Loading...</span>
+            <strong>Статус:</strong> <span id="project-status">Loading...</span>
           </div>
         </div>
       </div>
@@ -92,7 +91,6 @@
             <select id="projectStatus">
               <option value="">Выберите статус</option>
               <option value="Активный">Активный</option>
-              <option value="Завершённый">Завершённый</option>
               <option value="На удержании">На удержании</option>
             </select>
 
@@ -104,17 +102,17 @@
 
       <!-- Tasks Section -->
       <div class="tasks-section">
-        <h3 class="section-title">Tasks</h3>
+        <h3 class="section-title">Задачи</h3>
         <div class="add-buttons">
-          <button id="add-button" onclick="addTask()">Add Task</button>
+          <button id="add-button" onclick="addTask()">Добавить задачу</button>
         </div>
-        <div class="table-container"> <!-- Контейнер для прокрутки -->
+        <div class="table-container">
           <table id="tasks-list" class="tasks-table">
             <thead>
             <tr>
-              <th>Task Title</th>
-              <th>Status</th>
-              <th>Due Date</th>
+              <th>Название задачи</th>
+              <th>Статус</th>
+              <th>Дата выполнения</th>
             </tr>
             </thead>
             <tbody>
@@ -127,7 +125,7 @@
 
     <!-- Team Section, вынесенная из контента -->
     <div class="team">
-      <h2>Team</h2>
+      <h2>Команда</h2>
       <button class="add-members-button" onclick="addMembers()">
         <img src="/static/images/plus.png" alt="Add Members Icon">
       </button>
@@ -135,7 +133,7 @@
         <li>Loading team members...</li>
       </ul>
       <button id="complete-project-btn" onclick="completeProject()">
-        Complete Project
+        Выполнить проект
       </button>
     </div>
 
@@ -150,7 +148,7 @@
           <label for="taskDescription">Описание:</label>
           <textarea id="taskDescription"></textarea>
 
-          <label for="taskAssignedTo">Назначить (User ID):</label>
+          <label for="taskAssignedTo">Назначить:</label>
           <select id="taskAssignedTo" required>
             <option value="">Выберите участника</option>
           </select>
@@ -159,7 +157,6 @@
           <select id="taskStatus" required>
             <option value="В ожидании">В ожидании</option>
             <option value="В процессе">В процессе</option>
-            <option value="Завершено">Завершено</option>
           </select>
 
           <label for="taskPriority">Приоритет:</label>

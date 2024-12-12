@@ -2,10 +2,13 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/evstrART/taskFlow"
 	"github.com/evstrART/taskFlow/pkg/repository"
 	"github.com/jung-kurt/gofpdf"
+	"mime/multipart"
 	"os"
 )
 
@@ -208,4 +211,195 @@ func (a *AdminService) GetDBInJSON() (string, error) {
 	}
 
 	return "/Users/Учеба/3 курс/CУБД/backups/output.json", nil // Возврат пути к созданному JSON-файлу и nil как ошибку
+}
+
+func (a *AdminService) ImportDBInJSON(file *multipart.FileHeader) error {
+	var data map[string]interface{}
+	var users []taskFlow.User
+	var projects []taskFlow.Project
+	var tasks []taskFlow.Task
+	var comments []taskFlow.Comment
+	var projectMembers []taskFlow.ProjectMember
+	var activityLogs []taskFlow.ActivityLog
+	var tags []taskFlow.Tag
+	var taskTags []taskFlow.TaskTag
+
+	uploadedFile, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer uploadedFile.Close()
+
+	decoder := json.NewDecoder(uploadedFile)
+	if err = decoder.Decode(&data); err != nil {
+		return err
+	}
+
+	var valid bool = false
+
+	if usersData, ok := data["users"].([]interface{}); ok {
+		valid = true
+		for _, userData := range usersData {
+			userJSON, _ := json.Marshal(userData)
+			var user taskFlow.User
+			if err := json.Unmarshal(userJSON, &user); err == nil {
+				users = append(users, user)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, u := range users {
+			err = a.repo.InsertUser(u)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if projectsData, ok := data["projects"].([]interface{}); ok {
+		valid = true
+		for _, projectData := range projectsData {
+			projectJSON, _ := json.Marshal(projectData)
+			var project taskFlow.Project
+			if err := json.Unmarshal(projectJSON, &project); err == nil {
+				projects = append(projects, project)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, p := range projects {
+			err = a.repo.InsertProject(p)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if tasksData, ok := data["tasks"].([]interface{}); ok {
+		valid = true
+		for _, taskData := range tasksData {
+			taskJSON, _ := json.Marshal(taskData)
+			var task taskFlow.Task
+			if err := json.Unmarshal(taskJSON, &task); err == nil {
+				tasks = append(tasks, task)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, t := range tasks {
+			err = a.repo.InsertTask(t)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if commentsData, ok := data["comments"].([]interface{}); ok {
+		valid = true
+		for _, commentData := range commentsData {
+			commentJSON, _ := json.Marshal(commentData)
+			var comment taskFlow.Comment
+			if err := json.Unmarshal(commentJSON, &comment); err == nil {
+				comments = append(comments, comment)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, c := range comments {
+			err = a.repo.InsertComment(c)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if membersData, ok := data["project_members"].([]interface{}); ok {
+		valid = true
+		for _, memberData := range membersData {
+			memberJSON, _ := json.Marshal(memberData)
+			var member taskFlow.ProjectMember
+			if err := json.Unmarshal(memberJSON, &member); err == nil {
+				projectMembers = append(projectMembers, member)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, m := range projectMembers {
+			err = a.repo.InsertProjectMember(m)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if logsData, ok := data["activity_logs"].([]interface{}); ok {
+		valid = true
+		for _, logData := range logsData {
+			logJSON, _ := json.Marshal(logData)
+			var log taskFlow.ActivityLog
+			if err := json.Unmarshal(logJSON, &log); err == nil {
+				activityLogs = append(activityLogs, log)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, l := range activityLogs {
+			err = a.repo.InsertActivityLog(l)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if tagsData, ok := data["tags"].([]interface{}); ok {
+		valid = true
+		for _, tagData := range tagsData {
+			tagJSON, _ := json.Marshal(tagData)
+			var tag taskFlow.Tag
+			if err := json.Unmarshal(tagJSON, &tag); err == nil {
+				tags = append(tags, tag)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, t := range tags {
+			err = a.repo.InsertTag(t)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if taskTagsData, ok := data["task_tags"].([]interface{}); ok {
+		valid = true
+		for _, taskTagData := range taskTagsData {
+			taskTagJSON, _ := json.Marshal(taskTagData)
+			var taskTag taskFlow.TaskTag
+			if err := json.Unmarshal(taskTagJSON, &taskTag); err == nil {
+				taskTags = append(taskTags, taskTag)
+			}
+			if err != nil {
+				return err
+			}
+		}
+		for _, tt := range taskTags {
+			err = a.repo.InsertTaskTag(tt)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if !valid {
+		return errors.New("invalid json file")
+	}
+
+	return nil
 }

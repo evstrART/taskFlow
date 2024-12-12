@@ -57,3 +57,17 @@ func (h *Handler) exportJSON(ctx *gin.Context) {
 	ctx.File(filePath)
 	ctx.Status(http.StatusOK)
 }
+func (h *Handler) importJSON(ctx *gin.Context) {
+	file, err := ctx.FormFile("json")
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.services.Admin.ImportDBInJSON(file)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.Status(http.StatusOK)
+}

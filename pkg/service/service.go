@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/evstrART/taskFlow"
 	"github.com/evstrART/taskFlow/pkg/repository"
+	"mime/multipart"
 )
 
 type AutorisationService interface {
@@ -68,6 +69,7 @@ type Admin interface {
 	GetReportPDF() (string, error)
 	GetReportExcel() (string, error)
 	GetDBInJSON() (string, error)
+	ImportDBInJSON(file *multipart.FileHeader) error
 }
 type Service struct {
 	AutorisationService

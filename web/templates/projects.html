@@ -18,14 +18,14 @@
     </div>
     <div class="auth-buttons">
       <!-- Кнопка профиля, которая меняет действие в зависимости от наличия токена -->
-      <button id="profile-button" onclick="redirectToProfile()">Profile</button>
+      <button id="profile-button" onclick="redirectToProfile()">Профиль</button>
     </div>
   </header>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb">
     <ul>
-      <li><a href="/" class="home-link">Home</a></li>
+      <li><a href="/projects" class="home-link">Home</a></li>
       <li class="current-page">Projects</li>
     </ul>
   </div>
@@ -36,8 +36,8 @@
 
     <div class="content">
       <div class="head-project">
-        <h2>My Projects:</h2>
-        <button type="add-project">New Project</button>
+        <h2>Ваши проекты:</h2>
+        <button type="add-project">Новый проект</button>
       </div>
       <ul id="projects-list">
         <!-- Пример элемента списка проекта -->
@@ -47,9 +47,8 @@
             <p>Description of the project goes here. This can include details about the project.</p>
             <span class="project-date">Created on:</span>
           </div>
-          <button class="view-button">View Project</button>
+          <button class="view-button">Посмотреть проект</button>
         </li>
-        <!-- Конец примера -->
       </ul>
     </div>
   </main>
@@ -57,27 +56,27 @@
   <div id="addProjectModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
-      <h2>Add New Project</h2>
+      <h2>Добавить новый проект</h2>
       <form id="addProjectForm">
-        <label for="projectName">Project Name:</label>
+        <label for="projectName">Название проекта:</label>
         <input type="text" id="projectName" required>
 
-        <label for="projectDescription">Description:</label>
+        <label for="projectDescription">Описание:</label>
         <textarea id="projectDescription"></textarea>
 
-        <label for="projectStatus">Status:</label>
+        <label for="projectStatus">:</label>
         <select id="projectStatus" required>
           <option value="Активный">Активный</option>
           <option value="На удержании">На удержании</option>
         </select>
 
-        <label for="startDate">Start Date:</label>
+        <label for="startDate">Дата начала:</label>
         <input type="date" id="startDate" required>
 
-        <label for="endDate">End Date:</label>
+        <label for="endDate">Дата окончания:</label>
         <input type="date" id="endDate" required>
 
-        <button type="submit">Add Project</button>
+        <button type="submit">Добавить проект</button>
       </form>
     </div>
   </div>

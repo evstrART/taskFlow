@@ -116,6 +116,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		admin.GET("/", h.getAllProjects)
 		admin.GET("/reports/:format", h.getReport)
 		admin.GET("/export", h.exportJSON)
+		admin.POST("/import", h.importJSON)
 	}
 	return router
 }
