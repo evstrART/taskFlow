@@ -87,3 +87,30 @@ button[type="add-project"]:hover {
 .view-button:hover {
     background-color: #0099CC; /* Цвет фона кнопки при наведении */
 }
+
+.search-bar {
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+.search-bar input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 1300px; /* Ширина поля поиска */
+}
+.search-bar button {
+    padding: 8px 15px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 80px;
+    max-height: 40px;
+}
+.search-bar button:hover {
+    background-color: #0056b3;
+}

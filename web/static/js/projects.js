@@ -16,6 +16,7 @@ function formatDate(isoDate) {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' }; // Используем 'numeric' для полного года
     return date.toLocaleDateString('ru-RU', options).replace(/\./g, '.'); // Заменяем точки, если нужно
 }
+let allProjects = []; // Хранит все проекты для поиска
 
 async function fetchProjects() {
     const token = localStorage.getItem('token');
@@ -39,13 +40,36 @@ async function fetchProjects() {
             throw new Error('Error fetching projects');
         }
 
-        const projects = await response.json();
-        displayProjects(projects);
+        allProjects = await response.json(); // Сохраняем все проекты
+        displayProjects(allProjects); // Отображаем все проекты
     } catch (error) {
         console.error('Error:', error);  // Для отладки
         alert(error.message);
     }
 }
+
+function searchProjects() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase(); // Получаем текст поиска
+    const filteredProjects = allProjects.filter(project => {
+        // Проверяем наличие свойств title и description
+        const title = project.name ? project.name.toLowerCase() : '';
+        const description = project.description ? project.description.toLowerCase() : '';
+
+        return title.includes(searchInput) || description.includes(searchInput); // Фильтруем по заголовку и описанию
+    });
+
+    displayProjects(filteredProjects); // Отображаем отфильтрованные проекты
+}
+
+// Добавляем обработчик события для кнопки поиска
+document.getElementById('searchButton').addEventListener('click', searchProjects);
+
+// Также можно добавить обработчик события для ввода текста
+document.getElementById('searchInput').addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        searchProjects(); // Запускаем поиск при нажатии Enter
+    }
+});
 
 // Display project names in the sidebar
 function displayProjects(projects) {
