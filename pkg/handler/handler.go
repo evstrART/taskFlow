@@ -22,7 +22,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router.Static("/static", "./web/static")
 	main := router.Group("/")
 	{
-		main.GET("/", h.mainGet) // Главная страница
+		main.GET("/", h.mainGet)
 		main.GET("/projects", h.getProjectsPage)
 		main.GET("/projects/:id", h.projectGet)
 		main.GET("/profile", h.profileGet)
@@ -41,7 +41,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 	auth := router.Group("/auth")
 	{
-		auth.GET("/sign-in", h.signInGet) // Маршрут для страницы входа
+		auth.GET("/sign-in", h.signInGet)
 		auth.POST("/sign-in", h.signIn)
 		auth.GET("/sign-up", h.signUpGet)
 		auth.POST("/sign-up", h.signUp)

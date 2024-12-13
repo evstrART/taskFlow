@@ -48,12 +48,12 @@ func (r *AuthPostgres) UserExistsForReset(input taskFlow.ResetPasswordInput) (bo
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return false, nil // Пользователь не найден
+			return false, nil
 		}
-		return false, err // Возвращаем ошибку, если произошла другая ошибка
+		return false, err
 	}
 
-	return true, nil // Пользователь найден
+	return true, nil
 }
 
 func (r *AuthPostgres) GetUserByNameAndEmail(username, email string) (taskFlow.User, error) {

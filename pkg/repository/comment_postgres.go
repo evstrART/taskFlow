@@ -35,7 +35,6 @@ func (s *CommentPostgres) AddComment(taskId, userId int, input taskFlow.CommentI
 		return 0, err
 	}
 
-	// Запрос для вставки комментария
 	query := fmt.Sprintf("INSERT INTO %s (task_id, user_id, content) VALUES ($1, $2, $3) RETURNING comment_id", CommentTable)
 	err = tx.QueryRow(query, taskId, userId, input.Comment).Scan(&commentId)
 	if err != nil {
@@ -87,7 +86,6 @@ func (s *CommentPostgres) GetAllCommentsForUser(userId int) ([]taskFlow.Comment,
 }
 
 func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
-	// Начинаем транзакцию
 	tx, err := s.db.Begin()
 	if err != nil {
 		return err
@@ -101,14 +99,12 @@ func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
 		}
 	}()
 
-	// Удаляем комментарий
 	query := fmt.Sprintf("DELETE FROM %s WHERE comment_id = $1 AND user_id = $2", CommentTable)
 	_, err = tx.Exec(query, commentId, userId)
 	if err != nil {
 		return err
 	}
 
-	// Записываем действие в ActivityLogs
 	logQuery := `INSERT INTO ActivityLogs (user_id, action, related_entity, entity_id)
                   VALUES ($1, 'DELETE', 'comments', $2)`
 	_, err = tx.Exec(logQuery, userId, commentId)
@@ -116,7 +112,6 @@ func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
 		return err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}
@@ -125,13 +120,11 @@ func (s *CommentPostgres) DeleteComment(commentId, userId int) error {
 }
 
 func (s *CommentPostgres) UpdateComment(commentId, userId int, input taskFlow.CommentInput) error {
-	// Начинаем транзакцию
 	tx, err := s.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	// Обеспечиваем откат в случае ошибки
 	defer func() {
 		if err != nil {
 			if rbErr := tx.Rollback(); rbErr != nil {
@@ -140,19 +133,16 @@ func (s *CommentPostgres) UpdateComment(commentId, userId int, input taskFlow.Co
 		}
 	}()
 
-	// Устанавливаем локальный user_id
 	if _, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userId)); err != nil {
 		return err
 	}
 
-	// Запрос для обновления комментария
 	query := fmt.Sprintf("UPDATE %s SET content = $1 WHERE comment_id = $2 AND user_id = $3", CommentTable)
 	_, err = tx.Exec(query, input.Comment, commentId, userId)
 	if err != nil {
 		return err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}

@@ -24,13 +24,11 @@ func (r *TaskPostgres) CreateTask(userID, projectId int, input taskFlow.Task) (i
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
         RETURNING task_id`
 
-	// Начинаем транзакцию
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
 	}
 
-	// Обеспечиваем откат в случае ошибки
 	defer func() {
 		if err != nil {
 			if rbErr := tx.Rollback(); rbErr != nil {
@@ -39,18 +37,15 @@ func (r *TaskPostgres) CreateTask(userID, projectId int, input taskFlow.Task) (i
 		}
 	}()
 
-	// Устанавливаем локальный user_id (без параметров)
 	if _, err := tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID)); err != nil {
 		return 0, err
 	}
 
-	// Выполняем запрос и возвращаем идентификатор созданной задачи
 	err = tx.QueryRow(query, projectId, input.Title, input.Description, input.AssignedTo, input.Status, input.Priority, input.DueDate).Scan(&taskID)
 	if err != nil {
 		return 0, err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return 0, err
 	}
@@ -87,7 +82,6 @@ func (r *TaskPostgres) DeleteTask(userID, projectId, taskId int) error {
 		return err
 	}
 
-	// Обеспечиваем откат в случае ошибки
 	defer func() {
 		if err != nil {
 			if rbErr := tx.Rollback(); rbErr != nil {
@@ -96,14 +90,12 @@ func (r *TaskPostgres) DeleteTask(userID, projectId, taskId int) error {
 		}
 	}()
 
-	// Запрос для удаления задачи
 	query := fmt.Sprintf("DELETE FROM %s WHERE project_id = $1 AND task_id = $2", TaskTable)
 	_, err = tx.Exec(query, projectId, taskId)
 	if err != nil {
 		return err
 	}
 
-	// Записываем действие в ActivityLogs
 	logQuery := `INSERT INTO ActivityLogs (user_id, action, related_entity, entity_id)
                   VALUES ($1, 'DELETE', 'tasks', $2)`
 	_, err = tx.Exec(logQuery, userID, taskId)
@@ -111,7 +103,6 @@ func (r *TaskPostgres) DeleteTask(userID, projectId, taskId int) error {
 		return err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}

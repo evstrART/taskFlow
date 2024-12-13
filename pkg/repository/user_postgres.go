@@ -30,10 +30,10 @@ func (r *UserPostgres) GetUsers() ([]taskFlow.User, error) {
 	// Выполняем запрос и передаем "admin" как параметр
 	err := r.db.Select(&users, query, "admin")
 	if err != nil {
-		return nil, err // Возвращаем ошибку, если запрос не удался
+		return nil, err
 	}
 
-	return users, nil // Возвращаем список пользователей
+	return users, nil
 }
 
 func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) error {
@@ -53,13 +53,12 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 		argId++
 	}
 
-	if input.Role != nil { // Проверяем наличие нового поля Role
-		setValues = append(setValues, fmt.Sprintf("role=$%d", argId)) // Добавляем обновление роли
+	if input.Role != nil {
+		setValues = append(setValues, fmt.Sprintf("role=$%d", argId))
 		args = append(args, *input.Role)
 		argId++
 	}
 
-	// Если ничего не обновляется, возвращаем nil
 	if len(setValues) == 0 {
 		return nil
 	}
@@ -73,8 +72,7 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 
 	args = append(args, userId)
 
-	// Начинаем транзакцию
-	tx, err := r.db.Beginx() // Используем Beginx()
+	tx, err := r.db.Beginx()
 	if err != nil {
 		return err
 	}
@@ -82,11 +80,10 @@ func (r *UserPostgres) UpdateUser(userId int, input taskFlow.UpdateUserInput) er
 	// Выполняем запрос
 	_, err = tx.Exec(query, args...)
 	if err != nil {
-		tx.Rollback() // Откат в случае ошибки
+		tx.Rollback()
 		return err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}

@@ -20,72 +20,64 @@ func (r *AdminPostgres) SelectAdminId(userId int) ([]int, error) {
 
 	rows, err := r.db.Query(query, "admin")
 	if err != nil {
-		return nil, err // Возвращаем ошибку, если запрос не удался
+		return nil, err
 	}
-	defer rows.Close() // Закрываем rows после завершения работы с ними
+	defer rows.Close()
 
-	// Проходим по результатам запроса
 	for rows.Next() {
 		var adminId int
 		if err := rows.Scan(&adminId); err != nil {
-			return nil, err // Возвращаем ошибку, если сканирование не удалось
+			return nil, err
 		}
-		adminIds = append(adminIds, adminId) // Добавляем идентификатор в список
+		adminIds = append(adminIds, adminId)
 	}
 
-	// Проверяем наличие ошибок после завершения итерации
 	if err := rows.Err(); err != nil {
-		return nil, err // Возвращаем ошибку, если она возникла во время итерации
+		return nil, err
 	}
 
-	return adminIds, nil // Возвращаем список идентификаторов администраторов
+	return adminIds, nil
 }
 
 func (r *AdminPostgres) SelectActivityLogs() ([]taskFlow.ActivityLog, error) {
 	var logs []taskFlow.ActivityLog
 
-	// SQL-запрос для извлечения данных из таблицы ActivityLogs
 	query := `
         SELECT log_id, user_id, action, timestamp, related_entity, entity_id
         FROM activitylogs
         ORDER BY timestamp DESC`
 
-	// Выполнение запроса и сканирование результатов в структуру logs
 	err := r.db.Select(&logs, query)
 	if err != nil {
-		return nil, err // Возвращаем ошибку, если запрос не удался
+		return nil, err
 	}
 
-	return logs, nil // Возвращаем срез логов активности и nil как ошибку
+	return logs, nil
 }
 
 func (a *AdminPostgres) SelectTable(tableName string) ([]map[string]interface{}, error) {
-	// Подготовка SQL-запроса
 	query := "SELECT * FROM " + tableName
 
-	// Выполнение запроса
 	rows, err := a.db.Queryx(query)
 	if err != nil {
-		return nil, err // Обработка ошибки, если запрос не удался
+		return nil, err
 	}
-	defer rows.Close() // Закрываем rows после завершения работы с ними
+	defer rows.Close()
 
-	// Преобразование данных в формат JSON
 	var result []map[string]interface{}
 	for rows.Next() {
 		row := make(map[string]interface{})
-		// Сканируем данные в карту
 		if err := rows.MapScan(row); err != nil {
-			return nil, err // Обработка ошибки при сканировании строки
+			return nil, err
 		}
-		result = append(result, row) // Добавляем строку в результат
+		result = append(result, row)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err // Проверяем на ошибки после завершения итерации
+		return nil, err
 	}
 
-	return result, nil // Возвращаем результат
+	return result, nil
 }
 
 func (a *AdminPostgres) InsertUser(user taskFlow.User) error {

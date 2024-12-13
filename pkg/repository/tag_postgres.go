@@ -18,32 +18,29 @@ func NewTagPostgres(db *sqlx.DB) *TagPostgres {
 func (r *TagPostgres) CreateTag(taskId int, tag taskFlow.Tag) (int, error) {
 	tx, err := r.db.Beginx()
 	if err != nil {
-		return 0, err // Возвращаем ошибку, если не удалось начать транзакцию
+		return 0, err
 	}
 
-	// Сначала добавляем тег в таблицу tags
 	query := "INSERT INTO tags (name, color) VALUES ($1, $2) RETURNING tag_id"
 	var tagId int
 	err = tx.QueryRow(query, tag.Name, tag.Color).Scan(&tagId)
 	if err != nil {
-		tx.Rollback() // Откатываем транзакцию в случае ошибки
-		return 0, err // Возвращаем ошибку, если не удалось вставить тег
+		tx.Rollback()
+		return 0, err
 	}
 
-	// Затем добавляем запись в связную таблицу task_tags
 	linkQuery := "INSERT INTO tasktags (task_id, tag_id) VALUES ($1, $2)"
 	_, err = tx.Exec(linkQuery, taskId, tagId)
 	if err != nil {
-		tx.Rollback() // Откатываем транзакцию в случае ошибки
-		return 0, err // Возвращаем ошибку, если не удалось связать тег с задачей
+		tx.Rollback()
+		return 0, err
 	}
 
-	// Подтверждаем транзакцию
 	if err := tx.Commit(); err != nil {
-		return 0, err // Возвращаем ошибку, если не удалось подтвердить транзакцию
+		return 0, err
 	}
 
-	return tagId, nil // Возвращаем ID нового тега
+	return tagId, nil
 }
 
 func (r *TagPostgres) GetAllTags() ([]taskFlow.Tag, error) {
@@ -57,7 +54,6 @@ func (r *TagPostgres) GetAllTags() ([]taskFlow.Tag, error) {
 }
 func (r *TagPostgres) GetTags(taskId int) ([]taskFlow.Tag, error) {
 	var tags []taskFlow.Tag
-	// Исправленный запрос с запятой между t.name и t.color
 	query := "SELECT t.tag_id, t.name, t.color FROM tags t INNER JOIN tasktags tt ON t.tag_id = tt.tag_id WHERE tt.task_id = $1"
 	err := r.db.Select(&tags, query, taskId)
 	if err != nil {
@@ -72,7 +68,6 @@ func (r *TagPostgres) AddTag(taskId int, tag taskFlow.Tag) (int, error) {
 		return 0, err
 	}
 
-	// Затем свяжем тег с задачей
 	query := "INSERT INTO task_tags (task_id, tag_id) VALUES ($1, $2)"
 	_, err = r.db.Exec(query, taskId, tagId)
 	if err != nil {
@@ -97,7 +92,6 @@ func (r *TagPostgres) UpdateTag(tagId int, input taskFlow.TagInput) error {
 	args := make([]interface{}, 0)
 	argId := 1
 
-	// Проверяем поля и добавляем их в запрос
 	if input.Name != nil {
 		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
 		args = append(args, *input.Name)
@@ -110,17 +104,14 @@ func (r *TagPostgres) UpdateTag(tagId int, input taskFlow.TagInput) error {
 		argId++
 	}
 
-	// Формируем строку обновления
 	setQuery := strings.Join(setValues, ", ")
 	if setQuery == "" {
-		return nil // Если нет полей для обновления, ничего не делаем
+		return nil
 	}
 
-	// Формируем полный запрос
 	query := fmt.Sprintf("UPDATE tags SET %s WHERE tag_id = $%d", setQuery, argId)
 	args = append(args, tagId)
 
-	// Выполняем запрос
 	_, err := r.db.Exec(query, args...)
-	return err // Возвращаем ошибку, если она возникла
+	return err
 }

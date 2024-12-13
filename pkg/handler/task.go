@@ -112,7 +112,7 @@ func (h *Handler) getTaskById(c *gin.Context) {
 }
 
 func (h *Handler) getAllTasksForUser(c *gin.Context) {
-	userID, err := getUserId(c) // Используем вашу функцию для получения userID
+	userID, err := getUserId(c)
 	if err != nil {
 		return
 	}

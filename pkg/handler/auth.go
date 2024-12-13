@@ -33,8 +33,8 @@ func (h *Handler) signUp(ctx *gin.Context) {
 }
 
 type signInInput struct {
-	Username string `json:"username" binding:"required"` // Имя пользователя.
-	Password string `json:"password" binding:"required"` // Пароль (в хэшированном виде).
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (h *Handler) signIn(ctx *gin.Context) {
@@ -54,10 +54,10 @@ func (h *Handler) signIn(ctx *gin.Context) {
 }
 
 func (h *Handler) signInGet(c *gin.Context) {
-	c.HTML(http.StatusOK, "sign-in.html", nil) // Отображаем страницу входа
+	c.HTML(http.StatusOK, "sign-in.html", nil)
 }
 func (h *Handler) signUpGet(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "sign-up.html", nil) // Отображаем страницу регистрации
+	ctx.HTML(http.StatusOK, "sign-up.html", nil)
 }
 
 func (h *Handler) changePassword(c *gin.Context) {
@@ -73,7 +73,6 @@ func (h *Handler) changePassword(c *gin.Context) {
 		return
 	}
 
-	// Проверяем старый пароль
 	isValid, err := h.services.User.CheckOldPassword(userId, input.OldPassword)
 	if err != nil || !isValid {
 		newErrorResponse(c, http.StatusUnauthorized, "Old password is incorrect")
@@ -91,8 +90,8 @@ func (h *Handler) changePassword(c *gin.Context) {
 func sendEmail(to string, resetLink string) error {
 	m := gomail.NewMessage()
 
-	from := "art.evstr@gmail.com"     // Укажите свой адрес электронной почты
-	password := "ckgy yjxy vuki qokz" // Используйте пароль приложения
+	from := "art.evstr@gmail.com"
+	password := "ckgy yjxy vuki qokz"
 
 	m.SetHeader("From", from)
 	m.SetHeader("To", to)
@@ -104,14 +103,13 @@ func sendEmail(to string, resetLink string) error {
         <p>С уважением,<br>Команда Task Flow.</p>
     `, resetLink)
 
-	m.SetBody("text/html", body) // Устанавливаем тело сообщения в формате HTML
+	m.SetBody("text/html", body)
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, from, password)
 
-	// Отправка почты
 	err := d.DialAndSend(m)
 	if err != nil {
-		log.Printf("Ошибка при отправке почты: %v", err) // Логируем ошибку
+		log.Printf("Ошибка при отправке почты: %v", err)
 		return err
 	}
 
@@ -121,13 +119,11 @@ func sendEmail(to string, resetLink string) error {
 func (h *Handler) forgotPassword(c *gin.Context) {
 	var input taskFlow.ResetPasswordInput
 
-	// Привязываем входящие данные к структуре
 	if err := c.ShouldBindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// Проверяем, существует ли пользователь
 	exist, err := h.services.AutorisationService.UserExistsForReset(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "Ошибка при проверке существования пользователя")
@@ -139,14 +135,12 @@ func (h *Handler) forgotPassword(c *gin.Context) {
 		return
 	}
 
-	// Генерируем токен для сброса пароля
 	user, token, err := h.services.AutorisationService.GenerateTokenForReset(input.Username, input.Email)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "Ошибка при генерации токена")
 		return
 	}
 
-	// Создаем ссылку для сброса пароля с токеном
 	resetLink := fmt.Sprintf("http://localhost:8080/reset-password?token=%s&username=%s", token, user.Username)
 
 	emailErr := sendEmail(input.Email, resetLink)

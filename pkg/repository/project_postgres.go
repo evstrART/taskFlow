@@ -20,13 +20,11 @@ func NewProjectPostgres(db *sqlx.DB) *ProjectPostgres {
 func (r *ProjectPostgres) Create(ownerID int, project taskFlow.Project) (int, error) {
 	var projectID int
 
-	// Начинаем транзакцию
 	tx, err := r.db.Beginx()
 	if err != nil {
 		return 0, err
 	}
 
-	// Обеспечиваем откат в случае ошибки
 	defer func() {
 		if err != nil {
 			if rbErr := tx.Rollback(); rbErr != nil {
@@ -45,7 +43,6 @@ func (r *ProjectPostgres) Create(ownerID int, project taskFlow.Project) (int, er
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING project_id`, ProjectTable)
 
-	// Подготовка параметров
 	params := []interface{}{
 		project.Name,
 		project.Description,
@@ -65,13 +62,11 @@ func (r *ProjectPostgres) Create(ownerID int, project taskFlow.Project) (int, er
 	           INSERT INTO %s (project_id, user_id, role)
 	           VALUES ($1, $2, $3)`, ProjectMemberTable)
 
-	// Выполняем вставку с текущей датой
 	_, err = tx.Exec(memberQuery, projectID, ownerID, "owner")
 	if err != nil {
 		return 0, err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return 0, err
 	}
@@ -192,41 +187,34 @@ func (r *ProjectPostgres) UpdateProject(userID, id int, input taskFlow.UpdatePro
 		argId++
 	}
 
-	// Формируем строку обновления
 	setQuery := strings.Join(setValues, ", ")
 	if setQuery == "" {
 		return nil // Если нет полей для обновления, ничего не делаем
 	}
 
-	// Формируем полный запрос
 	query := fmt.Sprintf("UPDATE %s SET %s, updated_at = NOW() WHERE project_id = $%d", ProjectTable,
 		setQuery, argId)
 	args = append(args, id)
 
-	// Начинаем транзакцию
 	tx, err := r.db.Beginx()
 	if err != nil {
 		return err
 	}
 
-	// Устанавливаем user_id из JWT токена
 	_, err = tx.Exec(fmt.Sprintf("SET LOCAL myapp.user_id = %d", userID))
 	if err != nil {
 		return err
 	}
 
-	// Логирование
 	logrus.Debugf("updateQuery: %s", query)
 	logrus.Debugf("args: %v", args)
 
-	// Выполняем запрос
 	_, err = tx.Exec(query, args...)
 	if err != nil {
-		tx.Rollback() // Откат транзакции в случае ошибки
+		tx.Rollback()
 		return err
 	}
 
-	// Коммитим транзакцию
 	if err = tx.Commit(); err != nil {
 		return err
 	}
