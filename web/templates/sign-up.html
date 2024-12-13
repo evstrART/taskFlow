@@ -25,9 +25,24 @@
     const email = document.getElementById('email').value;
     const errorMessage = document.getElementById('error-message');
 
+    // Clear previous error messages
+    errorMessage.textContent = '';
+
     // Check if passwords match
     if (password !== confirmPassword) {
-      errorMessage.textContent = "Passwords do not match.";
+      errorMessage.textContent = "Пароли не совпадают.";
+      return;
+    }
+
+    // Validate password strength
+    if (!isValidPassword(password)) {
+      errorMessage.textContent = "Пароль должен содержать минимум 8 символов, включая заглавные буквы и цифры.";
+      return;
+    }
+
+    // Validate email format
+    if (!isValidEmail(email)) {
+      errorMessage.textContent = "Введите корректный адрес электронной почты.";
       return;
     }
 
@@ -38,12 +53,33 @@
         body: JSON.stringify({ username, password, email })
       });
 
-      if (!response.ok) throw new Error('Registration failed.');
+      if (!response.ok) throw new Error('Регистрация не удалась.');
 
       window.location.href = '/auth/sign-in'; // Redirect to login page after signup
     } catch (error) {
-      errorMessage.textContent = error.message;
+      errorMessage.textContent = error.message; // Display server-side error message
     }
+  }
+
+  function isValidPassword(password) {
+    // Check for minimum length of 8 characters
+    if (password.length < 8) return false;
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(password)) return false;
+
+    // Check for at least one lowercase letter
+    if (!/[a-z]/.test(password)) return false;
+
+    // Check for at least one digit
+    if (!/\d/.test(password)) return false;
+
+    return true; // Password is valid
+  }
+
+  function isValidEmail(email) {
+    // Basic validation for email format
+    return email.includes('@') && email.indexOf('@') > 0 && email.indexOf('@') < email.length - 1;
   }
 </script>
 </body>

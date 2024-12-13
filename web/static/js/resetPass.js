@@ -16,9 +16,11 @@ document.getElementById('reset-password-form').addEventListener('submit', async 
         return;
     }
 
-    // Получаем токен из URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
+    // Validate password strength
+    if (!isValidPassword(newPassword)) {
+        alert("Пароль должен содержать минимум 8 символов, включая заглавные буквы и цифры.");
+        return;
+    }
 
     const formData = {
         new_password: newPassword,
@@ -47,3 +49,19 @@ document.getElementById('reset-password-form').addEventListener('submit', async 
     }
 });
 
+// Функция для проверки сложности пароля
+function isValidPassword(password) {
+    // Check for minimum length of 8 characters
+    if (password.length < 8) return false;
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(password)) return false;
+
+    // Check for at least one lowercase letter
+    if (!/[a-z]/.test(password)) return false;
+
+    // Check for at least one digit
+    if (!/\d/.test(password)) return false;
+
+    return true; // Password is valid
+}
