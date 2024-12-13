@@ -634,7 +634,16 @@ async function deleteTask() {
         }
     }
 }
-document.getElementById('complete-task-btn').addEventListener('click', function() {
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+document.getElementById('complete-task-btn').addEventListener('click', async function() {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -642,22 +651,55 @@ document.getElementById('complete-task-btn').addEventListener('click', function(
         return;
     }
 
-    fetch(`http://localhost:8080/api/projects/${projectId}/tasks/${taskId}/complete`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text); });
-            }
-            // Перенаправление на страницу проекта после успешного завершения задачи
-            window.location.href = `http://localhost:8080/projects/${projectId}`;
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            alert('Failed to complete the task: ' + error.message);
+    const userId = parseJwt(token).user_id; // Get the current user's ID
+
+    try {
+        // Fetch task details to check assigned user and task status
+        const taskResponse = await fetch(`http://localhost:8080/api/projects/${projectId}/tasks/${taskId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
         });
+
+        if (!taskResponse.ok) {
+            throw new Error('Error fetching task details');
+        }
+
+        const task = await taskResponse.json();
+
+        // Check if the user is assigned to the task
+        if (task.assigned_to !== userId) {
+            alert("Задача назначена не на вас, и вы не можете её выполнить.");
+            return;
+        }
+
+        // Check if the task is already completed
+        if (task.status === "Завершено") {
+            alert("Задача уже выполнена.");
+            return;
+        }
+
+        // Proceed to complete the task
+        const completeResponse = await fetch(`http://localhost:8080/api/projects/${projectId}/tasks/${taskId}/complete`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!completeResponse.ok) {
+            const errorText = await completeResponse.text();
+            throw new Error(errorText);
+        }
+
+        // Redirect to project page after successful completion of the task
+        window.location.href = `http://localhost:8080/projects/${projectId}`;
+
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Failed to complete the task: ' + error.message);
+    }
 });
