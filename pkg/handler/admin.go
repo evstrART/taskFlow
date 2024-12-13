@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -70,4 +71,26 @@ func (h *Handler) importJSON(ctx *gin.Context) {
 		return
 	}
 	ctx.Status(http.StatusOK)
+}
+func (h *Handler) GetCompletedTasksByProject(c *gin.Context) {
+	stats, err := h.services.Admin.GetCompletedTasksByProject()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("Completed Tasks By Project: %+v\n", stats)
+
+	// Возвращаем только проекты
+	c.JSON(http.StatusOK, gin.H{"projects": stats})
+}
+func (h *Handler) GetCreatedTasksByUser(c *gin.Context) {
+	stats, err := h.services.Admin.GetCreatedTasksByUser()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("Created Tasks By User: %+v\n", stats)
+
+	// Возвращаем только пользователей
+	c.JSON(http.StatusOK, gin.H{"users": stats})
 }

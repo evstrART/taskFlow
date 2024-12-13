@@ -59,6 +59,8 @@ type Admin interface {
 	InsertActivityLog(log taskFlow.ActivityLog) error
 	InsertTag(tag taskFlow.Tag) error
 	InsertTaskTag(taskTag taskFlow.TaskTag) error
+	GetCompletedTasksByProject() ([]taskFlow.ProjectStats, error)
+	GetCreatedTasksByUser() ([]taskFlow.UserStats, error)
 }
 
 type Project interface {

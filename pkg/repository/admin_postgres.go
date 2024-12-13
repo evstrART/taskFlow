@@ -120,3 +120,53 @@ func (a *AdminPostgres) InsertTaskTag(taskTag taskFlow.TaskTag) error {
 	_, err := a.db.Exec(query, taskTag.TaskID, taskTag.TagID)
 	return err
 }
+
+func (r *AdminPostgres) GetCompletedTasksByProject() ([]taskFlow.ProjectStats, error) {
+	query := `
+	SELECT 
+		p.name AS project_name,
+		COUNT(al.log_id) AS completed_tasks
+	FROM 
+		ActivityLogs al
+	JOIN 
+		Tasks t ON al.entity_id = t.task_id
+	JOIN 
+		Projects p ON t.project_id = p.project_id
+	WHERE 
+		al.action = 'COMPLETE'
+		AND al.related_entity = 'tasks'
+	GROUP BY 
+		p.name
+	ORDER BY 
+		completed_tasks DESC
+	LIMIT 10;
+	`
+
+	var stats []taskFlow.ProjectStats
+	err := r.db.Select(&stats, query)
+	return stats, err
+}
+
+func (r *AdminPostgres) GetCreatedTasksByUser() ([]taskFlow.UserStats, error) {
+	query := `
+	SELECT 
+		u.username,
+		COUNT(al.log_id) AS created_tasks
+	FROM 
+		ActivityLogs al
+	JOIN 
+		Users u ON al.user_id = u.user_id
+	WHERE 
+		al.action = 'CREATE'
+		AND al.related_entity = 'tasks'
+	GROUP BY 
+		u.username
+	ORDER BY 
+		created_tasks DESC
+	LIMIT 10;
+	`
+
+	var stats []taskFlow.UserStats
+	err := r.db.Select(&stats, query)
+	return stats, err
+}

@@ -70,6 +70,8 @@ type Admin interface {
 	GetReportExcel() (string, error)
 	GetDBInJSON() (string, error)
 	ImportDBInJSON(file *multipart.FileHeader) error
+	GetCompletedTasksByProject() ([]taskFlow.ProjectStats, error)
+	GetCreatedTasksByUser() ([]taskFlow.UserStats, error)
 }
 type Service struct {
 	AutorisationService

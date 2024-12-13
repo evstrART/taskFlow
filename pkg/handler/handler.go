@@ -37,6 +37,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			admin.GET("/projects/:id/tasks/:task_id", h.adminTaskGet)
 			admin.GET("/reports", h.adminReportsGet)
 			admin.GET("/users", h.adminUsersGet)
+			admin.GET("/analytic", h.adminAnalyticGet)
 		}
 	}
 	auth := router.Group("/auth")
@@ -52,6 +53,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 	api := router.Group("/api", h.userIdentity)
 	{
+		api.GET("/completed-tasks-by-project", h.GetCompletedTasksByProject)
+		api.GET("/created-tasks-by-user", h.GetCreatedTasksByUser)
 		project := api.Group("/projects")
 		{
 			project.POST("/", h.createProject)

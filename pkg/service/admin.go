@@ -132,7 +132,7 @@ func (a *AdminService) GetReportExcel() (string, error) {
 		file.SetCellValue(sheetName, excelize.ToAlphaString(colNum)+fmt.Sprintf("%d", rowNum+2), log.EntityID)
 	}
 
-	pathExcel := "/Users/Учеба/3 курс/CУБД/reports/report3.xlsx" // Указываем путь для сохранения Excel-файла
+	pathExcel := "/Users/Учеба/3 курс/CУБД/reports/report.xlsx" // Указываем путь для сохранения Excel-файла
 
 	if err := file.SaveAs(pathExcel); err != nil {
 		return "", err // Обработка ошибки при сохранении файла
@@ -402,4 +402,12 @@ func (a *AdminService) ImportDBInJSON(file *multipart.FileHeader) error {
 	}
 
 	return nil
+}
+
+func (s *AdminService) GetCompletedTasksByProject() ([]taskFlow.ProjectStats, error) {
+	return s.repo.GetCompletedTasksByProject()
+}
+
+func (s *AdminService) GetCreatedTasksByUser() ([]taskFlow.UserStats, error) {
+	return s.repo.GetCreatedTasksByUser()
 }
